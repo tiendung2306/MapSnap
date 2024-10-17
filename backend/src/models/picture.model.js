@@ -7,7 +7,8 @@ const pictureSchema = new Schema({
     user_id: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        index: true,
     },
     location_id: {
         type: Schema.Types.ObjectId,
