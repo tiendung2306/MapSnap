@@ -1,6 +1,6 @@
 const allRoles = {
-  user: [],
-  admin: ['getUsers', 'manageUsers'],
+  user: ['userRights'],
+  admin: ['adminRights'],
 };
 
 const roles = Object.keys(allRoles);
