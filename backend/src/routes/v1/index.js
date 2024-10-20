@@ -19,7 +19,7 @@ const defaultRoutes = [
   {
     path: '/pictures',
     route: pictureRoute,
-  }
+  },
 ];
 
 const devRoutes = [
