@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Widget/accountModel.dart';
 import 'settingScreen.dart';
 
 class accountScreen extends StatefulWidget {
@@ -11,13 +13,19 @@ class accountScreen extends StatefulWidget {
 }
 
 class _accountScreenState extends State<accountScreen> {
-  static TextEditingController usernameController = TextEditingController();
-  static TextEditingController emailController = TextEditingController();
+  late TextEditingController usernameController;
+  late TextEditingController emailController;
   final TextEditingController addressController = TextEditingController();
   final TextEditingController numberPhoneController = TextEditingController();
+  String Notification = "";
+  late Color colorNotification;
+
 
   void initState() {
     super.initState();
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    usernameController = TextEditingController(text: accountModel.username);
+    emailController = TextEditingController(text: accountModel.email);
     _loadUserData();  // Tải dữ liệu khi khởi tạo màn hình
   }
 
@@ -39,7 +47,6 @@ class _accountScreenState extends State<accountScreen> {
     await prefs.setString('email', emailController.text);
     await prefs.setString('address', addressController.text);
     await prefs.setString('numberPhone', numberPhoneController.text);
-    print("Lưu thành công!");
   }
 
   @override
@@ -158,7 +165,7 @@ class _accountScreenState extends State<accountScreen> {
                         const SizedBox(height: 15),
                         buildTextField("Địa chỉ", addressController, "Nhập địa chỉ của bạn", TextInputType.text),
                         const SizedBox(height: 15),
-                        buildTextField("Số điện thoại", numberPhoneController, "Nhập sđt của bạn", TextInputType.text),
+                        buildTextField("Số điện thoại", numberPhoneController, "Nhập sđt của bạn", TextInputType.number),
                       ],
                     ),
                   ),
@@ -170,8 +177,55 @@ class _accountScreenState extends State<accountScreen> {
                   borderRadius: BorderRadius.circular(15),
                   child: InkWell(
                       onTap: () {
-                        // print("Bảo mật");
-                        _saveUserData();
+                        // Kiểm tra số điện thoại (chỉ bao gồm các chữ số)
+                        if(usernameController.text.isEmpty) {
+                          Notification = "Chưa nhập tên";
+                          colorNotification = Colors.red;
+                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(emailController.text)) {
+                          // Kiểm tra email (đơn giản)
+                          Notification = "Nhập sai gmail rồi";
+                          colorNotification = Colors.red;
+                        } else if (addressController.text.isEmpty) {
+                          Notification = "Chưa nhập địa chỉ";
+                          colorNotification = Colors.red;
+                        } else if (!RegExp(r'^[0-9]+$').hasMatch(numberPhoneController.text)) {
+                          Notification = "Nhập sai số điện thoại rồi";
+                          colorNotification = Colors.red;
+                        } else if (numberPhoneController.text.length != 10) {
+                          Notification = "Nhập sai số điện thoại rồi";
+                          colorNotification = Colors.red;
+                        } else {
+                          // Nếu tất cả đều hợp lệ, lưu dữ liệu
+                          Notification = "Lưu thông tin thành công";
+                          colorNotification = Colors.blue;
+                          _saveUserData();
+                          Provider.of<AccountModel>(context, listen: false)
+                              .updateUsername(usernameController.text);
+                          Provider.of<AccountModel>(context, listen: false)
+                              .updateEmail(emailController.text);
+                        }
+
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: const Text("Thông báo", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                              content: Text(Notification, style: TextStyle(fontSize: 20,)),
+                              actions: <Widget>[
+                                new ElevatedButton(
+                                  child: new Text('OK', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: colorNotification,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
                       },
                       splashColor: Colors.white.withOpacity(0.2),
                       child: Container(

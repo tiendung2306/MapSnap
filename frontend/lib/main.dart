@@ -4,11 +4,18 @@ import 'package:mapsnap_fe/Screen/mainScreenCamera.dart';
 import 'package:mapsnap_fe/Screen/settingScreen.dart';
 
 import 'package:mapsnap_fe/Widget/locator.dart';
+import 'package:mapsnap_fe/Widget/accountModel.dart';
+import 'package:provider/provider.dart'; // Import file model
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AccountModel(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

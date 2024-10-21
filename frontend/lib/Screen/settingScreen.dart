@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+import '../Widget/accountModel.dart';
 import 'AccountScreen.dart';
 
 
@@ -15,8 +17,8 @@ class settingScreen extends StatefulWidget {
 }
 
 class settingScreenState extends State<settingScreen> {
-  var nameController = "Top1thachdau";
-  var gmailController = "top1@gmail.com";
+  // var nameController = "Top1thachdau";
+  // var gmailController = "top1@gmail.com";
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class settingScreenState extends State<settingScreen> {
 
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
+    var accountModel = Provider.of<AccountModel>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -90,9 +93,9 @@ class settingScreenState extends State<settingScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(nameController, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold) ,),
+                              Text(accountModel.username, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold) ,),
                               const SizedBox(height: 5,),
-                              Text(gmailController, style: TextStyle(fontSize: 15 )),
+                              Text(accountModel.email, style: TextStyle(fontSize: 15 )),
                             ]
                         )
                     )
