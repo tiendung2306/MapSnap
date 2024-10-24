@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
+import 'securityScreen.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
 import 'AccountScreen.dart';
@@ -122,7 +122,6 @@ class settingScreenState extends State<settingScreen> {
                             context,
                             MaterialPageRoute(builder: (context) => accountScreen()),
                           );
-
                         },
                         splashColor: Colors.grey.withOpacity(0.2),
                         child: buildButtonSetting(Icons.person_add,"Tài khoản","Thông tin cá nhân: gmail,sđt,...",screenWidth),
@@ -134,7 +133,10 @@ class settingScreenState extends State<settingScreen> {
                         color: Colors.white,
                         child: InkWell(
                           onTap: () {
-                            print("Bảo mật");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => securityScreen()),
+                            );
                           },
                           splashColor: Colors.grey.withOpacity(0.2),
                           child: buildButtonSetting(Icons.lock,"Bảo mật","Đổi mật khẩu ",screenWidth),

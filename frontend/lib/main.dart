@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Screen/AccountScreen.dart';
-import 'package:mapsnap_fe/Screen/mainScreenCamera.dart';
+import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:mapsnap_fe/Screen/settingScreen.dart';
 
 import 'package:mapsnap_fe/Widget/locator.dart';
@@ -11,6 +11,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(
+    // Cấp quyền truy cập cao nhất cho AccountModel
     ChangeNotifierProvider(
       create: (context) => AccountModel(),
       child: MyApp(),
