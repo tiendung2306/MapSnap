@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Home.dart';
+import 'package:mapsnap_fe/dev.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +12,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      home: const Home(),
+      debugShowCheckedModeBanner: false,
+      home: SearchBarApp(),
     );
   }
 }
