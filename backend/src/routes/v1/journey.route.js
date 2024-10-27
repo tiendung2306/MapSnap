@@ -1,7 +1,7 @@
 const express = require('express');
 const journeyController = require('../../controllers/journey.controller');
-const auth = require('../../middlewares/auth');
-const permissionType = require('../../utils/constant');
+// const auth = require('../../middlewares/auth');
+// const permissionType = require('../../utils/constant');
 
 const router = express.Router();
 
@@ -9,8 +9,8 @@ const router = express.Router();
 router.get('/', journeyController.getJourneysByUserId);
 // create journey
 router.post(
-  '/',
-  //auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  '/create-journey',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
   journeyController.createJourney
 );
 
