@@ -1,18 +1,24 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
+const { add } = require('winston');
+const { count } = require('../models/user.model');
 
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    username: Joi.string().required(),
     role: Joi.string().required().valid('user', 'admin'),
+    displayName: Joi.string(),
+    address: Joi.string(),
+    dateOfBirth: Joi.date(),
+    country: Joi.string(),
   }),
 };
 
 const getUsers = {
   query: Joi.object().keys({
-    name: Joi.string(),
+    username: Joi.string(),
     role: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -34,7 +40,11 @@ const updateUser = {
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      name: Joi.string(),
+      username: Joi.string(),
+      displayName: Joi.string(),
+      address: Joi.string(),
+      dateofbirth: Joi.date(),
+      country: Joi.string(),
     })
     .min(1),
 };

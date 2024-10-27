@@ -13,7 +13,7 @@ router.post('/refresh-tokens', validate(authValidation.refreshTokens), authContr
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
-router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
+router.get('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
 
 module.exports = router;
 
@@ -37,11 +37,11 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - username
  *               - email
  *               - password
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
@@ -53,7 +53,7 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               name: fake name
+ *               username: fakename
  *               email: fake@example.com
  *               password: password1
  *     responses:
@@ -266,7 +266,7 @@ module.exports = router;
 /**
  * @swagger
  * /auth/verify-email:
- *   post:
+ *   get:
  *     summary: verify email
  *     tags: [Auth]
  *     parameters:
@@ -277,8 +277,8 @@ module.exports = router;
  *           type: string
  *         description: The verify email token
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: Verify email success
  *       "401":
  *         description: verify email failed
  *         content:
