@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
 const mongoose = require('mongoose');
-const _ = require('lodash');
+// const _ = require('lodash');
 const JourneyModel = require('../models/journey.model');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
-const UserModel = require('../models/user.model');
+// const UserModel = require('../models/user.model');
 
 const createJourney = async (journeyBody) => {
   const journey = await JourneyModel.findOne(journeyBody);
@@ -16,8 +16,8 @@ const createJourney = async (journeyBody) => {
 };
 
 const getJourneysByUserId = async ({ userId }) => {
-  const filter = { userId: mongoose.Types.ObjectId(userId), status: { $ne: status.disabled } };
-  return DishModel.find(filter);
+  const filter = { userId: mongoose.Types.ObjectId(userId), status: { $ne: 'enable' } };
+  return JourneyModel.find(filter);
 };
 
 const getJourneyByJourneyId = async (journeyId) => {
@@ -34,7 +34,7 @@ const updateJourney = async ({ journeyId, requestBody }) => {
 };
 
 const deleteJourney = async (journeyId) => {
-  await updateJourney({ journeyId, requestBody: { status: status.disabled } });
+  await updateJourney({ journeyId, requestBody: { status: 'disabled' } });
 };
 
 module.exports = {

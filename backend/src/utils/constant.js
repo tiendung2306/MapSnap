@@ -3,6 +3,6 @@ const permissionType = {
   ADMIN_RIGHT: 'adminRights',
 };
 
-modules.export = {
+module.exports = {
   permissionType,
 };

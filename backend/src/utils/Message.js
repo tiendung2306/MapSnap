@@ -73,7 +73,6 @@ module.exports = {
   updated,
   uploaded,
   notFound,
-  emptyPhone,
   journeyMsg,
   visitMsg,
   pictureMsg,
