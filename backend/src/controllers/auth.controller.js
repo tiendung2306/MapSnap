@@ -28,7 +28,7 @@ const refreshTokens = catchAsync(async (req, res) => {
 const forgotPassword = catchAsync(async (req, res) => {
   const { resetPasswordToken, verificationPinCode, expires } = await tokenService.generateResetPasswordToken(req.body.email);
   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken, verificationPinCode);
-  res.status(httpStatus.OK).send({ "resetPasswordToken": resetPasswordToken, "expires": expires.toDate() });
+  res.status(httpStatus.OK).send({ resetPasswordToken, expires: expires.toDate() });
 });
 
 const verifyPinCode = catchAsync(async (req, res) => {

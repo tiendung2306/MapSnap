@@ -246,8 +246,6 @@ module.exports = router;
  *                          message: verify pin code failed
  */
 
-
-
 /**
  * @swagger
  * /auth/reset-password:

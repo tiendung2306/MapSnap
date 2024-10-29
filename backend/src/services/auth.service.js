@@ -76,14 +76,12 @@ const verifyPinCode = async (pinCode, token) => {
   try {
     const pinDoc = await verificationPinService.verifyPin(pinCode, token);
     if (!pinDoc) {
-      throw new Error("PIN not found");
+      throw new Error('PIN not found');
     }
-  }
-  catch (err) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'PIN verification failed; ' + err);
+  } catch (err) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, `PIN verification failed; ${err}`);
   }
 };
-
 
 /**
  * Verify email

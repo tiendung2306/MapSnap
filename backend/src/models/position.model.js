@@ -1,6 +1,7 @@
-const { toJSON } = require('./plugins');
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { toJSON } = require('./plugins');
+
+const { Schema } = mongoose;
 
 // Define the Position schema
 const positionSchema = new Schema({
