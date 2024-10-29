@@ -3,6 +3,7 @@ const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const userService = require('./user.service');
+const verificationPinService = require('./verificationPin.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
@@ -98,7 +99,9 @@ const generateResetPasswordToken = async (email) => {
   const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
   const resetPasswordToken = generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
   await saveToken(resetPasswordToken, user.id, expires, tokenTypes.RESET_PASSWORD);
-  return resetPasswordToken;
+  const verificationPinCode = verificationPinService.generatePin();
+  verificationPinService.savePin(verificationPinCode, resetPasswordToken, expires);
+  return { resetPasswordToken, verificationPinCode, expires };
 };
 
 /**
