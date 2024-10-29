@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON } = require('./plugins');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 // Define the Location schema
 const locationSchema = new Schema({

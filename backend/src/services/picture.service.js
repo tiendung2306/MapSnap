@@ -1,3 +1,5 @@
+const httpStatus = require('http-status');
+const ApiError = require('../utils/ApiError');
 const { Picture } = require('../models'); // Đường dẫn tới file chứa model Picture
 
 /**
@@ -6,6 +8,7 @@ const { Picture } = require('../models'); // Đường dẫn tới file chứa m
  * @returns {Promise<Picture>}
  */
 const createPicture = async (pictureBody) => {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   if (await Picture.isPictureExists(pictureBody.link)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Picture already exists');
   }
