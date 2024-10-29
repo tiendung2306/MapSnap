@@ -26,9 +26,15 @@ const refreshTokens = catchAsync(async (req, res) => {
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  const { resetPasswordToken, verificationPinCode, expires } = await tokenService.generateResetPasswordToken(req.body.email);
+  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken, verificationPinCode);
+  res.status(httpStatus.OK).send({ resetPasswordToken, expires: expires.toDate() });
+});
+
+const verifyPinCode = catchAsync(async (req, res) => {
+  const { pinCode, resetPasswordToken } = req.body;
+  await authService.verifyPinCode(pinCode, resetPasswordToken);
+  res.status(httpStatus.OK).send();
 });
 
 const resetPassword = catchAsync(async (req, res) => {
@@ -44,7 +50,7 @@ const sendVerificationEmail = catchAsync(async (req, res) => {
 
 const verifyEmail = catchAsync(async (req, res) => {
   await authService.verifyEmail(req.query.token);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.OK).send();
 });
 
 module.exports = {
@@ -56,4 +62,5 @@ module.exports = {
   resetPassword,
   sendVerificationEmail,
   verifyEmail,
+  verifyPinCode,
 };
