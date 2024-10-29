@@ -1,23 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/ForgotPassword.dart';
-import 'package:mapsnap_fe/SignIn.dart';
-import 'package:mapsnap_fe/VerifyEmail.dart';
-import 'Onboarding.dart';
-import 'SignUp.dart';
-import 'Finish.dart';
+import 'package:mapsnap_fe/Screen/AccountScreen.dart';
+import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
+import 'package:mapsnap_fe/Screen/settingScreen.dart';
+import 'package:mapsnap_fe/Screen/helpScreen.dart';
+import 'package:mapsnap_fe/Screen/generalSettings.dart';
+import 'package:mapsnap_fe/Widget/locator.dart';
+import 'package:mapsnap_fe/Widget/accountModel.dart';
+import 'package:provider/provider.dart'; // Import file model
 
-
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+  runApp(
+    // Cấp quyền truy cập cao nhất cho AccountModel
+    ChangeNotifierProvider(
+      create: (context) => AccountModel(),
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
+      // theme: ThemeData(
+      //   brightness: Brightness.dark,
+      //   // brightness: Brightness.light,
+      //   // colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+      //   useMaterial3: true,
+      // ),
+      home: SafeArea(
+        child: Scaffold(
+          body: Container(
+            child: settingScreen(),
+            // child: generalSettings(),
+            // child: helpScreen(),
+            // child: MainScreenCamera(),
+            // child: accountScreen(),
+          ),
+        ),
       ),
-      home: Onboarding(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
+
