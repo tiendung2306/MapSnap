@@ -11,6 +11,7 @@ router.post('/login', validate(authValidation.login), authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
+router.post('/verify-pin-code', validate(authValidation.verifyPinCode), authController.verifyPinCode);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.get('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
@@ -198,11 +199,54 @@ module.exports = router;
  *             example:
  *               email: fake@example.com
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Token'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
+
+/**
+ * @swagger
+ * /auth/verify-pin-code:
+ *    post:
+ *      summary: Verify pin code
+ *      tags: [Auth]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      required:
+ *                        - pinCode
+ *                        - resetPasswordToken
+ *                      properties:
+ *                          pinCode:
+ *                              type: string
+ *                          resetPasswordToken:
+ *                              type: string
+ *                      example:
+ *                          pinCode: "2306"
+ *                          resetPasswordToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzFiY2MyZDZiMzgzZDI1MTBmNjQ2MGYiLCJpYXQiOjE3MzAyMDA0NTcsImV4cCI6MTczMDIwMTA1NywidHlwZSI6InJlc2V0UGFzc3dvcmQifQ.jxnnhQDiaIBnpz930nKKwsevRE5bzKgxeHp6J09CTbA"
+ *      responses:
+ *          "200":
+ *              description: Verify PIN code success
+ *          "401":
+ *              description: Verify PIN code failed
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Error'
+ *                      example:
+ *                          code: 401
+ *                          message: verify pin code failed
+ */
+
+
 
 /**
  * @swagger
