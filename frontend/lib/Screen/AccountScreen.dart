@@ -1,9 +1,15 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Widget/accountModel.dart';
-import 'settingScreen.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+
+
 
 class accountScreen extends StatefulWidget {
   const accountScreen({Key? key}) : super(key: key);
@@ -13,26 +19,80 @@ class accountScreen extends StatefulWidget {
 }
 
 class _accountScreenState extends State<accountScreen> {
+  XFile? _image; // Biến lưu trữ ảnh đã chọn
+
   late TextEditingController usernameController;
   late TextEditingController emailController;
   final TextEditingController addressController = TextEditingController();
   final TextEditingController numberPhoneController = TextEditingController();
+
   String Notification = "";
   late Color colorNotification;
 
 
+  final List<String> sex = [
+    'Male',
+    'Female',
+    'Transsexual Male',
+    'Transsexual Female',
+    'Metrosexual Male',
+    'Metrosexual Female',
+    'Male, But Curious What Being a Female is Like',
+    'Female, But Curious What Being a Male is Like',
+    'Male. But Overweight. So Have Moobs',
+    'Hermaphrodite with Predominant Male Leanings',
+    'Hermaphrodite with Predominant Female Leanings',
+    'Conjoined Twin-Male',
+    'Conjoined Twin-Female',
+    'Bom Without Genitals-Identify as Male',
+    'Bom Without Genitals-Identify as Female',
+    'Household Pet That Walked Across the Keyboard',
+    'SÚC VẬT',
+    'ĐCM TK NÀO NGHĨ RA MẤY CÁI NÀY V',
+  ];
+
+
+  String sexController = 'Chọn giới tính của bạn';
+
+
   void initState() {
     super.initState();
+    _loadImage();
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     usernameController = TextEditingController(text: accountModel.username);
     emailController = TextEditingController(text: accountModel.email);
     _loadUserData();  // Tải dữ liệu khi khởi tạo màn hình
   }
 
+  Future<void> _loadImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('imagePath'); // Lấy đường dẫn ảnh
+    if (imagePath != null) {
+      setState(() {
+        _image = XFile(imagePath); // Chuyển đường dẫn thành XFile
+      });
+    }
+  }
+
+  Future<void> _onProfileTapped() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _image = image;
+        Provider.of<AccountModel>(context, listen: false)
+            .updateImage(image);
+      });
+      // Lưu đường dẫn ảnh vào SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('imagePath', image.path);
+    }
+  }
   // Hàm để tải dữ liệu từ SharedPreferences
   _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      sexController = prefs.getString('sex') ?? '';
       usernameController.text = prefs.getString('username') ?? '';
       emailController.text = prefs.getString('email') ?? '';
       addressController.text = prefs.getString('address') ?? '';
@@ -49,13 +109,18 @@ class _accountScreenState extends State<accountScreen> {
     await prefs.setString('numberPhone', numberPhoneController.text);
   }
 
+  _saveSexData(String sex) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('sex', sexController);
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: GestureDetector(
         onTap: () {
           // Bỏ chọn tất cả các TextField khi bấm ra ngoài
@@ -134,8 +199,23 @@ class _accountScreenState extends State<accountScreen> {
                               height: 120,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.red,
-                              ),
+                                color: Colors.grey,
+                                image: _image != null
+                                  ? DecorationImage(
+                                    image: FileImage(File(_image!.path)), // Sử dụng FileImage để hiển thị ảnh
+                                    fit: BoxFit.cover,
+                                  )
+                                  : null,
+                                ),
+                                child: _image == null
+                                 ? Center(
+                                    child: Icon(
+                                    Icons.person_2_rounded,
+                                    color: Colors.black12,
+                                    size: 60,
+                                  ),
+                                )
+                                : null,
                             ),
                           ),
                           Align(
@@ -143,6 +223,7 @@ class _accountScreenState extends State<accountScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 print("Thay ảnh đại diện");
+                                _onProfileTapped();
                               },
                               child: Container(
                                 width: screenWidth / 10,
@@ -172,6 +253,50 @@ class _accountScreenState extends State<accountScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             buildTextField("Tên", usernameController, "Nhập tên của bạn", TextInputType.text),
+                            const SizedBox(height: 15),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Giới tính", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 5),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  width: screenWidth,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton2 (
+                                      isExpanded: true,
+                                      dropdownStyleData:const DropdownStyleData(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                          ),
+                                        maxHeight: 200,
+                                      ),
+                                      value: sexController == 'Chọn giới tính của bạn' ? null : sexController,
+                                      hint: Text(sexController),
+                                      iconStyleData: IconStyleData(
+                                        icon: Icon(Icons.arrow_drop_down), // Biểu tượng mũi tên
+                                        iconSize: 30,
+                                      ),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          sexController = newValue!;
+                                        });
+                                        _saveSexData(newValue!);
+                                      },
+                                      items: sex.map<DropdownMenuItem<String>>((String sex) {
+                                        return DropdownMenuItem<String>(
+                                          value: sex,
+                                          child: Text(sex),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 15),
                             buildTextField("Email", emailController, "Nhập email của bạn", TextInputType.emailAddress),
                             const SizedBox(height: 15),

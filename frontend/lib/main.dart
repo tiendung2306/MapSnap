@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Screen/AccountScreen.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:mapsnap_fe/Screen/settingScreen.dart';
-
+import 'package:mapsnap_fe/Screen/helpScreen.dart';
+import 'package:mapsnap_fe/Screen/generalSettings.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart'; // Import file model
@@ -35,6 +36,8 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           body: Container(
             child: settingScreen(),
+            // child: generalSettings(),
+            // child: helpScreen(),
             // child: MainScreenCamera(),
             // child: accountScreen(),
           ),
@@ -44,6 +47,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
 

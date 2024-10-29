@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,8 @@ import 'securityScreen.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
 import 'AccountScreen.dart';
+import 'helpScreen.dart';
+import 'generalSettings.dart';
 
 
 
@@ -17,14 +21,11 @@ class settingScreen extends StatefulWidget {
 }
 
 class settingScreenState extends State<settingScreen> {
-  // var nameController = "Top1thachdau";
-  // var gmailController = "top1@gmail.com";
 
   @override
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +77,36 @@ class settingScreenState extends State<settingScreen> {
               Container(
                 child: Row(
                   children: [
+                    // Container(
+                    //   width: 80,
+                    //   height: 80,
+                    //   decoration: BoxDecoration(
+                    //     shape: BoxShape.circle,
+                    //     color: Colors.red,
+                    //   ),
+                    // ),
                     Container(
-                      width: 80,
-                      height: 80,
+                      width: 100,
+                      height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.red,
+                        color: Colors.grey,
+                        image: accountModel.image != null
+                            ? DecorationImage(
+                          image: FileImage(File(accountModel.image!.path)), // Sử dụng FileImage để hiển thị ảnh
+                          fit: BoxFit.cover,
+                        )
+                            : null,
                       ),
+                      child: accountModel.image == null
+                          ? Center(
+                            child: Icon(
+                              Icons.person_2_rounded,
+                              color: Colors.black12,
+                              size: 60,
+                            ),
+                           )
+                          : null,
                     ),
 
                     SizedBox(width: screenWidth / 20),
@@ -148,7 +172,10 @@ class settingScreenState extends State<settingScreen> {
                         color: Colors.white,
                         child: InkWell(
                           onTap: () {
-                            print("Cài đặt chung");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => generalSettings()),
+                            );
                           },
                           splashColor: Colors.grey.withOpacity(0.2),
                           child: buildButtonSetting(Icons.settings,"Cài đặt chung","Giao diện, ngôn ngữ,...",screenWidth),
@@ -160,7 +187,27 @@ class settingScreenState extends State<settingScreen> {
                         color: Colors.white,
                         child: InkWell(
                           onTap: () {
-                            print("Thông báo");
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title: const Text("Thông báo", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+                                  content: Text("Tính năng đang được phát triển", style: TextStyle(fontSize: 20,)),
+                                  actions: <Widget>[
+                                    new ElevatedButton(
+                                      child: new Text('OK', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),),
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           },
                           splashColor: Colors.grey.withOpacity(0.2),
                           child: buildButtonSetting(Icons.notifications,"Thông báo","Cài đặt thông báo",screenWidth),
@@ -184,15 +231,15 @@ class settingScreenState extends State<settingScreen> {
                         color: Colors.white,
                         child: InkWell(
                           onTap: () {
-                            print("Trợ giúp");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => helpScreen()),
+                            );
                           },
                           splashColor: Colors.grey.withOpacity(0.2),
                           child: buildButtonSetting(Icons.help,"Trợ giúp","NPT khều donate",screenWidth),
                         )
                     ),
-
-
-
                   ],
                 ),
               ),

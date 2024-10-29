@@ -33,7 +33,7 @@ class TextFieldInput extends StatelessWidget {
         enabledBorder: enabledBorder,
         filled: true,
         fillColor: Colors.white, // Màu nền của TextField
-        contentPadding: const EdgeInsets.all(8),
+        contentPadding: const EdgeInsets.fromLTRB(16,8,16,8),
       ),
       keyboardType: textInputType,
       obscureText: isPass,
