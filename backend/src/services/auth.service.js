@@ -4,7 +4,6 @@ const userService = require('./user.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
-const verificationPinService = require('./verificationPin.service');
 
 /**
  * Login with username and password
@@ -72,17 +71,6 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
   }
 };
 
-const verifyPinCode = async (pinCode, token) => {
-  try {
-    const pinDoc = await verificationPinService.verifyPin(pinCode, token);
-    if (!pinDoc) {
-      throw new Error('PIN not found');
-    }
-  } catch (err) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, `PIN verification failed; ${err}`);
-  }
-};
-
 /**
  * Verify email
  * @param {string} verifyEmailToken
@@ -108,5 +96,4 @@ module.exports = {
   refreshAuth,
   resetPassword,
   verifyEmail,
-  verifyPinCode,
 };
