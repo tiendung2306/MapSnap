@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/CreateNewPassword.dart';
-import 'package:mapsnap_fe/SignUp.dart';
-import 'Widget/passwordForm.dart';
-import 'Widget/normalForm.dart';
-import 'Widget/outline_IconButton.dart';
+import 'CreateNewPassword.dart';
+import 'SignUp.dart';
+import 'package:mapsnap_fe/Widget/passwordForm.dart';
+import 'package:mapsnap_fe/Widget/normalForm.dart';
+import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Finish.dart';
 
 
