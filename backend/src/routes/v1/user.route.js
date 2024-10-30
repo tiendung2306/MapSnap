@@ -13,7 +13,7 @@ router
 
 router
   .route('/:userId')
-  .get(auth('getUserById'), validate(userValidation.getUser), userController.getUserById)
+  .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
@@ -42,17 +42,13 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - name
  *               - email
  *               - password
  *               - role
  *             properties:
- *               username:
+ *               name:
  *                 type: string
- *                 description: Unique username without spaces for login
- *               displayName:
- *                 type: string
- *                 description: User's display name for profile
  *               email:
  *                 type: string
  *                 format: email
@@ -63,27 +59,13 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *               role:
- *                 type: string
- *                 enum: [user, admin]
- *               address:
- *                 type: string
- *                 description: User's address
- *               dateofbirth:
- *                 type: string
- *                 format: date
- *                 description: User's date of birth
- *               country:
- *                 type: string
- *                 description: Country of the user
+ *                  type: string
+ *                  enum: [user, admin]
  *             example:
- *               username: fakeusername
- *               displayName: Fake Name
+ *               name: fake name
  *               email: fake@example.com
  *               password: password1
  *               role: user
- *               address: 123 Fake Street
- *               dateofbirth: 1990-01-01
- *               country: USA
  *     responses:
  *       "201":
  *         description: Created
@@ -106,7 +88,7 @@ module.exports = router;
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: username
+ *         name: name
  *         schema:
  *           type: string
  *         description: User name
@@ -214,7 +196,7 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               name:
  *                 type: string
  *               email:
  *                 type: string
@@ -226,7 +208,7 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               username: fakename
+ *               name: fake name
  *               email: fake@example.com
  *               password: password1
  *     responses:

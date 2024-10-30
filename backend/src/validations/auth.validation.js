@@ -5,7 +5,7 @@ const register = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
-    username: Joi.string().required(),
+    name: Joi.string().required(),
   }),
 };
 
@@ -34,13 +34,6 @@ const forgotPassword = {
   }),
 };
 
-const verifyPinCode = {
-  body: Joi.object().keys({
-    pinCode: Joi.string().required(),
-    resetPasswordToken: Joi.string().required(),
-  }),
-};
-
 const resetPassword = {
   query: Joi.object().keys({
     token: Joi.string().required(),
@@ -64,5 +57,4 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  verifyPinCode,
 };
