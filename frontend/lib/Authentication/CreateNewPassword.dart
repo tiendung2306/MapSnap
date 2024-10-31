@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/SignUp.dart';
-import 'package:mapsnap_fe/VerifyEmail.dart';
-import 'Widget/passwordForm.dart';
-import 'Widget/normalForm.dart';
-import 'Widget/outline_IconButton.dart';
+import 'SignIn.dart';
+import 'SignUp.dart';
+import 'VerifyEmail.dart';
+import 'package:mapsnap_fe/Widget/passwordForm.dart';
+import 'package:mapsnap_fe/Widget/normalForm.dart';
+import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Finish.dart';
 
 
 
-class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
+class CreateNewPassword extends StatelessWidget {
+  const CreateNewPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,9 @@ class ForgotPassword extends StatelessWidget {
                   child: TextButton.icon(
                     label: Text(""),
                     icon: Image.asset(
-                        "assets/Login/BackButton.png",
-                        width: 50,
-                        height: 50,
+                      "assets/Login/BackButton.png",
+                      width: 50,
+                      height: 50,
                     ),
                     onPressed: () {
                       Navigator.pop(context);
@@ -46,31 +47,33 @@ class ForgotPassword extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 200),
                 child: Text(
-                  "Forgot Password",
+                  "Create New Password",
                   style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Text(
-                  "No worries! Enter your email address below and we "
-                      "will send you a code to reset password.",
+                  "Please enter and confirm your new password."
+                      "You will need to login after you reset.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 15,
+                    fontSize: 15,
                   ),
                 ),
               ),
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: normalForm(label:'Email'),
+                child: passwordForm(label:'Password'),
               ),
-              // passwordForm(label:'Password'),
-              // SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: passwordForm(label:'Confirm Password'),
+              ),
               Expanded(child: Container()),
 
               // Nút Register
@@ -78,9 +81,9 @@ class ForgotPassword extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 40),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => VerifyEmail()),
+                      MaterialPageRoute(builder: (context) => SignIn()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
