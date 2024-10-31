@@ -37,6 +37,12 @@ const verifyPinCode = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send();
 });
 
+const changePassword = catchAsync(async (req, res) => {
+  const { id, oldPassword, newPassword } = req.body;
+  await authService.changePassword(id, oldPassword, newPassword);
+  res.status(httpStatus.OK).send();
+})
+
 const resetPassword = catchAsync(async (req, res) => {
   await authService.resetPassword(req.query.token, req.body.password);
   res.status(httpStatus.NO_CONTENT).send();
@@ -63,4 +69,5 @@ module.exports = {
   sendVerificationEmail,
   verifyEmail,
   verifyPinCode,
+  changePassword,
 };

@@ -12,6 +12,7 @@ router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/verify-pin-code', validate(authValidation.verifyPinCode), authController.verifyPinCode);
+router.post('/change-password', validate(authValidation.changePassword), authController.changePassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.get('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
@@ -244,6 +245,45 @@ module.exports = router;
  *                      example:
  *                          code: 401
  *                          message: verify pin code failed
+ */
+
+/**
+ *  @swagger
+ *  /auth/change-password:
+ *      post:
+ *          summary: Change password
+ *          tags: [Auth]
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          required:
+ *                              - id
+ *                              - oldPassword
+ *                              - newPassword
+ *                          properties:
+ *                              id:
+ *                                  type: string
+ *                                  description: user id
+ *                              oldPassword:
+ *                                  type: string
+ *                                  format: password
+ *                              newPassword:
+ *                                  type: string
+ *                                  format: password
+ *                                  minLength: 8
+ *                                  description: At least one number and one letter
+ *                          example:
+ *                              id: "5ebac534954b54139806c112"
+ *                              oldPassword: "password1"
+ *                              newPassword: "password2"
+ *          responses:  
+ *              "200":
+ *                  description: Change password success
+ *              "401":
+ *                  description: Change password failed
  */
 
 /**
