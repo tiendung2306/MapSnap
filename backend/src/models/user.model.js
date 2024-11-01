@@ -30,10 +30,14 @@ const userSchema = mongoose.Schema(
       default: '',
     },
     avatar: {
-      url: { type: String, default: '' },
-      updatedAt: { type: Date, default: Date.now }
+      type: String,
+      default: '',
     },
     address: {
+      type: String,
+      default: '',
+    },
+    phoneNumber: {
       type: String,
       default: '',
     },
