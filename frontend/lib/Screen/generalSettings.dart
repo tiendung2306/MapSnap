@@ -122,7 +122,7 @@ class _generalSettingsState extends State<generalSettings> {
                     ),
                     Container(
                       child: Text(
-                        "Tài khoản",
+                        "Cài đặt chung",
                         style: TextStyle(fontSize: 30),
                       ),
                     ),

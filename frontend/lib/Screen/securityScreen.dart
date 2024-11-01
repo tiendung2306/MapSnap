@@ -134,8 +134,8 @@ class _securityScreenState extends State<securityScreen> {
                                   Notification = "Đổi mật khẩu thành công";
                                   colorNotification = Colors.blue;
                                   // Cập nhật mật khẩu mới
-                                  Provider.of<AccountModel>(context, listen: false)
-                                      .updatePassword(newPasswordController1.text);
+                                  // Provider.of<AccountModel>(context, listen: false)
+                                  //     .updatePassword(newPasswordController1.text);
                                 }
 
                                 showDialog(

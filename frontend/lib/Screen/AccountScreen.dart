@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Widget/accountModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mapsnap_fe/Widget/UpdateUser.dart';
+import '../main.dart';
 
 
 
@@ -23,13 +25,14 @@ class _accountScreenState extends State<accountScreen> {
 
   late TextEditingController usernameController;
   late TextEditingController emailController;
-  final TextEditingController addressController = TextEditingController();
+  late TextEditingController addressController ;
   final TextEditingController numberPhoneController = TextEditingController();
 
   String Notification = "";
   late Color colorNotification;
 
 
+  //List giới tính
   final List<String> sex = [
     'Male',
     'Female',
@@ -54,16 +57,18 @@ class _accountScreenState extends State<accountScreen> {
 
   String sexController = 'Chọn giới tính của bạn';
 
-
   void initState() {
     super.initState();
     _loadImage();
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     usernameController = TextEditingController(text: accountModel.username);
     emailController = TextEditingController(text: accountModel.email);
+    addressController = TextEditingController(text: accountModel.address);
     _loadUserData();  // Tải dữ liệu khi khởi tạo màn hình
   }
 
+
+  // Hàm load ảnh lưu cục bộ
   Future<void> _loadImage() async {
     final prefs = await SharedPreferences.getInstance();
     final imagePath = prefs.getString('imagePath'); // Lấy đường dẫn ảnh
@@ -88,14 +93,13 @@ class _accountScreenState extends State<accountScreen> {
       await prefs.setString('imagePath', image.path);
     }
   }
+
+
   // Hàm để tải dữ liệu từ SharedPreferences
   _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       sexController = prefs.getString('sex') ?? '';
-      usernameController.text = prefs.getString('username') ?? '';
-      emailController.text = prefs.getString('email') ?? '';
-      addressController.text = prefs.getString('address') ?? '';
       numberPhoneController.text = prefs.getString('numberPhone') ?? '';
     });
   }
@@ -103,12 +107,10 @@ class _accountScreenState extends State<accountScreen> {
   // Hàm để lưu dữ liệu vào SharedPreferences
   _saveUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', usernameController.text);
-    await prefs.setString('email', emailController.text);
-    await prefs.setString('address', addressController.text);
     await prefs.setString('numberPhone', numberPhoneController.text);
   }
 
+  //Lưu giới tính trong bộ nhớ cục bộ
   _saveSexData(String sex) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('sex', sexController);
@@ -313,15 +315,9 @@ class _accountScreenState extends State<accountScreen> {
                       color: Colors.blueAccent,
                       borderRadius: BorderRadius.circular(15),
                       child: InkWell(
-                          onTap: () {
-                            if(usernameController.text.isEmpty) {
-                              Notification = "Chưa nhập tên";
-                              colorNotification = Colors.red;
-                            } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$').hasMatch(emailController.text)) {
+                          onTap:  () async {
+                           if (!RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$').hasMatch(emailController.text)) {
                               Notification = "Nhập sai gmail rồi";
-                              colorNotification = Colors.red;
-                            } else if (addressController.text.isEmpty) {
-                              Notification = "Chưa nhập địa chỉ";
                               colorNotification = Colors.red;
                             } else if (!RegExp(r'^[0-9]+$').hasMatch(numberPhoneController.text)) {
                               Notification = "Nhập sai số điện thoại rồi";
@@ -331,13 +327,24 @@ class _accountScreenState extends State<accountScreen> {
                               colorNotification = Colors.red;
                             } else {
                               // Nếu tất cả đều hợp lệ, lưu dữ liệu
+                              var accountModel = Provider.of<AccountModel>(context, listen: false);
                               Notification = "Lưu thông tin thành công";
                               colorNotification = Colors.blue;
+                              // Cập nhật dữ liệu lên database
+                              await updateUser(accountModel.idUser,usernameController.text,emailController.text,addressController.text,accountModel.token_access);
+                              //Tạo 1 biến User
+                              User updatedUser = User(
+                                idUser: accountModel.idUser,
+                                username: usernameController.text,
+                                email: emailController.text,
+                                address: addressController.text,
+                                password: accountModel.password, // Giữ nguyên mật khẩu cũ
+                                role: accountModel.role,  //  Giữ nguyên vai trò
+                              );
+                              //Cập nhật biến User mới vừa đẩy lên database
+                              accountModel.setUser(updatedUser);
+
                               _saveUserData();
-                              Provider.of<AccountModel>(context, listen: false)
-                                  .updateUsername(usernameController.text);
-                              Provider.of<AccountModel>(context, listen: false)
-                                  .updateEmail(emailController.text);
                             }
 
                             showDialog(
