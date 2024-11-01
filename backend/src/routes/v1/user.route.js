@@ -8,14 +8,14 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
-  .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+  .post(auth('manageUser'), validate(userValidation.createUser), userController.createUser)
+  .get(auth('getUser'), validate(userValidation.getUsers), userController.getUsers);
 
 router
   .route('/:userId')
-  .get(auth('getUserById'), validate(userValidation.getUser), userController.getUserById)
-  .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('getUser'), validate(userValidation.getUser), userController.getUserById)
+  .patch(auth('manageUser'), validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth('manageUser'), validate(userValidation.deleteUser), userController.deleteUser);
 
 module.exports = router;
 

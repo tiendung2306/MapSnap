@@ -10,6 +10,8 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
+      lowercase: true,
     },
     email: {
       type: String,
@@ -26,6 +28,10 @@ const userSchema = mongoose.Schema(
     displayName: {
       type: String,
       default: '',
+    },
+    avatar: {
+      url: { type: String, default: '' },
+      updatedAt: { type: Date, default: Date.now }
     },
     address: {
       type: String,
