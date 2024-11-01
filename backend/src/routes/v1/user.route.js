@@ -17,6 +17,10 @@ router
   .patch(auth('manageUser'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUser'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/avatar/:userId')
+  .post(validate(userValidation.updateUserAvatar), userController.updateUserAvatarByID);
+
 module.exports = router;
 
 /**
@@ -74,7 +78,7 @@ module.exports = router;
  *               address:
  *                 type: string
  *                 description: User's address
- *               dateofbirth:
+ *               dateOfBirth:
  *                 type: string
  *                 format: date
  *                 description: User's date of birth
@@ -90,7 +94,7 @@ module.exports = router;
  *               avatar: "https://example.com/picture/1"
  *               phoneNumber: "01234567899"
  *               address: 123 Fake Street
- *               dateofbirth: 1990-01-01
+ *               dateOfBirth: 1990-01-01
  *               country: USA
  *     responses:
  *       "201":
@@ -240,7 +244,7 @@ module.exports = router;
  *               avatar: "https://example.com/picture/1"
  *               phoneNumber: "01234567899"
  *               address: 123 Fake Street
- *               dateofbirth: 1990-01-01
+ *               dateOfBirth: 1990-01-01
  *               country: USA
  *     responses:
  *       "200":
@@ -280,4 +284,62 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /users/avatar/{userId}:
+ *   post:
+ *     summary: Upload user avatar
+ *     description: Uploads an avatar image for the specified user.
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user to update the avatar for.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *                 description: The avatar image file to upload.
+ *     responses:
+ *       '200':
+ *         description: Avatar uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 userAvatar:
+ *                   type: string
+ *                   description: The URL of the uploaded avatar image
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
  */
