@@ -56,7 +56,7 @@ module.exports = router;
  *               email:
  *                 type: string
  *                 format: email
- *                 description: must be unique
+ *                 description: Must be unique
  *               password:
  *                 type: string
  *                 format: password
@@ -65,6 +65,12 @@ module.exports = router;
  *               role:
  *                 type: string
  *                 enum: [user, admin]
+ *               avatar:
+ *                 type: string
+ *                 description: User's avatar URL
+ *               phoneNumber:
+ *                 type: string
+ *                 description: User's phone number
  *               address:
  *                 type: string
  *                 description: User's address
@@ -81,6 +87,8 @@ module.exports = router;
  *               email: fake@example.com
  *               password: password1
  *               role: user
+ *               avatar: "https://example.com/picture/1"
+ *               phoneNumber: "01234567899"
  *               address: 123 Fake Street
  *               dateofbirth: 1990-01-01
  *               country: USA
@@ -109,31 +117,31 @@ module.exports = router;
  *         name: username
  *         schema:
  *           type: string
- *         description: User name
+ *         description: Username for filtering results
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: User role
+ *         description: User role for filtering results
  *       - in: query
  *         name: sortBy
  *         schema:
  *           type: string
- *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *         description: Sort by query in the form of field:desc/asc (e.g., name:asc)
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of users to retrieve
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           minimum: 1
- *           default: 1
- *         description: Page number
+ *         default: 1
+ *         description: Page number for pagination
  *     responses:
  *       "200":
  *         description: OK
@@ -169,7 +177,7 @@ module.exports = router;
  * /users/{id}:
  *   get:
  *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     description: Logged-in users can fetch only their own information. Only admins can fetch other users.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -179,7 +187,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User ID
  *     responses:
  *       "200":
  *         description: OK
@@ -196,7 +204,7 @@ module.exports = router;
  *
  *   patch:
  *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     description: Logged-in users can update their own information. Only admins can update other users.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -206,7 +214,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User ID
  *     requestBody:
  *       required: true
  *       content:
@@ -219,7 +227,7 @@ module.exports = router;
  *               email:
  *                 type: string
  *                 format: email
- *                 description: must be unique
+ *                 description: Must be unique
  *               password:
  *                 type: string
  *                 format: password
@@ -229,6 +237,11 @@ module.exports = router;
  *               username: fakename
  *               email: fake@example.com
  *               password: password1
+ *               avatar: "https://example.com/picture/1"
+ *               phoneNumber: "01234567899"
+ *               address: 123 Fake Street
+ *               dateofbirth: 1990-01-01
+ *               country: USA
  *     responses:
  *       "200":
  *         description: OK
@@ -247,7 +260,7 @@ module.exports = router;
  *
  *   delete:
  *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
+ *     description: Logged-in users can delete only themselves. Only admins can delete other users.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -257,9 +270,9 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User ID
  *     responses:
- *       "200":
+ *       "204":
  *         description: No content
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
