@@ -161,11 +161,12 @@ class MyApp extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           body: Container(
-            child: settingScreen(),
+            // child: Onboarding(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),
             // child: accountScreen(),
+             child: settingScreen(),
           ),
         ),
       ),

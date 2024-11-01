@@ -41,6 +41,14 @@ const verifyPinCode = {
   }),
 };
 
+const changePassword = {
+  body: Joi.object().keys({
+    id: Joi.string().required(),
+    oldPassword: Joi.string().required(),
+    newPassword: Joi.string().required().custom(password),
+  }),
+}
+
 const resetPassword = {
   query: Joi.object().keys({
     token: Joi.string().required(),
@@ -65,4 +73,5 @@ module.exports = {
   resetPassword,
   verifyEmail,
   verifyPinCode,
+  changePassword,
 };
