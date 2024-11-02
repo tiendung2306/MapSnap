@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/Screen/AccountScreen.dart';
-import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:mapsnap_fe/Screen/settingScreen.dart';
-import 'package:mapsnap_fe/Screen/helpScreen.dart';
-import 'package:mapsnap_fe/Screen/generalSettings.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart'; // Import file model
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'Widget/UpdateUser.dart';
 
 // Đăng ký
 Future<void> Register(String name,String password,String email) async {
@@ -78,62 +76,9 @@ Future<Token> Login(String email,String password) async {
   }
 }
 
-
-// Lấy thông tin
-class User {
-  String idUser;
-  String username;
-  String password;
-  String email;
-  String role;
-  String address;
-
-  User({required this.username, required this.password, required this.email,required this.role,required this.address,required this.idUser});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    print('JSON received: $json\n');
-    return User(
-      username: json['user']['username'] ?? 'NoUsername',
-      email: json['user']['email'] ?? 'NoEmail',
-      password: json['user']['password'] ?? 'NoPassword',
-      role: json['user']['role'] ?? 'NoRole',
-      address: json['user']['address'] ?? 'NoAddress',
-      idUser: json['user']['id'] ?? 'NoID',
-    );
-  }
-}
-
-Future<User?> fetchData(String userId,String token) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
-  final response = await http.get(
-    url,
-    headers: {
-      'Authorization': 'Bearer $token', // Thêm token vào header
-    },
-  );
-
-  if (response.statusCode == 200) {
-    try {
-      var data = jsonDecode(response.body) as Map;
-      return User(
-        username: data['username'] ?? 'NoUsername',
-        email: data['email'] ?? 'NoEmail',
-        password: data['password'] ?? 'NoPassword',
-        role: data['role'] ?? 'NoRole',
-        address: data['address'] ?? 'NoAddress',
-        idUser: data['id'] ?? 'NoID',
-      );
-    } catch (e) {
-      print('Dữ liệu nhận về không phải là JSON: $e');
-    }
-  } else {
-    print('Lỗi: ${response.statusCode}, nội dung: ${response.body}');
-  }
-}
-
 Future<void> main() async {
-  // await Register('prjnhucac', 'prjnhucac1', 'linhson7a127@gmail.com');
-  Token token = await Login('linhson7a127@gmail.com', 'prjnhucac1');
+  // await Register('prjnhucac', 'a1234567', 'linhson7a127@gmail.com');
+  Token token = await Login('linhson7a127@gmail.com', 'a1234567');
   User? user = await fetchData(token.idUser,token.token_access);
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
@@ -152,20 +97,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: ThemeData(
-      //   brightness: Brightness.dark,
-      //   // brightness: Brightness.light,
-      //   // colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-      //   useMaterial3: true,
-      // ),
       home: SafeArea(
         child: Scaffold(
           body: Container(
             // child: Onboarding(),
-            // child: generalSettings(),
-            // child: helpScreen(),
-            // child: MainScreenCamera(),
-            // child: accountScreen(),
              child: settingScreen(),
           ),
         ),

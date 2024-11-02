@@ -4,6 +4,8 @@ import '../main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'UpdateUser.dart';
+
 // Class để quản lý các biến dùng chung
 class AccountModel extends ChangeNotifier {
 
@@ -14,7 +16,6 @@ class AccountModel extends ChangeNotifier {
   String get idUser => _user?.idUser ?? 'Chua co id';
   String get username => _user?.username ?? 'Chưa có tên người dùng';
   String get email => _user?.email ?? 'Chưa có email';
-  String get password => _user?.password ?? 'Chưa có mật khẩu';
   String get address => _user?.address ?? 'Thêm địa chỉ';
   String get role => _user?.role ?? '.....';
 

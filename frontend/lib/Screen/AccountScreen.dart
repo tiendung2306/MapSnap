@@ -300,7 +300,7 @@ class _accountScreenState extends State<accountScreen> {
                               ],
                             ),
                             const SizedBox(height: 15),
-                            buildTextField("Email", emailController, "Nhập email của bạn", TextInputType.emailAddress),
+                            buildTextField("Email", emailController, "Nhập email của bạn", TextInputType.emailAddress, enabled: false),
                             const SizedBox(height: 15),
                             buildTextField("Địa chỉ", addressController, "Nhập địa chỉ của bạn", TextInputType.text),
                             const SizedBox(height: 15),
@@ -338,7 +338,6 @@ class _accountScreenState extends State<accountScreen> {
                                 username: usernameController.text,
                                 email: emailController.text,
                                 address: addressController.text,
-                                password: accountModel.password, // Giữ nguyên mật khẩu cũ
                                 role: accountModel.role,  //  Giữ nguyên vai trò
                               );
                               //Cập nhật biến User mới vừa đẩy lên database
@@ -391,7 +390,7 @@ class _accountScreenState extends State<accountScreen> {
     );
   }
 
-  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType) {
+  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType, {bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -404,6 +403,7 @@ class _accountScreenState extends State<accountScreen> {
           textEditingController: controller,
           hintText: hintText,
           textInputType: inputType,
+          isEnabled: enabled,
         ),
       ],
     );
