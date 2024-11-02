@@ -29,6 +29,11 @@ const updateUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updateUserAvatarByID = catchAsync(async (req, res) => {
+  const userAvatar = await userService.updateUserAvatarByID(req, res);
+  res.status(httpStatus.OK).send({ message: 'Avatar updated successfully', userAvatar });
+});
+
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();
@@ -40,4 +45,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  updateUserAvatarByID,
 };

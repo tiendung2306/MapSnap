@@ -10,6 +10,8 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
+      lowercase: true,
     },
     email: {
       type: String,
@@ -27,7 +29,15 @@ const userSchema = mongoose.Schema(
       type: String,
       default: '',
     },
+    avatar: {
+      type: String,
+      default: '',
+    },
     address: {
+      type: String,
+      default: '',
+    },
+    phoneNumber: {
       type: String,
       default: '',
     },
