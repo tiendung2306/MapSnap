@@ -8,6 +8,8 @@ const createUser = {
     username: Joi.string().required(),
     role: Joi.string().required().valid('user', 'admin'),
     displayName: Joi.string(),
+    avatar: Joi.string(),
+    phoneNumber: Joi.string(),
     address: Joi.string(),
     dateOfBirth: Joi.date(),
     country: Joi.string(),
@@ -40,12 +42,20 @@ const updateUser = {
       password: Joi.string().custom(password),
       username: Joi.string(),
       displayName: Joi.string(),
+      avatar: Joi.string(),
+      phoneNumber: Joi.string(),
       address: Joi.string(),
-      dateofbirth: Joi.date(),
+      dateOfBirth: Joi.date(),
       country: Joi.string(),
     })
     .min(1),
 };
+
+const updateUserAvatar = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+}
 
 const deleteUser = {
   params: Joi.object().keys({
@@ -59,4 +69,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  updateUserAvatar,
 };
