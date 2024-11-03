@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Authentication/SignIn.dart';
 import 'package:mapsnap_fe/Authentication/SignUp.dart';
 import 'package:mapsnap_fe/Screen/AccountScreen.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           body: Container(
-            child: SignUp(),
+            child: SignIn(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),

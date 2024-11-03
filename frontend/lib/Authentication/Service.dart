@@ -23,20 +23,30 @@ class AuthService {
     await _storage.deleteAll();
   }
 
-  Future<bool> login(String username, String password) async {
-    final url = Uri.parse('$_baseUrl/login');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({'username': username, 'password': password}),
-    );
+  Future<Map<String, dynamic>>  Login(String email, String password) async {
+    final url = Uri.parse('$_baseUrl/auth/login');
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      await saveTokens(data['access_token'], data['refresh_token']);
-      return true;
-    } else {
-      return false;
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "email": email,
+          "password": password
+        }
+        ),
+      );
+      return {
+        'statusCode': response.statusCode,
+        'data': json.decode(response.body),
+      };
+
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'statusCode': null,
+        'data': null,
+      };
     }
   }
 
