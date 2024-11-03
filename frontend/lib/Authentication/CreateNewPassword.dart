@@ -68,11 +68,11 @@ class CreateNewPassword extends StatelessWidget {
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: passwordForm(label:'Password'),
+                // child: passwordForm(label:'Password'),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: passwordForm(label:'Confirm Password'),
+                // child: passwordForm(label:'Confirm Password'),
               ),
               Expanded(child: Container()),
 

@@ -4,13 +4,16 @@ class normalForm extends StatelessWidget {
   const normalForm({
     super.key,
     required this.label,
+    required this.controller,
   });
 
   final String label;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: this.controller,
       decoration: new InputDecoration(
           labelText: this.label,
           enabledBorder: OutlineInputBorder(

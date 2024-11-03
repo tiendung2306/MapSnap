@@ -67,7 +67,7 @@ class ForgotPassword extends StatelessWidget {
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: normalForm(label:'Email'),
+                // child: normalForm(label:'Email'),
               ),
               // passwordForm(label:'Password'),
               // SizedBox(height: 20),

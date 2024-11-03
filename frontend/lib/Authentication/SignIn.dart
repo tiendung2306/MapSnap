@@ -37,9 +37,9 @@ class SignIn extends StatelessWidget {
               SizedBox(height: 20),
 
               // Các ô nhập liệu
-              normalForm(label:'Email'),
+              // normalForm(label:'Email'),
               SizedBox(height: 12),
-              passwordForm(label:'Password'),
+              // passwordForm(label:'Password'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

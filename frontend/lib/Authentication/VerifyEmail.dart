@@ -67,7 +67,7 @@ class VerifyEmail extends StatelessWidget {
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: normalForm(label:'4 Digit Code'),
+                // child: normalForm(label:'4 Digit Code'),
               ),
               // passwordForm(label:'Password'),
               // SizedBox(height: 20),
