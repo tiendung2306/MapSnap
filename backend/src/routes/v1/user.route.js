@@ -17,9 +17,7 @@ router
   .patch(auth('manageUser'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUser'), validate(userValidation.deleteUser), userController.deleteUser);
 
-router
-  .route('/avatar/:userId')
-  .post(validate(userValidation.updateUserAvatar), userController.updateUserAvatarByID);
+router.route('/avatar/:userId').post(validate(userValidation.updateUserAvatar), userController.updateUserAvatarByID);
 
 module.exports = router;
 
