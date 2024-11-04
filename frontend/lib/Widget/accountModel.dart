@@ -12,6 +12,8 @@ class AccountModel extends ChangeNotifier {
   User? _user;
   late Token _token;
 
+  String get avatar => _user?.avatar ?? ".....";
+  String get phoneNumber => _user?.numberPhone ?? "??????";
   String get token_access => _token.token_access;
   String get idUser => _user?.idUser ?? 'Chua co id';
   String get username => _user?.username ?? 'Chưa có tên người dùng';
@@ -19,15 +21,6 @@ class AccountModel extends ChangeNotifier {
   String get address => _user?.address ?? 'Thêm địa chỉ';
   String get role => _user?.role ?? '.....';
 
-  XFile? _image;
-
-  XFile? get image => _image;
-
-
-  void updateImage(XFile newImage) {
-    _image = newImage;
-    notifyListeners(); // Thông báo cho tất cả các widget đang nghe
-  }
 
   // Setter để cập nhật `User`
   void setUser(User newUser) {

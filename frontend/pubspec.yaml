@@ -28,6 +28,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  path_provider: ^2.0.10
+  mime: ^2.0.0
+  http_parser: ^4.0.2
+  flutter_image_compress: ^2.3.0
   http: ^1.2.2
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.8

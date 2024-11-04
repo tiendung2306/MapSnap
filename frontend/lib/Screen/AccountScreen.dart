@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mapsnap_fe/Authentication/Onboarding_content_model.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,10 +27,11 @@ class _accountScreenState extends State<accountScreen> {
   late TextEditingController usernameController;
   late TextEditingController emailController;
   late TextEditingController addressController ;
-  final TextEditingController numberPhoneController = TextEditingController();
+  late TextEditingController numberPhoneController;
 
   String Notification = "";
   late Color colorNotification;
+
 
 
   //List giới tính
@@ -64,33 +66,53 @@ class _accountScreenState extends State<accountScreen> {
     usernameController = TextEditingController(text: accountModel.username);
     emailController = TextEditingController(text: accountModel.email);
     addressController = TextEditingController(text: accountModel.address);
+    numberPhoneController = TextEditingController(text: accountModel.phoneNumber);
     _loadUserData();  // Tải dữ liệu khi khởi tạo màn hình
   }
 
 
-  // Hàm load ảnh lưu cục bộ
+  // Hàm load ảnh lưu ở database
   Future<void> _loadImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final imagePath = prefs.getString('imagePath'); // Lấy đường dẫn ảnh
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    final imagePath =  accountModel.avatar;// Lấy đường dẫn ảnh
+    print(accountModel.avatar);
     if (imagePath != null) {
       setState(() {
-        _image = XFile(imagePath); // Chuyển đường dẫn thành XFile
+        _image = XFile(imagePath); //Chuyển đường dẫn thành ảnh
       });
+    } else {
+      print("Đường dẫn ảnh không hợp lệ");
     }
   }
 
+
+  //Khi ấn vào ảnh thì sẽ gọi API để gửi ảnh lên sever
   Future<void> _onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    Avatar? avatar = await uploadAvatar(accountModel.token_access, accountModel.idUser, image!);
+    if (avatar != null) {
       setState(() {
         _image = image;
-        Provider.of<AccountModel>(context, listen: false)
-            .updateImage(image);
+        print("====================");
+        print(image.path);
+        print("====================");
+        User updatedUser = User(
+            idUser: accountModel.idUser,  //  Giữ nguyên
+            username: accountModel.username, //  Giữ nguyên
+            email: accountModel.email, //  Giữ nguyên
+            address: accountModel.address, //  Giữ nguyên
+            role: accountModel.role, //  Giữ nguyên vai trò
+            numberPhone: accountModel.phoneNumber, //  Giữ nguyên
+            avatar: avatar.userAvatar
+        );
+        //Cập nhật biến User mới vừa đẩy lên database
+        accountModel.setUser(updatedUser);
       });
-      // Lưu đường dẫn ảnh vào SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('imagePath', image.path);
+      print('Avatar updated successfully');
+    } else {
+      print('Avatar update failed');
     }
   }
 
@@ -100,15 +122,9 @@ class _accountScreenState extends State<accountScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       sexController = prefs.getString('sex') ?? '';
-      numberPhoneController.text = prefs.getString('numberPhone') ?? '';
     });
   }
 
-  // Hàm để lưu dữ liệu vào SharedPreferences
-  _saveUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('numberPhone', numberPhoneController.text);
-  }
 
   //Lưu giới tính trong bộ nhớ cục bộ
   _saveSexData(String sex) async {
@@ -118,6 +134,7 @@ class _accountScreenState extends State<accountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
@@ -202,24 +219,23 @@ class _accountScreenState extends State<accountScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.grey,
-                                image: _image != null
-                                  ? DecorationImage(
-                                    image: FileImage(File(_image!.path)), // Sử dụng FileImage để hiển thị ảnh
-                                    fit: BoxFit.cover,
-                                  )
-                                  : null,
-                                ),
-                                child: _image == null
-                                 ? Center(
-                                    child: Icon(
-                                    Icons.person_2_rounded,
-                                    color: Colors.black12,
-                                    size: 60,
-                                  ),
+                                image: accountModel.avatar.isNotEmpty
+                                    ? DecorationImage(
+                                  image: NetworkImage(accountModel.avatar),
+                                  fit: BoxFit.cover,
                                 )
                                 : null,
+                              ),
+                               child: const Center(
+                                        child: Icon(
+                                          Icons.person_2_rounded,
+                                          color: Colors.black12,
+                                          size: 60,
+                                        ),
+                                       )
+
+                              ),
                             ),
-                          ),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: GestureDetector(
@@ -259,7 +275,7 @@ class _accountScreenState extends State<accountScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Giới tính", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                const Text("Giới tính", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 5),
                                 Container(
                                   decoration: BoxDecoration(
@@ -278,7 +294,7 @@ class _accountScreenState extends State<accountScreen> {
                                       ),
                                       value: sexController == 'Chọn giới tính của bạn' ? null : sexController,
                                       hint: Text(sexController),
-                                      iconStyleData: IconStyleData(
+                                      iconStyleData: const IconStyleData(
                                         icon: Icon(Icons.arrow_drop_down), // Biểu tượng mũi tên
                                         iconSize: 30,
                                       ),
@@ -331,19 +347,19 @@ class _accountScreenState extends State<accountScreen> {
                               Notification = "Lưu thông tin thành công";
                               colorNotification = Colors.blue;
                               // Cập nhật dữ liệu lên database
-                              await updateUser(accountModel.idUser,usernameController.text,emailController.text,addressController.text,accountModel.token_access);
+                              await updateUser(accountModel.idUser,usernameController.text,emailController.text,addressController.text,numberPhoneController.text,accountModel.avatar,accountModel.token_access);
                               //Tạo 1 biến User
                               User updatedUser = User(
                                 idUser: accountModel.idUser,
                                 username: usernameController.text,
                                 email: emailController.text,
                                 address: addressController.text,
-                                role: accountModel.role,  //  Giữ nguyên vai trò
+                                role: accountModel.role, //  Giữ nguyên vai trò
+                                numberPhone: numberPhoneController.text,
+                                avatar: accountModel.avatar // Giữ nguyên avatar
                               );
                               //Cập nhật biến User mới vừa đẩy lên database
                               accountModel.setUser(updatedUser);
-
-                              _saveUserData();
                             }
 
                             showDialog(
@@ -372,7 +388,7 @@ class _accountScreenState extends State<accountScreen> {
                           child: Container(
                             width: screenWidth * 2 / 3,
                             height: 50,
-                            child: Center(
+                            child: const Center(
                               child: Text("Lưu thay đổi", style: TextStyle(color: Colors.white,
                                   fontSize: 20, fontWeight: FontWeight.bold),),
                             ),

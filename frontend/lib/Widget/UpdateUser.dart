@@ -1,27 +1,54 @@
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data'; // Để xử lý dữ liệu nhị phân
+import 'dart:io'; // Để sử dụng File
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:mime/mime.dart';
+import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
+
+
+//Tạo class User
 class User {
   String idUser;
   String username;
   String email;
   String role;
   String address;
+  String avatar;
+  String numberPhone;
 
-  User({required this.username, required this.email,required this.role,required this.address,required this.idUser});
+  //Cập nhật constructor để avatar có giá trị mặc định
+  User({
+    required this.username,
+    required this.email,
+    required this.role,
+    required this.address,
+    required this.idUser,
+    required this.avatar,
+    required this.numberPhone,
+  });
+
 
   factory User.fromJson(Map<String, dynamic> json) {
-    print('JSON received: $json\n');
     return User(
-      username: json['user']['username'] ?? 'NoUsername',
-      email: json['user']['email'] ?? 'NoEmail',
-      role: json['user']['role'] ?? 'NoRole',
-      address: json['user']['address'] ?? 'NoAddress',
-      idUser: json['user']['id'] ?? 'NoID',
+      username: json['username'] ?? 'NoUsername',
+      email: json['email'] ?? 'NoEmail',
+      role: json['role'] ?? 'NoRole',
+      address: json['address'] ?? 'NoAddress',
+      idUser: json['id'] ?? 'NoID',
+      avatar: json['avatar'] ?? "",
+      numberPhone: json['phoneNumber'] ?? 'ghghgh',
     );
   }
 }
 
+
+
+//Gọi API để lấy thông tin User
 Future<User?> fetchData(String userId,String token) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   final response = await http.get(
@@ -32,31 +59,27 @@ Future<User?> fetchData(String userId,String token) async {
   );
 
   if (response.statusCode == 200) {
-    try {
-      var data = jsonDecode(response.body) as Map;
-      return User(
-        username: data['username'] ?? 'NoUsername',
-        email: data['email'] ?? 'NoEmail',
-        role: data['role'] ?? 'NoRole',
-        address: data['address'] ?? 'NoAddress',
-        idUser: data['id'] ?? 'NoID',
-      );
-    } catch (e) {
-      print('Dữ liệu nhận về không phải là JSON: $e');
-    }
+    var data = jsonDecode(response.body);
+    print(data);
+    return User.fromJson(data);
   } else {
-    print('Lỗi: ${response.statusCode}, nội dung: ${response.body}');
+    print('Lỗi: ${response.statusCode}');
   }
+  return null;
 }
 
-Future<void> updateUser(String userId, String newName, String newEmail,String newAddress,String token) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
 
+
+// Gọi API để update thông tin của User lên dâtbase
+Future<void> updateUser(String userId, String newName, String newEmail,String newAddress,String newPhoneNumber,String newAvatar,String token) async {
+  final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'username': newName,
     'email': newEmail,
     'address': newAddress,
+    'phoneNumber': newPhoneNumber,
+    'avatar': newAvatar,
   };
 
   // Gửi yêu cầu PATCH
@@ -70,8 +93,70 @@ Future<void> updateUser(String userId, String newName, String newEmail,String ne
   );
   // Kiểm tra trạng thái phản hồi
   if (response.statusCode == 200) {
-    print('Cập nhật thành công: ${response.body}');
+    print('Cập nhật thành công:');
   } else {
-    print('Cập nhật thất bại: ${response.statusCode}');
+    print('Cập nhật thất bại:');
+  }
+}
+
+
+// Lớp để đại diện cho phản hồi từ API
+class Avatar {
+  String message;
+  String userAvatar;
+
+  Avatar({required this.message, required this.userAvatar});
+
+  factory Avatar.fromJson(Map<String, dynamic> json) {
+    return Avatar(
+      message: json['message'] ?? 'NoMessage',
+      userAvatar: json['userAvatar'] ?? 'UserAvatar',
+    );
+  }
+}
+
+
+
+// Gọi API để gửi ảnh lên server
+Future<Avatar?> uploadAvatar(String token, String userId, XFile image ) async {
+  if (image == null) {
+    print('Không có ảnh nào được chọn!');
+    return null;
+  }
+
+  final File imgFile = File(image.path);
+  print(imgFile);
+
+  // Địa chỉ API
+  final String url = 'http://10.0.2.2:3000/v1/users/avatar/$userId';
+
+  // Tạo yêu cầu `MultipartRequest`
+  final request = http.MultipartRequest('POST', Uri.parse(url))
+    ..headers['Authorization'] = 'Bearer $token';
+
+  // Xác định loại MIME của file và thêm vào yêu cầu
+  final mimeTypeData = lookupMimeType(imgFile.path)!.split('/');
+  final multipartFile = await http.MultipartFile.fromPath(
+    'avatar', // Tên trường trong yêu cầu API
+    imgFile.path,
+    contentType: MediaType(mimeTypeData[0], mimeTypeData[1]),
+  );
+
+  // Thêm file ảnh vào yêu cầu `multipart`
+  request.files.add(multipartFile);
+
+  // Gửi yêu cầu
+  final response = await request.send();
+
+  // Xử lý phản hồi
+  if (response.statusCode == 200) {
+    final responseData = await response.stream.bytesToString();
+    final data = jsonDecode(responseData);
+    print('Ảnh đại diện đã được tải lên thành công!');
+    print(data);
+    return Avatar.fromJson(data);
+  } else {
+    print('Lỗi khi tải ảnh đại diện lên: ${response.statusCode}');
+    return null;
   }
 }
