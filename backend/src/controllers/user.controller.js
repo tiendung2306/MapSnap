@@ -31,7 +31,6 @@ const updateUser = catchAsync(async (req, res) => {
 
 const updateUserAvatarByID = catchAsync(async (req, res) => {
   const userAvatar = await userService.updateUserAvatarByID(req, res);
-  res.status(httpStatus.OK).send({ message: 'Avatar updated successfully', userAvatar });
 });
 
 const deleteUser = catchAsync(async (req, res) => {

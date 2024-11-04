@@ -32,8 +32,8 @@ const forgotPassword = catchAsync(async (req, res) => {
 });
 
 const verifyPinCode = catchAsync(async (req, res) => {
-  const { pinCode, resetPasswordToken } = req.body;
-  await authService.verifyPinCode(pinCode, resetPasswordToken);
+  const { pinCode, token } = req.body;
+  await authService.verifyPinCode(pinCode, token);
   res.status(httpStatus.OK).send();
 });
 
@@ -49,13 +49,13 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  const { verifyEmailToken, verificationPinCode, expires } = await tokenService.generateVerifyEmailToken(req.user);
+  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken, verificationPinCode);
+  res.status(httpStatus.OK).send({ "verifyEmailToken": verifyEmailToken });
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.token);
+  await authService.verifyEmail(req.query.token, req.body.pinCode);
   res.status(httpStatus.OK).send();
 });
 
