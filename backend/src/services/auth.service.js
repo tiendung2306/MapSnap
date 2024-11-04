@@ -94,6 +94,7 @@ const verifyPinCode = async (pinCode, token) => {
     if (!pinDoc) {
       throw new Error('PIN not found');
     }
+    return pinDoc;
   } catch (err) {
     throw new ApiError(httpStatus.UNAUTHORIZED, `PIN verification failed; ${err}`);
   }
@@ -104,17 +105,21 @@ const verifyPinCode = async (pinCode, token) => {
  * @param {string} verifyEmailToken
  * @returns {Promise}
  */
-const verifyEmail = async (verifyEmailToken) => {
+const verifyEmail = async (verifyEmailToken, pinCode) => {
   try {
     const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
     const user = await userService.getUserById(verifyEmailTokenDoc.user);
     if (!user) {
-      throw new Error();
+      throw new Error('Not valid user!');
+    }
+    const verifyPinCodeDoc = await verifyPinCode(pinCode, verifyEmailToken);
+    if (!verifyPinCodeDoc) {
+      throw new Error('Not valid PinCode!');
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed ' + error);
   }
 };
 
