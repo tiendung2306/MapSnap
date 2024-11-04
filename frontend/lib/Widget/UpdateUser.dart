@@ -7,7 +7,6 @@ import 'dart:io'; // Để sử dụng File
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:mime/mime.dart';
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 
 
@@ -110,7 +109,7 @@ class Avatar {
   factory Avatar.fromJson(Map<String, dynamic> json) {
     return Avatar(
       message: json['message'] ?? 'NoMessage',
-      userAvatar: json['userAvatar'] ?? 'UserAvatar',
+      userAvatar: json['avatar'] ?? 'heheheheheh',
     );
   }
 }
@@ -125,7 +124,6 @@ Future<Avatar?> uploadAvatar(String token, String userId, XFile image ) async {
   }
 
   final File imgFile = File(image.path);
-  print(imgFile);
 
   // Địa chỉ API
   final String url = 'http://10.0.2.2:3000/v1/users/avatar/$userId';

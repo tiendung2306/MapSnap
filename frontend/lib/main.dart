@@ -77,7 +77,7 @@ Future<Token> Login(String email,String password) async {
 }
 
 Future<void> main() async {
-  await Register('prjnhucac', 'a1234567', 'linhson7a127@gmail.com');
+  // await Register('prjnhucac', 'a1234567', 'linhson7a127@gmail.com');
   Token token = await Login('linhson7a127@gmail.com', 'a1234567');
   User? user = await fetchData(token.idUser,token.token_access);
   WidgetsFlutterBinding.ensureInitialized();

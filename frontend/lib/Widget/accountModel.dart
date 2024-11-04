@@ -1,9 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import 'UpdateUser.dart';
 
 // Class để quản lý các biến dùng chung
