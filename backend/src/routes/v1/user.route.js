@@ -319,9 +319,7 @@ module.exports = router;
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                 userAvatar:
+ *                 avatar:
  *                   type: string
  *                   description: The URL of the uploaded avatar image
  *       '400':
