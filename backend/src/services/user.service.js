@@ -76,7 +76,7 @@ const updateUserAvatarByID = async (req, res) => {
     }
 
     try {
-      const userId = req.params.userId;
+      const { userId } = req.params;
 
       // Validate user
       const user = await getUserById(userId);
@@ -92,7 +92,6 @@ const updateUserAvatarByID = async (req, res) => {
       // Return the updated avatar URL
       return res.status(httpStatus.OK).send({ avatar: user.avatar });
     } catch (error) {
-      console.error(error);
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: 'Server Error' });
     }
   });

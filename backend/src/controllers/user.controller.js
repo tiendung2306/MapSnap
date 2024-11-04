@@ -30,6 +30,7 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const updateUserAvatarByID = catchAsync(async (req, res) => {
+  // eslint-disable-next-line no-unused-vars
   const userAvatar = await userService.updateUserAvatarByID(req, res);
 });
 
