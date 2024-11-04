@@ -6,6 +6,7 @@ import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Service.dart';
+import 'package:mapsnap_fe/Model/Token.dart';
 
 
 
@@ -43,7 +44,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     final data = response['data'];
 
     if(statusCode == 200){
-      final String accessToken = data['tokens'];
+      final token = data['resetPasswordToken'];
+      final expires = data['expires'];
+      final accessToken = Token(token: token, expires: expires);
       await _authService.saveAccessTokens(accessToken);
       await _authService.save('confirmEmail', _emailController.text);
       Navigator.push(
@@ -136,7 +139,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
               if(isComplete != 'true')
                 Container(
-                  margin: const EdgeInsets.all(10.0),
+                  height: 40,
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -149,7 +152,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                 )
               else
-                SizedBox(height: 20),
+                SizedBox(height : 40),
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),

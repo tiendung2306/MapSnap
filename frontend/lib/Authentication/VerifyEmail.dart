@@ -51,7 +51,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
   }
 
   void post_verify() async {
-    final response = await _authService.SendPinCode(_pincodeController.text);
+    final resetPasswordToken = await _authService.getAccessToken();
+    final response = await _authService.VerifyEmail(_pincodeController.text, resetPasswordToken.token);
     final int statusCode = response['statusCode'];
     final data = response['data'];
 
@@ -88,6 +89,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
       post_verify();
 
     });
+  }
+
+  void resendPincode() async {
+    await _authService.SendPinCode(email);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => VerifyEmail()),
+    );
   }
 
   @override
@@ -145,7 +154,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
               if(isComplete != 'true')
                 Container(
-                  margin: const EdgeInsets.all(10.0),
+                  height: 40,
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -156,9 +165,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       ),
                     ),
                   ),
-                )
-              else
-                SizedBox(height: 20),
+                ),
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),
@@ -180,7 +187,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
                     children: [
                       Text("Didn’t Receive Code?"),
                       TextButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            resendPincode();
+                          },
                           child: Text(
                               "Resend Code",
                               style: TextStyle(
@@ -196,10 +205,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 padding: const EdgeInsets.only(bottom: 40),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CreateNewPassword()),
-                    );
+                    verify();
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),

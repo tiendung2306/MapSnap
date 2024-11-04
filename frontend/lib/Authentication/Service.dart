@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
 import 'package:mapsnap_fe/Model/User.dart';
+import 'package:mapsnap_fe/Model/Token.dart';
 
 class AuthService {
   final _storage = FlutterSecureStorage();
@@ -22,8 +23,14 @@ class AuthService {
   }
 
 
-  Future<void> saveAccessTokens(String accessToken) async {
-    await _storage.write(key: 'access_token', value: accessToken);
+  Future<void> saveAccessTokens(Token accessToken) async {
+    String accesstokenJson = jsonEncode(accessToken.toJson());
+    await _storage.write(key: 'access_token', value: accesstokenJson);
+  }
+
+  Future<Token> getAccessToken() async {
+    String tokenjson =  await _storage.read(key: 'access_token') ?? 'null';
+    return Token.fromJson(jsonDecode(tokenjson));
   }
 
   Future<void> saveRefreshTokens(String refreshToken) async {
@@ -33,10 +40,6 @@ class AuthService {
   Future<void> saveTokens(String accessToken, String refreshToken) async {
     await _storage.write(key: 'access_token', value: accessToken);
     await _storage.write(key: 'refresh_token', value: refreshToken);
-  }
-
-  Future<String?> getAccessToken() async {
-    return await _storage.read(key: 'access_token');
   }
 
   Future<String?> getRefreshToken() async {
@@ -147,21 +150,46 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>>  VerifyEmail(String email) async {
-    final url = Uri.parse('$_baseUrl/auth/verify-email');
+  Future<Map<String, dynamic>>  VerifyEmail(String pinCode, String resetPasswordToken) async {
+    final url = Uri.parse('$_baseUrl/auth/verify-pin-code');
 
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "email": email,
-        }
-        ),
+          "pinCode": pinCode,
+          "resetPasswordToken": resetPasswordToken
+        }),
       );
       return {
         'statusCode': response.statusCode,
-        'data': json.decode(response.body),
+        'data': response.statusCode == 200 ? null : json.decode(response.body),
+      };
+
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'statusCode': null,
+        'data': null,
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>>  ResetPassword(String newPassword, String resetPasswordToken) async {
+    final url = Uri.parse('$_baseUrl/auth/reset-password').replace(queryParameters: {'token' : resetPasswordToken});
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "password": newPassword,
+        }),
+      );
+      return {
+        'statusCode': response.statusCode,
+        'data': response.statusCode == 204 ? null : json.decode(response.body),
       };
 
     } catch (e) {
