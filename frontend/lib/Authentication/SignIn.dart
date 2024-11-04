@@ -6,6 +6,7 @@ import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Service.dart';
+import 'package:mapsnap_fe/Model/User.dart';
 
 
 
@@ -46,9 +47,8 @@ class _SignInState extends State<SignIn> {
     final data = response['data'];
 
     if(statusCode == 200){
-      final String accessToken = data['tokens']['access']['token'];
-      final String refreshToken = data['tokens']['refresh']['token'];
-      await _authService.saveTokens(accessToken, refreshToken);
+      final user = User.fromJson(data);
+      await _authService.saveUser(user);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Finish()),

@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Finish.dart';
 import 'Service.dart';
+import 'package:mapsnap_fe/Model/User.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -50,9 +51,8 @@ class _SignUpState extends State<SignUp> {
     final data = response['data'];
 
     if(statusCode == 201){
-      final String accessToken = data['tokens']['access']['token'];
-      final String refreshToken = data['tokens']['refresh']['token'];
-      await _authService.saveTokens(accessToken, refreshToken);
+      final user = User.fromJson(data);
+      await _authService.saveUser(user);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Finish()),
