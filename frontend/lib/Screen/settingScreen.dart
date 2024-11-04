@@ -93,7 +93,7 @@ class settingScreenState extends State<settingScreen> {
                         color: Colors.grey,
                         image: accountModel.avatar.isNotEmpty
                             ? DecorationImage(
-                          image: NetworkImage(accountModel.avatar),
+                          image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
                           fit: BoxFit.cover,
                         )
                             : null,
