@@ -314,7 +314,7 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               password: password1
+ *               password: "password1"
  *     responses:
  *       "204":
  *         description: No content
@@ -339,8 +339,17 @@ module.exports = router;
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       "204":
+ *       "200":
  *         description: No content
+ *         content:
+ *           application/json:
+ *             schema: 
+ *               type: object
+ *               properties:
+ *                 verifyEmailToken:
+ *                   type: string
+ *             example:
+ *               verifyEmailToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzI2NDEyYWY1OWM4YzMyNjAxZDIyYzAiLCJpYXQiOjE3MzA2MzI1MTEsImV4cCI6MTczMDYzMzExMSwidHlwZSI6InZlcmlmeUVtYWlsIn0.yRZHzeJBi1SDH_BHa8KKvLBsGGwViHeYDL1PpbSwtq0"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  */
@@ -358,6 +367,19 @@ module.exports = router;
  *         schema:
  *           type: string
  *         description: The verify email token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - pinCode
+ *             properties:
+ *               pinCode:
+ *                 type: string
+ *             example:
+ *               pinCode: "2306"
  *     responses:
  *       "200":
  *         description: Verify email success

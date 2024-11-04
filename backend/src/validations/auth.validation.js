@@ -62,6 +62,9 @@ const verifyEmail = {
   query: Joi.object().keys({
     token: Joi.string().required(),
   }),
+  body: Joi.object().keys({
+    pinCode: Joi.string().required(),
+  }),
 };
 
 module.exports = {
