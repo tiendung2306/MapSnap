@@ -1,3 +1,12 @@
 # Convert text file line endings to lf
 * text eol=lf
 *.js text
+
+# Chỉ định các tệp nhị phân không thay đổi kết thúc dòng
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tiff binary
+*.ico binary
