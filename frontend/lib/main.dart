@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Authentication/ForgotPassword.dart';
+import 'package:mapsnap_fe/Authentication/SignIn.dart';
+import 'package:mapsnap_fe/Authentication/SignUp.dart';
+import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
+import 'package:mapsnap_fe/Screen/AccountScreen.dart';
+import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:mapsnap_fe/Screen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';

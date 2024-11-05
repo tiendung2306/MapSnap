@@ -15,7 +15,7 @@ router.post('/verify-pin-code', validate(authValidation.verifyPinCode), authCont
 router.post('/change-password', validate(authValidation.changePassword), authController.changePassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
-router.get('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
+router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
 
 module.exports = router;
 
@@ -205,7 +205,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Token'
+ *               type: object
+ *               properties:
+ *                 resetPasswordToken:
+ *                   type: string
+ *                 expires:
+ *                   type: string
+ *               example:
+ *                 "resetPasswordToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzNTYzMzE1OWY4MzUwZmNlODMwMzMiLCJpYXQiOjE3MzA3OTQ2MjMsImV4cCI6MTczMDc5NTIyMywidHlwZSI6InJlc2V0UGFzc3dvcmQifQ.ttLzlRBbPe-I-B0AlHr6xnnRgSD97Dfx1moz2Gg99U4"
+ *                 "expires": "2024-11-05T08:27:03.072Z"
+ * 
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
@@ -279,7 +288,7 @@ module.exports = router;
  *                              id: "5ebac534954b54139806c112"
  *                              oldPassword: "password1"
  *                              newPassword: "password2"
- *          responses:  
+ *          responses:
  *              "200":
  *                  description: Change password success
  *              "401":
@@ -343,7 +352,7 @@ module.exports = router;
  *         description: No content
  *         content:
  *           application/json:
- *             schema: 
+ *             schema:
  *               type: object
  *               properties:
  *                 verifyEmailToken:
@@ -357,7 +366,7 @@ module.exports = router;
 /**
  * @swagger
  * /auth/verify-email:
- *   get:
+ *   post:
  *     summary: verify email
  *     tags: [Auth]
  *     parameters:

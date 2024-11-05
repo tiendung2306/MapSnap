@@ -4,9 +4,12 @@ class passwordForm extends StatefulWidget {
   const passwordForm({
     super.key,
     required this.label,
+    required this.controller,
   });
     
   final String label;
+  final TextEditingController controller;
+
   
   @override
   State<passwordForm> createState() => _passwordFormState();
@@ -24,6 +27,7 @@ class _passwordFormState extends State<passwordForm> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       obscureText: passwordVisible,
       decoration: new InputDecoration(
           labelText: widget.label,

@@ -5,12 +5,97 @@ import 'Finish.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
+import 'Service.dart';
+import 'package:mapsnap_fe/Model/User.dart';
 
 
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  final _authService = AuthService();
+
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  bool isEmailInvalid = false;
+  bool isPasswordInvalid = false;
+
+  String isComplete = 'Missing info';
+  String errorMess = '';
+
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+  void post_login() async {
+    final response = await _authService.Login(_emailController.text, _passwordController.text);
+    final mess = response['mess'];
+
+    if(mess == 'Login success'){
+      final data = response['data'];
+      final user = User.fromJson(data);
+      await _authService.saveUser(user);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Finish()),
+      );
+    }
+
+    else if(mess == 'Login failed'){
+      final data = response['data'];
+
+      isComplete = 'Invalid info';
+      setState(() {
+        errorMess = data == null ? 'Unknown information error!' : data['message'];
+      });
+    }
+
+    else{
+      isComplete = 'Connection error';
+      setState(() {
+        errorMess = 'Connection error!';
+      });
+    }
+  }
+
+  void login(){
+    setState((){
+      isComplete = 'true';
+      isEmailInvalid = false;
+      isPasswordInvalid = false;
+
+      if(_emailController.text == ''){
+        isEmailInvalid = true;
+        isComplete = 'Missing info';
+      }
+      if(_passwordController.text == ''){
+        isPasswordInvalid = true;
+        isComplete = 'Missing info';
+      }
+
+      if(isComplete != 'true'){
+        errorMess = 'Please fill out all infomation';
+        return;
+      }
+
+      post_login();
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +119,50 @@ class SignIn extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 20),
+              if(isComplete != 'true')
+                Container(
+                  height: 40,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      errorMess,
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 20
+                      ),
+                    ),
+                  ),
+                )
+              else
+                SizedBox(height: 40),
 
               // Các ô nhập liệu
-              normalForm(label:'Email'),
-              SizedBox(height: 12),
-              passwordForm(label:'Password'),
+              normalForm(label:'Email', controller: _emailController,),
+              if(isEmailInvalid)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'Please fill this infomation!',
+                    style: TextStyle(
+                        color: Colors.red
+                    ),
+                  ),
+                )
+              else
+                SizedBox(height: 12),
+              passwordForm(label:'Password', controller: _passwordController,),
+              if(isPasswordInvalid)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'Please fill this infomation!',
+                    style: TextStyle(
+                        color: Colors.red
+                    ),
+                  ),
+                )
+              else
+                SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -62,10 +185,7 @@ class SignIn extends StatelessWidget {
               // Nút Register
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.pushReplacement(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => Finish()),
-                  // );
+                  login();
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
