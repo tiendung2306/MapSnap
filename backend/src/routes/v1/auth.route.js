@@ -11,6 +11,8 @@ router.post('/login', validate(authValidation.login), authController.login);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
+router.post('/verify-pin-code', validate(authValidation.verifyPinCode), authController.verifyPinCode);
+router.post('/change-password', validate(authValidation.changePassword), authController.changePassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
@@ -37,11 +39,11 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - username
  *               - email
  *               - password
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
@@ -53,7 +55,7 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               name: fake name
+ *               username: fakename
  *               email: fake@example.com
  *               password: password1
  *     responses:
@@ -198,10 +200,90 @@ module.exports = router;
  *             example:
  *               email: fake@example.com
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Token'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /auth/verify-pin-code:
+ *    post:
+ *      summary: Verify pin code
+ *      tags: [Auth]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      required:
+ *                        - pinCode
+ *                        - resetPasswordToken
+ *                      properties:
+ *                          pinCode:
+ *                              type: string
+ *                          resetPasswordToken:
+ *                              type: string
+ *                      example:
+ *                          pinCode: "2306"
+ *                          resetPasswordToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzFiY2MyZDZiMzgzZDI1MTBmNjQ2MGYiLCJpYXQiOjE3MzAyMDA0NTcsImV4cCI6MTczMDIwMTA1NywidHlwZSI6InJlc2V0UGFzc3dvcmQifQ.jxnnhQDiaIBnpz930nKKwsevRE5bzKgxeHp6J09CTbA"
+ *      responses:
+ *          "200":
+ *              description: Verify PIN code success
+ *          "401":
+ *              description: Verify PIN code failed
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Error'
+ *                      example:
+ *                          code: 401
+ *                          message: verify pin code failed
+ */
+
+/**
+ *  @swagger
+ *  /auth/change-password:
+ *      post:
+ *          summary: Change password
+ *          tags: [Auth]
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          required:
+ *                              - id
+ *                              - oldPassword
+ *                              - newPassword
+ *                          properties:
+ *                              id:
+ *                                  type: string
+ *                                  description: user id
+ *                              oldPassword:
+ *                                  type: string
+ *                                  format: password
+ *                              newPassword:
+ *                                  type: string
+ *                                  format: password
+ *                                  minLength: 8
+ *                                  description: At least one number and one letter
+ *                          example:
+ *                              id: "5ebac534954b54139806c112"
+ *                              oldPassword: "password1"
+ *                              newPassword: "password2"
+ *          responses:  
+ *              "200":
+ *                  description: Change password success
+ *              "401":
+ *                  description: Change password failed
  */
 
 /**
@@ -232,7 +314,7 @@ module.exports = router;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               password: password1
+ *               password: "password1"
  *     responses:
  *       "204":
  *         description: No content
@@ -257,8 +339,17 @@ module.exports = router;
  *     security:
  *       - bearerAuth: []
  *     responses:
- *       "204":
+ *       "200":
  *         description: No content
+ *         content:
+ *           application/json:
+ *             schema: 
+ *               type: object
+ *               properties:
+ *                 verifyEmailToken:
+ *                   type: string
+ *             example:
+ *               verifyEmailToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzI2NDEyYWY1OWM4YzMyNjAxZDIyYzAiLCJpYXQiOjE3MzA2MzI1MTEsImV4cCI6MTczMDYzMzExMSwidHlwZSI6InZlcmlmeUVtYWlsIn0.yRZHzeJBi1SDH_BHa8KKvLBsGGwViHeYDL1PpbSwtq0"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  */
@@ -276,9 +367,22 @@ module.exports = router;
  *         schema:
  *           type: string
  *         description: The verify email token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - pinCode
+ *             properties:
+ *               pinCode:
+ *                 type: string
+ *             example:
+ *               pinCode: "2306"
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: Verify email success
  *       "401":
  *         description: verify email failed
  *         content:

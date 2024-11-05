@@ -26,10 +26,22 @@ const refreshTokens = catchAsync(async (req, res) => {
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  const { resetPasswordToken, verificationPinCode, expires } = await tokenService.generateResetPasswordToken(req.body.email);
+  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken, verificationPinCode);
+  res.status(httpStatus.OK).send({ resetPasswordToken, expires: expires.toDate() });
 });
+
+const verifyPinCode = catchAsync(async (req, res) => {
+  const { pinCode, token } = req.body;
+  await authService.verifyPinCode(pinCode, token);
+  res.status(httpStatus.OK).send();
+});
+
+const changePassword = catchAsync(async (req, res) => {
+  const { id, oldPassword, newPassword } = req.body;
+  await authService.changePassword(id, oldPassword, newPassword);
+  res.status(httpStatus.OK).send();
+})
 
 const resetPassword = catchAsync(async (req, res) => {
   await authService.resetPassword(req.query.token, req.body.password);
@@ -37,14 +49,14 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  const { verifyEmailToken, verificationPinCode, expires } = await tokenService.generateVerifyEmailToken(req.user);
+  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken, verificationPinCode);
+  res.status(httpStatus.OK).send({ "verifyEmailToken": verifyEmailToken });
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.token);
-  res.status(httpStatus.NO_CONTENT).send();
+  await authService.verifyEmail(req.query.token, req.body.pinCode);
+  res.status(httpStatus.OK).send();
 });
 
 module.exports = {
@@ -56,4 +68,6 @@ module.exports = {
   resetPassword,
   sendVerificationEmail,
   verifyEmail,
+  verifyPinCode,
+  changePassword,
 };

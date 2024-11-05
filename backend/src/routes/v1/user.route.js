@@ -8,14 +8,18 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
-  .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+  .post(auth('manageUser'), validate(userValidation.createUser), userController.createUser)
+  .get(auth('getUser'), validate(userValidation.getUsers), userController.getUsers);
 
 router
   .route('/:userId')
-  .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('getUser'), validate(userValidation.getUser), userController.getUserById)
+  .patch(auth('manageUser'), validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth('manageUser'), validate(userValidation.deleteUser), userController.deleteUser);
+
+router
+  .route('/avatar/:userId')
+  .post(validate(userValidation.updateUserAvatar), userController.updateUserAvatarByID);
 
 module.exports = router;
 
@@ -42,30 +46,56 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - username
  *               - email
  *               - password
  *               - role
  *             properties:
- *               name:
+ *               username:
  *                 type: string
+ *                 description: Unique username without spaces for login
+ *               displayName:
+ *                 type: string
+ *                 description: User's display name for profile
  *               email:
  *                 type: string
  *                 format: email
- *                 description: must be unique
+ *                 description: Must be unique
  *               password:
  *                 type: string
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
  *               role:
- *                  type: string
- *                  enum: [user, admin]
+ *                 type: string
+ *                 enum: [user, admin]
+ *               avatar:
+ *                 type: string
+ *                 description: User's avatar URL
+ *               phoneNumber:
+ *                 type: string
+ *                 description: User's phone number
+ *               address:
+ *                 type: string
+ *                 description: User's address
+ *               dateOfBirth:
+ *                 type: string
+ *                 format: date
+ *                 description: User's date of birth
+ *               country:
+ *                 type: string
+ *                 description: Country of the user
  *             example:
- *               name: fake name
+ *               username: fakeusername
+ *               displayName: Fake Name
  *               email: fake@example.com
  *               password: password1
  *               role: user
+ *               avatar: "https://example.com/picture/1"
+ *               phoneNumber: "01234567899"
+ *               address: 123 Fake Street
+ *               dateOfBirth: 1990-01-01
+ *               country: USA
  *     responses:
  *       "201":
  *         description: Created
@@ -88,34 +118,34 @@ module.exports = router;
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: name
+ *         name: username
  *         schema:
  *           type: string
- *         description: User name
+ *         description: Username for filtering results
  *       - in: query
  *         name: role
  *         schema:
  *           type: string
- *         description: User role
+ *         description: User role for filtering results
  *       - in: query
  *         name: sortBy
  *         schema:
  *           type: string
- *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *         description: Sort by query in the form of field:desc/asc (e.g., name:asc)
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of users to retrieve
  *       - in: query
  *         name: page
  *         schema:
  *           type: integer
  *           minimum: 1
- *           default: 1
- *         description: Page number
+ *         default: 1
+ *         description: Page number for pagination
  *     responses:
  *       "200":
  *         description: OK
@@ -151,7 +181,7 @@ module.exports = router;
  * /users/{id}:
  *   get:
  *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     description: Logged-in users can fetch only their own information. Only admins can fetch other users.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -161,7 +191,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User ID
  *     responses:
  *       "200":
  *         description: OK
@@ -178,7 +208,7 @@ module.exports = router;
  *
  *   patch:
  *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     description: Logged-in users can update their own information. Only admins can update other users.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -188,7 +218,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User ID
  *     requestBody:
  *       required: true
  *       content:
@@ -196,21 +226,26 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
  *                 format: email
- *                 description: must be unique
+ *                 description: Must be unique
  *               password:
  *                 type: string
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               name: fake name
+ *               username: fakename
  *               email: fake@example.com
  *               password: password1
+ *               avatar: "https://example.com/picture/1"
+ *               phoneNumber: "01234567899"
+ *               address: 123 Fake Street
+ *               dateOfBirth: 1990-01-01
+ *               country: USA
  *     responses:
  *       "200":
  *         description: OK
@@ -229,7 +264,7 @@ module.exports = router;
  *
  *   delete:
  *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
+ *     description: Logged-in users can delete only themselves. Only admins can delete other users.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -239,9 +274,9 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User ID
  *     responses:
- *       "200":
+ *       "204":
  *         description: No content
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
@@ -249,4 +284,62 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /users/avatar/{userId}:
+ *   post:
+ *     summary: Upload user avatar
+ *     description: Uploads an avatar image for the specified user.
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user to update the avatar for.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *                 description: The avatar image file to upload.
+ *     responses:
+ *       '200':
+ *         description: Avatar uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 userAvatar:
+ *                   type: string
+ *                   description: The URL of the uploaded avatar image
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
  */

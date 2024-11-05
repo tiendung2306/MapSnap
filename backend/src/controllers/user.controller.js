@@ -10,13 +10,13 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['username', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
 });
 
-const getUser = catchAsync(async (req, res) => {
+const getUserById = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -29,6 +29,11 @@ const updateUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updateUserAvatarByID = catchAsync(async (req, res) => {
+  const userAvatar = await userService.updateUserAvatarByID(req, res);
+  res.status(httpStatus.OK).send({ message: 'Avatar updated successfully', userAvatar });
+});
+
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();
@@ -37,7 +42,8 @@ const deleteUser = catchAsync(async (req, res) => {
 module.exports = {
   createUser,
   getUsers,
-  getUser,
+  getUserById,
   updateUser,
   deleteUser,
+  updateUserAvatarByID,
 };

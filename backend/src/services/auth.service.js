@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const verificationPinService = require('./verificationPin.service');
 
 /**
  * Login with username and password
@@ -51,6 +52,22 @@ const refreshAuth = async (refreshToken) => {
   }
 };
 
+const changePassword = async (id, oldPassword, newPassword) => {
+  try {
+    const user = await userService.getUserById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    if (!(await user.isPasswordMatch(oldPassword))) {
+      throw new Error('Old password is incorrect');
+    }
+    await userService.updateUserById(user.id, { password: newPassword });
+  }
+  catch (err) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, `Password change failed; ${err}`);
+  }
+};
+
 /**
  * Reset password
  * @param {string} resetPasswordToken
@@ -71,22 +88,38 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
   }
 };
 
+const verifyPinCode = async (pinCode, token) => {
+  try {
+    const pinDoc = await verificationPinService.verifyPin(pinCode, token);
+    if (!pinDoc) {
+      throw new Error('PIN not found');
+    }
+    return pinDoc;
+  } catch (err) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, `PIN verification failed; ${err}`);
+  }
+};
+
 /**
  * Verify email
  * @param {string} verifyEmailToken
  * @returns {Promise}
  */
-const verifyEmail = async (verifyEmailToken) => {
+const verifyEmail = async (verifyEmailToken, pinCode) => {
   try {
     const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
     const user = await userService.getUserById(verifyEmailTokenDoc.user);
     if (!user) {
-      throw new Error();
+      throw new Error('Not valid user!');
+    }
+    const verifyPinCodeDoc = await verifyPinCode(pinCode, verifyEmailToken);
+    if (!verifyPinCodeDoc) {
+      throw new Error('Not valid PinCode!');
     }
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed ' + error);
   }
 };
 
@@ -96,4 +129,6 @@ module.exports = {
   refreshAuth,
   resetPassword,
   verifyEmail,
+  verifyPinCode,
+  changePassword,
 };

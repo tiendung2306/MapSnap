@@ -5,14 +5,20 @@ const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    username: Joi.string().required(),
     role: Joi.string().required().valid('user', 'admin'),
+    displayName: Joi.string(),
+    avatar: Joi.string(),
+    phoneNumber: Joi.string(),
+    address: Joi.string(),
+    dateOfBirth: Joi.date(),
+    country: Joi.string(),
   }),
 };
 
 const getUsers = {
   query: Joi.object().keys({
-    name: Joi.string(),
+    username: Joi.string(),
     role: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -34,10 +40,22 @@ const updateUser = {
     .keys({
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      name: Joi.string(),
+      username: Joi.string(),
+      displayName: Joi.string(),
+      avatar: Joi.string(),
+      phoneNumber: Joi.string(),
+      address: Joi.string(),
+      dateOfBirth: Joi.date(),
+      country: Joi.string(),
     })
     .min(1),
 };
+
+const updateUserAvatar = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+}
 
 const deleteUser = {
   params: Joi.object().keys({
@@ -51,4 +69,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  updateUserAvatar,
 };
