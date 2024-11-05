@@ -288,7 +288,7 @@ module.exports = router;
  *                              id: "5ebac534954b54139806c112"
  *                              oldPassword: "password1"
  *                              newPassword: "password2"
- *          responses:  
+ *          responses:
  *              "200":
  *                  description: Change password success
  *              "401":
@@ -352,7 +352,7 @@ module.exports = router;
  *         description: No content
  *         content:
  *           application/json:
- *             schema: 
+ *             schema:
  *               type: object
  *               properties:
  *                 verifyEmailToken:

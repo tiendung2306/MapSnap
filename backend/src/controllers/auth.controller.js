@@ -41,7 +41,7 @@ const changePassword = catchAsync(async (req, res) => {
   const { id, oldPassword, newPassword } = req.body;
   await authService.changePassword(id, oldPassword, newPassword);
   res.status(httpStatus.OK).send();
-})
+});
 
 const resetPassword = catchAsync(async (req, res) => {
   await authService.resetPassword(req.query.token, req.body.password);
@@ -49,9 +49,9 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  const { verifyEmailToken, verificationPinCode, expires } = await tokenService.generateVerifyEmailToken(req.user);
+  const { verifyEmailToken, verificationPinCode } = await tokenService.generateVerifyEmailToken(req.user);
   await emailService.sendVerificationEmail(req.user.email, verifyEmailToken, verificationPinCode);
-  res.status(httpStatus.OK).send({ "verifyEmailToken": verifyEmailToken });
+  res.status(httpStatus.OK).send({ verifyEmailToken });
 });
 
 const verifyEmail = catchAsync(async (req, res) => {

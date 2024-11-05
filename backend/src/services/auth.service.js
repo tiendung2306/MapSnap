@@ -62,8 +62,7 @@ const changePassword = async (id, oldPassword, newPassword) => {
       throw new Error('Old password is incorrect');
     }
     await userService.updateUserById(user.id, { password: newPassword });
-  }
-  catch (err) {
+  } catch (err) {
     throw new ApiError(httpStatus.UNAUTHORIZED, `Password change failed; ${err}`);
   }
 };
@@ -116,7 +115,7 @@ const verifyEmail = async (verifyEmailToken, pinCode) => {
     await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed ' + error);
+    throw new ApiError(httpStatus.UNAUTHORIZED, `Email verification failed ${error}`);
   }
 };
 
