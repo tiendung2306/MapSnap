@@ -47,7 +47,7 @@ const changePassword = {
     oldPassword: Joi.string().required(),
     newPassword: Joi.string().required().custom(password),
   }),
-}
+};
 
 const resetPassword = {
   query: Joi.object().keys({

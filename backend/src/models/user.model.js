@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: '',
+      default: '/uploads/avatars/default_avatar.png',
     },
     address: {
       type: String,
