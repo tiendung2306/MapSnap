@@ -32,8 +32,8 @@ const forgotPassword = catchAsync(async (req, res) => {
 });
 
 const verifyPinCode = catchAsync(async (req, res) => {
-  const { pinCode, token } = req.body;
-  await authService.verifyPinCode(pinCode, token);
+  const { pinCode, resetPasswordToken } = req.body;
+  await authService.verifyPinCode(pinCode, resetPasswordToken);
   res.status(httpStatus.OK).send();
 });
 

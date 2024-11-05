@@ -20,7 +20,7 @@ const savePin = async (pinCode, token, expires, isUsed = false) => {
 };
 
 const verifyPin = async (pinCode, token) => {
-  const pinDoc = await VerificationPin.findOne({ token, isUsed: false });
+  const pinDoc = await VerificationPin.findOne({ token: token });
   if (!pinDoc) {
     throw new Error('PIN not found');
   }

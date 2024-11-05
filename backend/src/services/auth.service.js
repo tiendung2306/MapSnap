@@ -91,9 +91,6 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 const verifyPinCode = async (pinCode, token) => {
   try {
     const pinDoc = await verificationPinService.verifyPin(pinCode, token);
-    if (!pinDoc) {
-      throw new Error('PIN not found');
-    }
     return pinDoc;
   } catch (err) {
     throw new ApiError(httpStatus.UNAUTHORIZED, `PIN verification failed; ${err}`);
