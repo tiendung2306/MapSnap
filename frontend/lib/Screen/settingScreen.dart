@@ -98,13 +98,6 @@ class settingScreenState extends State<settingScreen> {
                         )
                             : null,
                       ),
-                      child: Center(
-                            child: Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.black12,
-                              size: 60,
-                            ),
-                           )
                     ),
 
                     SizedBox(width: screenWidth / 20),

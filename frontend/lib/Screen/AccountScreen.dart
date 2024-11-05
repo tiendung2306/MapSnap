@@ -225,14 +225,6 @@ class _accountScreenState extends State<accountScreen> {
                                 )
                                 : null,
                               ),
-                               child: const Center(
-                                        child: Icon(
-                                          Icons.person_2_rounded,
-                                          color: Colors.black12,
-                                          size: 60,
-                                        ),
-                                       )
-
                               ),
                             ),
                           Align(
