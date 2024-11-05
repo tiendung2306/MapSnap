@@ -82,16 +82,30 @@ class AuthService {
         }
         ),
       );
-      return {
-        'statusCode': response.statusCode,
-        'data': json.decode(response.body),
-      };
 
+      if(response.statusCode == 200)
+        return {
+          'mess': "Login success",
+          'data': json.decode(response.body),
+        };
+      else{
+        try{
+          return {
+            'mess': "Login failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Login failed",
+            'data': null,
+          };
+        }
+      }
     } catch (e) {
       print('Error: $e');
       return {
-        'statusCode': null,
-        'data': null,
+        'mess': 'Connection error',
       };
     }
   }
@@ -110,16 +124,30 @@ class AuthService {
             }
         ),
       );
-      return {
-        'statusCode': response.statusCode,
-        'data': json.decode(response.body),
-      };
 
+      if(response.statusCode == 201)
+        return {
+          'mess': "Register success",
+          'data': json.decode(response.body),
+        };
+      else{
+        try{
+          return {
+            'mess': "Register failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Register failed",
+            'data': null,
+          };
+        }
+      }
     } catch (e) {
       print('Error: $e');
       return {
-        'statusCode': null,
-        'data': null,
+        'mess': 'Connection error',
       };
     }
   }
@@ -136,21 +164,36 @@ class AuthService {
         }
         ),
       );
-      return {
-        'statusCode': response.statusCode,
-        'data': json.decode(response.body),
-      };
 
+      if(response.statusCode == 200)
+        return {
+          'mess': "Pincode send success",
+          'data': json.decode(response.body),
+        };
+      else{
+        try{
+          return {
+            'mess': "Pincode send failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Pincode send failed",
+            'data': null,
+          };
+        }
+      }
     } catch (e) {
       print('Error: $e');
       return {
-        'statusCode': null,
-        'data': null,
+        'mess': 'Connection error',
       };
     }
   }
 
   Future<Map<String, dynamic>>  VerifyEmail(String pinCode, String resetPasswordToken) async {
+    print(resetPasswordToken);
     final url = Uri.parse('$_baseUrl/auth/verify-pin-code');
 
     try {
@@ -162,21 +205,33 @@ class AuthService {
           "resetPasswordToken": resetPasswordToken
         }),
       );
-      return {
-        'statusCode': response.statusCode,
-        'data': response.statusCode == 200 ? null : json.decode(response.body),
-      };
-
+      if(response.statusCode == 200)
+        return {
+          'mess': "Verify success",
+        };
+      else{
+        try{
+          return {
+            'mess': "Verify failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Verify failed",
+            'data': null,
+          };
+        }
+      }
     } catch (e) {
       print('Error: $e');
       return {
-        'statusCode': null,
-        'data': null,
+        'mess': 'Connection error',
       };
     }
   }
 
-  Future<Map<String, dynamic>>  ResetPassword(String newPassword, String resetPasswordToken) async {
+  Future<Map<String, dynamic>>  ResetPassword(String pinCode, String resetPasswordToken) async {
     final url = Uri.parse('$_baseUrl/auth/reset-password').replace(queryParameters: {'token' : resetPasswordToken});
 
     try {
@@ -184,19 +239,106 @@ class AuthService {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "password": newPassword,
+          "pinCode": pinCode,
         }),
       );
-      return {
-        'statusCode': response.statusCode,
-        'data': response.statusCode == 204 ? null : json.decode(response.body),
-      };
-
+      if(response.statusCode == 204)
+        return {
+          'mess': "Reset password success",
+        };
+      else{
+        try{
+          return {
+            'mess': "Reset password failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Reset password failed",
+            'data': null,
+          };
+        }
+      }
     } catch (e) {
       print('Error: $e');
       return {
-        'statusCode': null,
-        'data': null,
+        'mess': 'Connection error',
+      };
+    }
+  }
+  Future<Map<String, dynamic>>  SendEmailPinCode(String bearerToken) async {
+    final url = Uri.parse('$_baseUrl/auth/send-verification-email');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $bearerToken",
+        },
+      );
+
+      if(response.statusCode == 200)
+        return {
+          'mess': "Pincode send success",
+          'data': json.decode(response.body),
+        };
+      else{
+        try{
+          return {
+            'mess': "Pincode send failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Pincode send failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>>  VerifyEmailSignUp(String pinCode, String emailVerifyToken) async {
+    final url = Uri.parse('$_baseUrl/auth/verify-email').replace(queryParameters: {'token' : emailVerifyToken});
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "pinCode": pinCode,
+        }),
+      );
+      if(response.statusCode == 200)
+        return {
+          'mess': "Verify success",
+        };
+      else{
+        try{
+          return {
+            'mess': "Verify failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Verify failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
       };
     }
   }

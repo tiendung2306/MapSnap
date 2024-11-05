@@ -40,10 +40,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   void post_confirm() async {
     final response = await _authService.SendPinCode(_emailController.text);
-    final int statusCode = response['statusCode'];
-    final data = response['data'];
+    final mess = response['mess'];
 
-    if(statusCode == 200){
+    if(mess == 'Pincode send success'){
+      final data = response['data'];
       final token = data['resetPasswordToken'];
       final expires = data['expires'];
       final accessToken = Token(token: token, expires: expires);
@@ -54,11 +54,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         MaterialPageRoute(builder: (context) => VerifyEmail()),
       );
     }
+    else if(mess == 'Pincode send failed'){
+      final data = response['data'];
 
-    else{
       isComplete = 'Invalid info';
       setState(() {
-        errorMess = data['message'];
+        errorMess = data == null ? 'Unknown information error!' : data['message'];
+      });
+    }
+    else{
+      isComplete = 'Connection error';
+      setState(() {
+        errorMess = 'Connection error!';
       });
     }
   }

@@ -43,10 +43,10 @@ class _SignInState extends State<SignIn> {
   }
   void post_login() async {
     final response = await _authService.Login(_emailController.text, _passwordController.text);
-    final int statusCode = response['statusCode'];
-    final data = response['data'];
+    final mess = response['mess'];
 
-    if(statusCode == 200){
+    if(mess == 'Login success'){
+      final data = response['data'];
       final user = User.fromJson(data);
       await _authService.saveUser(user);
       Navigator.pushReplacement(
@@ -55,10 +55,19 @@ class _SignInState extends State<SignIn> {
       );
     }
 
-    else{
+    else if(mess == 'Login failed'){
+      final data = response['data'];
+
       isComplete = 'Invalid info';
       setState(() {
-        errorMess = data['message'];
+        errorMess = data == null ? 'Unknown information error!' : data['message'];
+      });
+    }
+
+    else{
+      isComplete = 'Connection error';
+      setState(() {
+        errorMess = 'Connection error!';
       });
     }
   }
@@ -112,7 +121,7 @@ class _SignInState extends State<SignIn> {
               ),
               if(isComplete != 'true')
                 Container(
-                  margin: const EdgeInsets.all(10.0),
+                  height: 40,
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -125,7 +134,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 )
               else
-                SizedBox(height: 20),
+                SizedBox(height: 40),
 
               // Các ô nhập liệu
               normalForm(label:'Email', controller: _emailController,),

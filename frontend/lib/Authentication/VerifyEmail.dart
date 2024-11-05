@@ -53,20 +53,26 @@ class _VerifyEmailState extends State<VerifyEmail> {
   void post_verify() async {
     final resetPasswordToken = await _authService.getAccessToken();
     final response = await _authService.VerifyEmail(_pincodeController.text, resetPasswordToken.token);
-    final int statusCode = response['statusCode'];
-    final data = response['data'];
+    final mess = response['mess'];
 
-    if(statusCode == 200){
+    if(mess == "Verify success"){
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CreateNewPassword()),
       );
     }
+    else if(mess == 'Verify failed'){
+      final data = response['data'];
 
-    else{
       isComplete = 'Invalid info';
       setState(() {
-        errorMess = data['message'];
+        errorMess = data == null ? 'Unknown information error!' : data['message'];
+      });
+    }
+    else{
+      isComplete = 'Connection error';
+      setState(() {
+        errorMess = 'Connection error!';
       });
     }
   }

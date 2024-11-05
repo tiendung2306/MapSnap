@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Authentication/VefifySignUp.dart';
 import 'SignIn.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
@@ -6,6 +7,7 @@ import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Finish.dart';
 import 'Service.dart';
 import 'package:mapsnap_fe/Model/User.dart';
+import 'package:mapsnap_fe/Model/Token.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -46,23 +48,42 @@ class _SignUpState extends State<SignUp> {
   }
 
   void post_register() async {
-    final response = await _authService.Register(_nameController.text, _emailController.text, _passwordController.text);
-    final int statusCode = response['statusCode'];
-    final data = response['data'];
+    final user_response = await _authService.Register(_nameController.text, _emailController.text, _passwordController.text);
+    final user_response_mess  = user_response['mess'];
 
-    if(statusCode == 201){
-      final user = User.fromJson(data);
+
+
+
+    if(user_response_mess == 'Register success'){
+      // print(-2);
+      final user_data = user_response['data'];
+      final user = User.fromJson(user_data);
+      // print(-1);
       await _authService.saveUser(user);
+
+      final sendcode_response = await _authService.SendEmailPinCode(user.accessToken.token);
+      final sendcode_data = sendcode_response['data'];
+
+      final verifyEmailToken = sendcode_data['verifyEmailToken'];
+      await _authService.save('verifyEmailToken', verifyEmailToken);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Finish()),
+        MaterialPageRoute(builder: (context) => VerifySignUp()),
       );
     }
 
-    else{
+    else if(user_response_mess == 'Register failed'){
+      final user_data = user_response['data'];
+
       isComplete = 'Invalid info';
       setState(() {
-        errorMess = data['message'];
+        errorMess = user_data == null ? 'Unknown information error!' : user_data['message'];
+      });
+    }
+    else{
+      isComplete = 'Connection error';
+      setState(() {
+        errorMess = 'Connection error!';
       });
     }
   }
@@ -131,7 +152,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 if(isComplete != 'true')
                   Container(
-                    margin: const EdgeInsets.all(10.0),
+                    height: 40,
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
@@ -144,7 +165,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   )
                 else
-                SizedBox(height: 20),
+                SizedBox(height: 40),
 
                 // Các ô nhập liệu
                 normalForm(label:'Name', controller: _nameController,),
