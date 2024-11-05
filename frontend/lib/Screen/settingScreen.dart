@@ -91,22 +91,13 @@ class settingScreenState extends State<settingScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.grey,
-                        image: accountModel.image != null
+                        image: accountModel.avatar.isNotEmpty
                             ? DecorationImage(
-                          image: FileImage(File(accountModel.image!.path)), // Sử dụng FileImage để hiển thị ảnh
+                          image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
                           fit: BoxFit.cover,
                         )
                             : null,
                       ),
-                      child: accountModel.image == null
-                          ? Center(
-                            child: Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.black12,
-                              size: 60,
-                            ),
-                           )
-                          : null,
                     ),
 
                     SizedBox(width: screenWidth / 20),
