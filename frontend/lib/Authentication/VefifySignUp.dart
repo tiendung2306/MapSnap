@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'SignIn.dart';
+import 'CreateNewPassword.dart';
 import 'SignUp.dart';
-import 'VerifyEmail.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
@@ -9,44 +8,63 @@ import 'Finish.dart';
 import 'Service.dart';
 
 
-class CreateNewPassword extends StatefulWidget {
-  const CreateNewPassword({super.key});
+
+class VerifySignUp extends StatefulWidget {
+  const VerifySignUp({super.key});
 
   @override
-  State<CreateNewPassword> createState() => _CreateNewPasswordState();
+  State<VerifySignUp> createState() => _VerifySignUpState();
 }
 
-class _CreateNewPasswordState extends State<CreateNewPassword> {
+class _VerifySignUpState extends State<VerifySignUp> {
   final _authService = AuthService();
 
-  late TextEditingController _passwordController;
-  late TextEditingController _confirmController;
+  late TextEditingController _pincodeController;
 
-  bool isPasswordInvalid = false;
-  bool isConfirmInvalid = false;
+  bool isPincodeInvalid = false;
+
+  String email = 'null';
+  String title = 'null';
 
   String isComplete = 'Missing info';
   String errorMess = '';
 
+  void loadData() async {
+    String tmp = (await _authService.get('confirmEmail'))?? 'null';
+    setState(() {
+      email = tmp;
+      title = "Code has been send to " + email +
+          ".Enter the code to verify your account.";
+    });
+  }
+
   void initState() {
-    _passwordController = TextEditingController();
-    _confirmController = TextEditingController();
+    loadData();
+    _pincodeController = TextEditingController();
     super.initState();
   }
-  void post_createPassword() async {
-    final resetPasswordToken = await _authService.getAccessToken();
-    final response = await _authService.ResetPassword(_passwordController.text, resetPasswordToken.token);
+
+  @override
+  void dispose() {
+    _pincodeController.dispose();
+    super.dispose();
+  }
+
+  void post_verify() async {
+    final resetPasswordToken = await _authService.get('verifyEmailToken')?? "null";
+    final response = await _authService.VerifyEmailSignUp(_pincodeController.text, resetPasswordToken);
     final mess = response['mess'];
 
-    if(mess == 'Reset password success'){
-      Navigator.pushReplacement(
+    if(mess == 'Verify success'){
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SignIn()),
+        MaterialPageRoute(builder: (context) => Finish()),
       );
     }
 
-    else if(mess == 'Reset password failed'){
+    else if(mess == 'Verify failed'){
       final data = response['data'];
+
       isComplete = 'Invalid info';
       setState(() {
         errorMess = data == null ? 'Unknown information error!' : data['message'];
@@ -60,20 +78,13 @@ class _CreateNewPasswordState extends State<CreateNewPassword> {
     }
   }
 
-
-
-  void createPassword(){
+  void verify(){
     setState((){
       isComplete = 'true';
-      isPasswordInvalid = false;
-      isConfirmInvalid = false;
+      isPincodeInvalid = false;
 
-      if(_passwordController.text == ''){
-        isPasswordInvalid = true;
-        isComplete = 'Missing info';
-      }
-      if(_confirmController.text == '' || _confirmController.text != _passwordController.text){
-        isConfirmInvalid = true;
+      if(_pincodeController.text == ''){
+        isPincodeInvalid = true;
         isComplete = 'Missing info';
       }
 
@@ -82,15 +93,17 @@ class _CreateNewPasswordState extends State<CreateNewPassword> {
         return;
       }
 
-      post_createPassword();
+      post_verify();
 
     });
   }
-  @override
-  void dispose() {
-    _passwordController.dispose();
-    _confirmController.dispose();
-    super.dispose();
+
+  void resendPincode() async {
+    await _authService.SendPinCode(email);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => VerifySignUp()),
+    );
   }
 
   @override
@@ -128,7 +141,7 @@ class _CreateNewPasswordState extends State<CreateNewPassword> {
               Padding(
                 padding: const EdgeInsets.only(top: 200),
                 child: Text(
-                  "Create New Password",
+                  "Verify Account",
                   style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold
@@ -138,8 +151,7 @@ class _CreateNewPasswordState extends State<CreateNewPassword> {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Text(
-                  "Please enter and confirm your new password."
-                      "You will need to login after you reset.",
+                  title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -160,15 +172,13 @@ class _CreateNewPasswordState extends State<CreateNewPassword> {
                       ),
                     ),
                   ),
-                )
-              else
-                SizedBox(height: 40),
+                ),
               // Các ô nhập liệu
               Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: passwordForm(label:'Password', controller: _passwordController,),
+                child: normalForm(label:'4 Digit Code', controller: _pincodeController,),
               ),
-              if(isPasswordInvalid)
+              if(isPincodeInvalid)
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
@@ -178,29 +188,31 @@ class _CreateNewPasswordState extends State<CreateNewPassword> {
                     ),
                   ),
                 ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: passwordForm(label:'Confirm Password', controller: _confirmController,),
+              Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Didn’t Receive Code?"),
+                      TextButton(
+                          onPressed: (){
+                            resendPincode();
+                          },
+                          child: Text(
+                            "Resend Code",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold
+                            ),
+                          )
+                      ),
+                    ],
+                  )
               ),
-              if(isConfirmInvalid)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    _passwordController.text == _confirmController.text ? 'Please fill this infomation!' : 'Unmatch password',
-                    style: TextStyle(
-                        color: Colors.red
-                    ),
-                  ),
-                ),
-
-              Expanded(child: Container()),
-
-              // Nút xác nhận
+              // Nút Register
               Padding(
                 padding: const EdgeInsets.only(bottom: 40),
                 child: ElevatedButton(
                   onPressed: () {
-                    createPassword();
+                    verify();
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
