@@ -231,7 +231,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>>  ResetPassword(String pinCode, String resetPasswordToken) async {
+  Future<Map<String, dynamic>>  ResetPassword(String password, String resetPasswordToken) async {
     final url = Uri.parse('$_baseUrl/auth/reset-password').replace(queryParameters: {'token' : resetPasswordToken});
 
     try {
@@ -239,7 +239,7 @@ class AuthService {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "pinCode": pinCode,
+          "password": password,
         }),
       );
       if(response.statusCode == 204)

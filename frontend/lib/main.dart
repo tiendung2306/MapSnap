@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           body: Container(
-            child: SignUp(),
+            child: Onboarding(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),
