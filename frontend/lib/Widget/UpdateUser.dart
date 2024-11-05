@@ -56,7 +56,6 @@ Future<User?> fetchData(String userId,String token) async {
       'Authorization': 'Bearer $token', // Thêm token vào header
     },
   );
-
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
     print(data);
@@ -80,7 +79,6 @@ Future<void> updateUser(String userId, String newName, String newEmail,String ne
     'phoneNumber': newPhoneNumber,
     'avatar': newAvatar,
   };
-
   // Gửi yêu cầu PATCH
   final response = await http.patch(
     url,
@@ -113,8 +111,6 @@ class Avatar {
     );
   }
 }
-
-
 
 // Gọi API để gửi ảnh lên server
 Future<Avatar?> uploadAvatar(String token, String userId, XFile image ) async {

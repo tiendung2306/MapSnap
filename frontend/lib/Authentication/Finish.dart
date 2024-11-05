@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Screen/settingScreen.dart';
 
 class Finish extends StatelessWidget {
   const Finish({super.key});
@@ -51,6 +52,10 @@ class Finish extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Xử lý đăng ký
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => settingScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
