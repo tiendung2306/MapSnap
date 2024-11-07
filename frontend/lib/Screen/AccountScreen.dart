@@ -120,7 +120,7 @@ class _accountScreenState extends State<accountScreen> {
   _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      sexController = prefs.getString('sex') ?? '';
+      sexController = prefs.getString('sex') ?? 'Chọn giới tính của bạn';
     });
   }
 

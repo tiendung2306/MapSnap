@@ -16,7 +16,7 @@ class _generalSettingsState extends State<generalSettings> {
   //=======================================================================
   void initState() {
     super.initState();
-    _loadUserData();
+    // _loadUserData();
   }
 
   _loadUserData() async {
