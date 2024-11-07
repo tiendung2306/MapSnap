@@ -3,9 +3,9 @@ import 'package:mapsnap_fe/Authentication/ForgotPassword.dart';
 import 'package:mapsnap_fe/Authentication/SignIn.dart';
 import 'package:mapsnap_fe/Authentication/SignUp.dart';
 import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
-import 'package:mapsnap_fe/Screen/AccountScreen.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
-import 'package:mapsnap_fe/Screen/settingScreen.dart';
+import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
+import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart'; // Import file model
@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           body: Container(
             // child: Onboarding(),
-             child: settingScreen(),
+             child: personalPageScreen(),
           ),
         ),
       ),

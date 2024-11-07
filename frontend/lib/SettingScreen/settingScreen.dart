@@ -50,6 +50,7 @@ class settingScreenState extends State<settingScreen> {
                   GestureDetector(
                     onTap: () {
                       print("Thoat ra");
+                      Navigator.pop(context);
                     },
                     child: Container(
                         width: screenWidth / 8,

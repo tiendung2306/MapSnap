@@ -92,22 +92,12 @@ class _accountScreenState extends State<accountScreen> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     Avatar? avatar = await uploadAvatar(accountModel.token_access, accountModel.idUser, image!);
     if (avatar != null) {
-      setState(() {
+      setState(() async {
         _image = image;
-        print("====================");
-        print(image.path);
-        print("====================");
-        User updatedUser = User(
-            idUser: accountModel.idUser,  //  Giữ nguyên
-            username: accountModel.username, //  Giữ nguyên
-            email: accountModel.email, //  Giữ nguyên
-            address: accountModel.address, //  Giữ nguyên
-            role: accountModel.role, //  Giữ nguyên vai trò
-            numberPhone: accountModel.phoneNumber, //  Giữ nguyên
-            avatar: avatar.userAvatar
-        );
+        //Tạo 1 biến User
+        User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
         //Cập nhật biến User mới vừa đẩy lên database
-        accountModel.setUser(updatedUser);
+        accountModel.setUser(updatedUser!);
       });
       print('Avatar updated successfully');
     } else {
@@ -340,17 +330,9 @@ class _accountScreenState extends State<accountScreen> {
                               // Cập nhật dữ liệu lên database
                               await updateUser(accountModel.idUser,usernameController.text,emailController.text,addressController.text,numberPhoneController.text,accountModel.avatar,accountModel.token_access);
                               //Tạo 1 biến User
-                              User updatedUser = User(
-                                idUser: accountModel.idUser,
-                                username: usernameController.text,
-                                email: emailController.text,
-                                address: addressController.text,
-                                role: accountModel.role, //  Giữ nguyên vai trò
-                                numberPhone: numberPhoneController.text,
-                                avatar: accountModel.avatar // Giữ nguyên avatar
-                              );
+                              User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
                               //Cập nhật biến User mới vừa đẩy lên database
-                              accountModel.setUser(updatedUser);
+                              accountModel.setUser(updatedUser!);
                             }
 
                             showDialog(

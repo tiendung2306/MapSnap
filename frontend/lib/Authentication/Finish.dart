@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/Screen/settingScreen.dart';
+
+import '../SettingScreen/settingScreen.dart';
 
 class Finish extends StatelessWidget {
   const Finish({super.key});
