@@ -6,6 +6,7 @@ import 'package:provider/provider.dart'; // Import file model
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'Authentication/Onboarding.dart';
 import 'Widget/UpdateUser.dart';
 
 // Đăng ký
@@ -85,7 +86,9 @@ Future<void> main() async {
   runApp(
     // Cấp quyền truy cập cao nhất cho AccountModel
     ChangeNotifierProvider(
+      // create: (context) => AccountModel(), // Đặt `User` vào `AccountModel`
       create: (context) => AccountModel()..setUser(user!)..setToken(token), // Đặt `User` vào `AccountModel`
+
       child: MyApp(),
     ),
   );
