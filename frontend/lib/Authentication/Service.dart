@@ -22,6 +22,10 @@ class AuthService {
     await _storage.write(key: 'user', value: userJson);
   }
 
+  Future<User> getUser() async {
+    String userJson = await _storage.read(key: 'user') ?? 'null';
+    return User.fromJson(jsonDecode(userJson));
+  }
 
   Future<void> saveAccessTokens(Token accessToken) async {
     String accesstokenJson = jsonEncode(accessToken.toJson());

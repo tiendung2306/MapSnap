@@ -7,6 +7,7 @@ import 'package:mapsnap_fe/Widget/UpdateUser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
+import 'Service.dart';
 
 class Finish extends StatefulWidget {
   const Finish({super.key});
@@ -62,10 +63,13 @@ class Finish extends StatefulWidget {
 // }
 
 class _FinishState extends State<Finish> {
+  final _authService = AuthService();
+
   void to_InApp() async {
-    Token token = await Login('linhson7a127@gmail.com', 'a1234567');
-    User? user = await fetchData(token.idUser,token.token_access);
-    Provider.of<AccountModel>(context, listen: false).setUser(user!);
+    final user = await _authService.getUser();
+    Token token = await Login(user.id, 'a1234567');
+    // User? user = await fetchData(token.idUser,token.token_access);
+    // Provider.of<AccountModel>(context, listen: false).setUser(user!);
     Provider.of<AccountModel>(context, listen: false).setToken(token);
     print('--------------------------------------asdasdasdada');
     Navigator.pushReplacement(

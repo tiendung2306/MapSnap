@@ -79,15 +79,15 @@ Future<Token> Login(String email,String password) async {
 
 Future<void> main() async {
   // await Register('prjnhucac', 'a1234567', 'linhson7a127@gmail.com');
-  Token token = await Login('linhson7a127@gmail.com', 'a1234567');
-  User? user = await fetchData(token.idUser,token.token_access);
+  // Token token = await Login('linhson7a127@gmail.com', 'a1234567');
+  // User? user = await fetchData(token.idUser,token.token_access);
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(
     // Cấp quyền truy cập cao nhất cho AccountModel
     ChangeNotifierProvider(
       // create: (context) => AccountModel(), // Đặt `User` vào `AccountModel`
-      create: (context) => AccountModel()..setUser(user!)..setToken(token), // Đặt `User` vào `AccountModel`
+      create: (context) => AccountModel(), // Đặt `User` vào `AccountModel`
 
       child: MyApp(),
     ),
@@ -104,7 +104,7 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           body: Container(
             // child: Onboarding(),
-             child: settingScreen(),
+             child: Onboarding(),
           ),
         ),
       ),
