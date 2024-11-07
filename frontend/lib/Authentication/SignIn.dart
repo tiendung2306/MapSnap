@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/Screen/settingScreen.dart';
+import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
+import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import '../Widget/UpdateUser.dart';
 import '../Widget/accountModel.dart';
 import 'ForgotPassword.dart';
@@ -62,7 +63,7 @@ class _SignInState extends State<SignIn> {
       // await _authService.saveUser(user);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => settingScreen()),
+        MaterialPageRoute(builder: (context) => personalPageScreen()),
       );
     }
 

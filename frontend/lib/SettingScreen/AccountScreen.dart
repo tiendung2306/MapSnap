@@ -34,6 +34,7 @@ class _accountScreenState extends State<accountScreen> {
 
 
 
+
   //List giới tính
   final List<String> sex = [
     'Male',
@@ -88,21 +89,27 @@ class _accountScreenState extends State<accountScreen> {
   //Khi ấn vào ảnh thì sẽ gọi API để gửi ảnh lên sever
   Future<void> _onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     var accountModel = Provider.of<AccountModel>(context, listen: false);
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     Avatar? avatar = await uploadAvatar(accountModel.token_access, accountModel.idUser, image!);
     if (avatar != null) {
-      setState(() async {
+      setState(() {
         _image = image;
-        //Tạo 1 biến User
-        User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
-        //Cập nhật biến User mới vừa đẩy lên database
-        accountModel.setUser(updatedUser!);
+        getImage();
       });
+
       print('Avatar updated successfully');
     } else {
       print('Avatar update failed');
     }
+  }
+
+  void getImage() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    //Tạo 1 biến User
+    User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
+    //Cập nhật biến User mới vừa đẩy lên database
+    accountModel.setUser(updatedUser!);
   }
 
 

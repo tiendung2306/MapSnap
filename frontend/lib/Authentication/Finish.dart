@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/Screen/AccountScreen.dart';
-import 'package:mapsnap_fe/Screen/settingScreen.dart';
+import 'package:mapsnap_fe/SettingScreen/AccountScreen.dart';
+import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
 import 'package:mapsnap_fe/Widget/UpdateUser.dart';
@@ -11,7 +11,7 @@ import 'Service.dart';
 
 import '../SettingScreen/settingScreen.dart';
 
-class Finish extends StatelessWidget {
+class Finish extends StatefulWidget {
   const Finish({super.key});
 
   @override
