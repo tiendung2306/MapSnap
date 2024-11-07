@@ -2,19 +2,17 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-// Define the Journey schema
-const journeySchema = new Schema({
+// Define the Trip schema
+const tripSchema = new Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true,
   },
-  trip_id: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Trip',
-    },
-  ],
+  journey_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   title: {
     type: String,
   },
@@ -36,7 +34,7 @@ const journeySchema = new Schema({
   },
 });
 
-// Create the Journey model
-const Journey = mongoose.model('Journey', journeySchema);
+// Create the Trip model
+const Trip = mongoose.model('Trip', tripSchema);
 
-module.exports = Journey;
+module.exports = Trip;
