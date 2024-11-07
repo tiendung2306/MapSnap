@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data'; // Để xử lý dữ liệu nhị phân
 import 'dart:io'; // Để sử dụng File
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:mime/mime.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
