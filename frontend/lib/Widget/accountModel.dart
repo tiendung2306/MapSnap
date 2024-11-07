@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import '../Model/Token_2.dart';
+import '../Model/User_2.dart';
 import '../main.dart';
 import 'UpdateUser.dart';
 
@@ -12,6 +14,7 @@ class AccountModel extends ChangeNotifier {
   String get avatar => _user?.avatar ?? ".....";
   String get phoneNumber => _user?.numberPhone ?? "??????";
   String get token_access => _token.token_access;
+  String get token_refresh => _token.token_refresh;
   String get idUser => _user?.idUser ?? 'Chua co id';
   String get username => _user?.username ?? 'Chưa có tên người dùng';
   String get email => _user?.email ?? 'Chưa có email';

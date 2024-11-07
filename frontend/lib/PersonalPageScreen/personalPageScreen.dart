@@ -5,6 +5,9 @@ import 'package:mapsnap_fe/PersonalPageScreen/albumScreen.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/postScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
+import 'package:provider/provider.dart';
+
+import '../Widget/accountModel.dart';
 
 
 class personalPageScreen extends StatefulWidget {
@@ -17,6 +20,7 @@ class personalPageScreen extends StatefulWidget {
 
 class personalPageScreenState extends State<personalPageScreen> {
 
+
   @override
   void initState() {
     super.initState();
@@ -24,6 +28,7 @@ class personalPageScreenState extends State<personalPageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
@@ -64,7 +69,7 @@ class personalPageScreenState extends State<personalPageScreen> {
                                     Container(
                                       width: screenWidth * 1 / 2,
                                       child: Text(
-                                        "lolololl@gmail.com",
+                                        accountModel.email,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: TextStyle(
@@ -129,13 +134,19 @@ class personalPageScreenState extends State<personalPageScreen> {
                                         height: 80,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Colors.red,
+                                          color: Colors.grey,
+                                          image: accountModel.avatar.isNotEmpty
+                                              ? DecorationImage(
+                                            image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
+                                            fit: BoxFit.cover,
+                                          )
+                                              : null,
                                         ),
                                       ),
                                       const SizedBox(height: 10,),
                                       Container(
                                           child: Text(
-                                            "Top1flo",
+                                            accountModel.username,
                                             style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                                             overflow: TextOverflow.ellipsis,
                                           )
@@ -350,13 +361,13 @@ class personalPageScreenState extends State<personalPageScreen> {
                                 borderRadius: BorderRadius.circular(50),
                                 splashColor: Colors.grey.withOpacity(0.3), // Màu hiệu ứng sóng
                                 child: Container(
-                                  width: 85,
-                                  height: 85,
+                                  width: 75,
+                                  height: 75,
                                   decoration: BoxDecoration(
                                     color: Colors.blue,
                                     borderRadius: BorderRadius.circular(60),
                                   ),
-                                  child: Icon(Icons.photo_camera, size: 70, color: Colors.white,),
+                                  child: Icon(Icons.photo_camera, size: 65, color: Colors.white,),
                                 ),
                               ),
                             ),
@@ -402,5 +413,4 @@ class personalPageScreenState extends State<personalPageScreen> {
       ),
     );
   }
-
 }

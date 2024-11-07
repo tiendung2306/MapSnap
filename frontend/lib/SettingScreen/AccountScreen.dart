@@ -7,6 +7,7 @@ import 'package:mapsnap_fe/Authentication/Onboarding_content_model.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Model/User_2.dart';
 import '../Widget/accountModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mapsnap_fe/Widget/UpdateUser.dart';

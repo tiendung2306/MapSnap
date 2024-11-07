@@ -2,52 +2,21 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
+import 'package:mapsnap_fe/Model/Token_2.dart';
 import 'dart:typed_data'; // Để xử lý dữ liệu nhị phân
 import 'dart:io'; // Để sử dụng File
 import 'package:mime/mime.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
-
-//Tạo class User
-class User {
-  String idUser;
-  String username;
-  String email;
-  String role;
-  String address;
-  String avatar;
-  String numberPhone;
-
-  //Cập nhật constructor để avatar có giá trị mặc định
-  User({
-    required this.username,
-    required this.email,
-    required this.role,
-    required this.address,
-    required this.idUser,
-    required this.avatar,
-    required this.numberPhone,
-  });
-
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      username: json['username'] ?? 'NoUsername',
-      email: json['email'] ?? 'NoEmail',
-      role: json['role'] ?? 'NoRole',
-      address: json['address'] ?? 'NoAddress',
-      idUser: json['id'] ?? 'NoID',
-      avatar: json['avatar'] ?? "",
-      numberPhone: json['phoneNumber'] ?? 'ghghgh',
-    );
-  }
-}
+import '../Model/User_2.dart';
+import 'accountModel.dart';
 
 
 
 //Gọi API để lấy thông tin User
-Future<User?> fetchData(String userId,String token) async {
+Future<User?> fetchData(String userId, String token) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   final response = await http.get(
     url,
@@ -67,7 +36,7 @@ Future<User?> fetchData(String userId,String token) async {
 
 
 
-// Gọi API để update thông tin của User lên dâtbase
+// Gọi API để update thông tin của User lên database
 Future<void> updateUser(String userId, String newName, String newEmail,String newAddress,String newPhoneNumber,String newAvatar,String token) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   // Dữ liệu cần cập nhật
@@ -95,7 +64,7 @@ Future<void> updateUser(String userId, String newName, String newEmail,String ne
   }
 }
 
-
+//=============================================================================
 // Lớp để đại diện cho phản hồi từ API
 class Avatar {
   String message;
@@ -153,3 +122,6 @@ Future<Avatar?> uploadAvatar(String token, String userId, XFile image ) async {
     return null;
   }
 }
+
+
+//==============================================================================

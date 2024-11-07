@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/SettingScreen/AccountScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:provider/provider.dart';
+import '../Model/Token_2.dart';
 import '../Widget/accountModel.dart';
 import 'package:mapsnap_fe/Widget/UpdateUser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
 import 'Service.dart';
+import 'SignIn.dart';
 
 import '../SettingScreen/settingScreen.dart';
 

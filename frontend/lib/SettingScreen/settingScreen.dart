@@ -78,14 +78,6 @@ class settingScreenState extends State<settingScreen> {
               Container(
                 child: Row(
                   children: [
-                    // Container(
-                    //   width: 80,
-                    //   height: 80,
-                    //   decoration: BoxDecoration(
-                    //     shape: BoxShape.circle,
-                    //     color: Colors.red,
-                    //   ),
-                    // ),
                     Container(
                       width: 100,
                       height: 100,
