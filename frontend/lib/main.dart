@@ -12,6 +12,8 @@ import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart'; // Import file model
 import 'package:mapsnap_fe/Authentication/Onboarding.dart';
+import 'InApp/HomePage.dart';
+import 'dev.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +42,8 @@ class MyApp extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           body: Container(
-            child: SignUp(),
+            // child: ResizableWidget(),
+            child: HomePage(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),

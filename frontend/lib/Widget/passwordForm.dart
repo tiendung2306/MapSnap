@@ -44,9 +44,7 @@ class _passwordFormState extends State<passwordForm> {
                   color: Colors.lightBlueAccent
               )
           ),
-          suffixIcon: TextButton.icon(
-
-            label: Text(''),
+          suffixIcon: IconButton(
             icon: (!passwordVisible ? Image.asset("assets/Login/visibility.png") : Image.asset("assets/Login/visibility_off.png")),
             onPressed: () {
               setState(

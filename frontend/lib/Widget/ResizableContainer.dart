@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ResizableWidget extends StatefulWidget {
+  const ResizableWidget({
+    super.key,
+    required this.label,
+    required this.controller,
+  });
+
+  final String label;
+  final TextEditingController controller;
+
+
   @override
   _ResizableWidgetState createState() => _ResizableWidgetState();
 }
@@ -50,3 +60,5 @@ class _ResizableWidgetState extends State<ResizableWidget> {
     );
   }
 }
+
+
