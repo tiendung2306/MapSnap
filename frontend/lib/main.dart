@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'Authentication/Onboarding.dart';
+import 'Widget/AutoRefreshToken.dart';
 import 'Widget/UpdateUser.dart';
 
 
@@ -25,7 +26,6 @@ Future<void> main() async {
     // Cấp quyền truy cập cao nhất cho AccountModel
     ChangeNotifierProvider(
       create: (context) => AccountModel(),
-
       child: MyApp(),
     ),
   );
@@ -33,6 +33,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {

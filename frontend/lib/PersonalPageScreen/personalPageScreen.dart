@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:provider/provider.dart';
 
+import '../Widget/AutoRefreshToken.dart';
 import '../Widget/accountModel.dart';
 
 
@@ -19,11 +21,29 @@ class personalPageScreen extends StatefulWidget {
 }
 
 class personalPageScreenState extends State<personalPageScreen> {
+  XFile? _image;
 
 
   @override
   void initState() {
+    // 2 dòng này sẽ được để vào HomeScreen để liên tục làm mới token
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
+    //===============================================================
+    _loadImage();
     super.initState();
+  }
+
+  Future<void> _loadImage() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: true);
+    final imagePath =  'http://10.0.2.2:3000${accountModel.avatar}';// Lấy đường dẫn ảnh
+    if (imagePath != null) {
+      setState(() {
+        _image = XFile(imagePath); //Chuyển đường dẫn thành ảnh
+      });
+    } else {
+      print("Đường dẫn ảnh không hợp lệ");
+    }
   }
 
   @override
@@ -129,19 +149,23 @@ class personalPageScreenState extends State<personalPageScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        width: 80,
-                                        height: 80,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.grey,
-                                          image: accountModel.avatar.isNotEmpty
-                                              ? DecorationImage(
-                                            image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
-                                            fit: BoxFit.cover,
-                                          )
-                                              : null,
-                                        ),
+                                      Consumer<AccountModel>(
+                                        builder: (context, accountModel, child) {
+                                          return Container(
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.grey,
+                                              image: accountModel.avatar.isNotEmpty
+                                                  ? DecorationImage(
+                                                image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
+                                                fit: BoxFit.cover,
+                                              )
+                                                  : null,
+                                            ),
+                                          );
+                                        },
                                       ),
                                       const SizedBox(height: 10,),
                                       Container(

@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../Widget/AutoRefreshToken.dart';
 import 'securityScreen.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
@@ -26,6 +28,8 @@ class settingScreenState extends State<settingScreen> {
   void initState() {
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {

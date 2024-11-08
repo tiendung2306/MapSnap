@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
@@ -15,7 +16,7 @@ import 'accountModel.dart';
 
 
 
-//Gọi API để lấy thông tin User
+// Gọi API để lấy thông tin User
 Future<User?> fetchData(String userId, String token) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   final response = await http.get(
@@ -64,6 +65,7 @@ Future<void> updateUser(String userId, String newName, String newEmail,String ne
   }
 }
 
+
 //=============================================================================
 // Lớp để đại diện cho phản hồi từ API
 class Avatar {
@@ -81,7 +83,7 @@ class Avatar {
 }
 
 // Gọi API để gửi ảnh lên server
-Future<Avatar?> uploadAvatar(String token, String userId, XFile image ) async {
+Future<Avatar?> uploadAvatar(String token, String userId, XFile image) async {
   if (image == null) {
     print('Không có ảnh nào được chọn!');
     return null;
@@ -118,10 +120,7 @@ Future<Avatar?> uploadAvatar(String token, String userId, XFile image ) async {
     print(data);
     return Avatar.fromJson(data);
   } else {
-    print('Lỗi khi tải ảnh đại diện lên: ${response.statusCode}');
-    return null;
+    print('Lỗi: ${response.statusCode}');
   }
 }
 
-
-//==============================================================================

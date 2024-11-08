@@ -8,6 +8,7 @@ import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Model/User_2.dart';
+import '../Widget/AutoRefreshToken.dart';
 import '../Widget/accountModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mapsnap_fe/Widget/UpdateUser.dart';
@@ -65,6 +66,7 @@ class _accountScreenState extends State<accountScreen> {
     super.initState();
     _loadImage();
     var accountModel = Provider.of<AccountModel>(context, listen: false);
+    // startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
     usernameController = TextEditingController(text: accountModel.username);
     emailController = TextEditingController(text: accountModel.email);
     addressController = TextEditingController(text: accountModel.address);
@@ -98,7 +100,6 @@ class _accountScreenState extends State<accountScreen> {
         _image = image;
         getImage();
       });
-
       print('Avatar updated successfully');
     } else {
       print('Avatar update failed');
@@ -339,6 +340,7 @@ class _accountScreenState extends State<accountScreen> {
                               await updateUser(accountModel.idUser,usernameController.text,emailController.text,addressController.text,numberPhoneController.text,accountModel.avatar,accountModel.token_access);
                               //Tạo 1 biến User
                               User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
+
                               //Cập nhật biến User mới vừa đẩy lên database
                               accountModel.setUser(updatedUser!);
                             }

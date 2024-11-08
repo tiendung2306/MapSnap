@@ -1,8 +1,8 @@
 class Token {
   String token_access;
-  String token_access_expires;
+  DateTime token_access_expires;
   String token_refresh;
-  String token_refresh_expires;
+  DateTime token_refresh_expires;
   String idUser;
 
   Token({
@@ -17,9 +17,9 @@ class Token {
   factory Token.fromJson(Map<String, dynamic> json) {
     return Token(
       token_access: json['tokens']['access']['token'] ?? 'NoTokenAccess',
-      token_access_expires: json['tokens']['access']['expires'] ?? 'NoTokenAccessExpires',
+      token_access_expires: DateTime.parse(json['tokens']['access']['expires']),
       token_refresh: json['tokens']['refresh']['token'] ?? 'NoTokenRefresh',
-      token_refresh_expires: json['tokens']['refresh']['expires'] ?? 'NoTokenRefreshExpires',
+      token_refresh_expires: DateTime.parse(json['tokens']['refresh']['expires']),
       idUser: json['user']['id'] ?? 'NoID',
     );
   }

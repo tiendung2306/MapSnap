@@ -15,6 +15,7 @@ class AccountModel extends ChangeNotifier {
   String get phoneNumber => _user?.numberPhone ?? "??????";
   String get token_access => _token.token_access;
   String get token_refresh => _token.token_refresh;
+  DateTime get token_refresh_expires => _token.token_access_expires;
   String get idUser => _user?.idUser ?? 'Chua co id';
   String get username => _user?.username ?? 'Chưa có tên người dùng';
   String get email => _user?.email ?? 'Chưa có email';
