@@ -31,8 +31,7 @@ const pictureSchema = new Schema({
     required: true,
   },
   created_at: {
-    type: Date,
-    default: Date.now,
+    type: Number,
     required: true,
   },
 });

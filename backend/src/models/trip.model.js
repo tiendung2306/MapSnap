@@ -17,15 +17,15 @@ const tripSchema = new Schema({
     type: String,
   },
   started_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   ended_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   updated_at: {
-    type: Date,
+    type: Number,
     default: Date.now,
   },
   status: {

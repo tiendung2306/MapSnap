@@ -19,16 +19,16 @@ const journeySchema = new Schema({
     type: String,
   },
   started_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   ended_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   updated_at: {
-    type: Date,
-    default: Date.now,
+    type: Number,
+    required: true,
   },
   status: {
     type: Boolean,

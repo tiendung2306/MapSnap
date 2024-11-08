@@ -10,8 +10,8 @@ const pictureSchema = new Schema({
     required: true,
   },
   created_at: {
-    type: Date,
-    default: Date.now,
+    type: Number,
+    required: true,
   },
 });
 
@@ -28,11 +28,11 @@ const visitSchema = new Schema({
     required: true,
   },
   started_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   ended_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   pictures: [pictureSchema],

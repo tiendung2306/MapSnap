@@ -47,6 +47,32 @@ components:
         message:
           type: string
 
+    Journey:
+      type: object
+      required:
+        - user_id
+        - started_at
+        - ended_at
+        - updated_at
+        - status
+      properties:
+        user_id:
+          type: string
+        trip_id:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        started_at:
+          type: number
+        ended_at:
+          type: number
+        updated_at:
+          type: number
+        status:
+          type: boolean
+
   responses:
     DuplicateEmail:
       description: Email already taken

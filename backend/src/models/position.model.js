@@ -11,7 +11,7 @@ const positionSchema = new Schema({
     required: true,
   },
   time_at: {
-    type: Date,
+    type: Number,
     required: true,
   },
   coordinate_x: {
