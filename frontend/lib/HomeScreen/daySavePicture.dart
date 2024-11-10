@@ -34,7 +34,7 @@ class daySaveScreen extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 15),
-                for(int i=0; i<imageProvider.imageManager.length; i++) ...[
+                for(int i = imageProvider.imageManager.length - 1; i >= 0; i--) ...[
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     padding: const EdgeInsets.all(10),
@@ -56,6 +56,7 @@ class daySaveScreen extends StatelessWidget {
                         SizedBox(height: 10,),
                         GridView.builder(
                             shrinkWrap: true,
+                            // reverse: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: imageProvider.imageManager[i].length,
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -64,7 +65,9 @@ class daySaveScreen extends StatelessWidget {
                               mainAxisSpacing: 10,
                             ),
                             itemBuilder: (BuildContext context, int index) {
+                              // Đảo ngược thứ tự khi hiển thị
                               final String imagePath = imageProvider.imageManager[i][index];
+
                               return GestureDetector(
                                 onTap: () {
                                   navigateToImageScreen(context, imagePath,i);

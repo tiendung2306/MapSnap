@@ -62,10 +62,10 @@ class personalPageScreenState extends State<personalPageScreen> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
             children: [
               Image.asset(
                 'assets/Login/Background.png',

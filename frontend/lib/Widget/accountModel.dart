@@ -72,7 +72,7 @@ class AccountModel extends ChangeNotifier {
   // Hàm thêm ảnh vào ngày hiện tại (ngày cuối cùng)
   void addImageDay(String imagePath) {
     if (imageManager.isNotEmpty) {
-      imageManager.last.add(imagePath);
+      imageManager.last.insert(0, imagePath);
       notifyListeners();
     }
   }
