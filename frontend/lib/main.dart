@@ -13,6 +13,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'Authentication/Onboarding.dart';
+import 'FavouriteScreen.dart';
+import 'HomeScreen/HomeScreen.dart';
+import 'MapScreen.dart';
 import 'Widget/AutoRefreshToken.dart';
 import 'Widget/UpdateUser.dart';
 
@@ -38,6 +41,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => Onboarding(),
+        '/home': (context) => const HomeScreen(),
+        '/map': (context) => const MapScreen(),
+        '/camera': (context) => const MainScreenCamera(),
+        '/favorites': (context) => const FavoritesScreen(),
+        '/account': (context) => const personalPageScreen(),
+      },
       home: SafeArea(
         child: Scaffold(
           body: Container(
@@ -50,4 +62,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 

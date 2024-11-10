@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../Widget/AutoRefreshToken.dart';
 import '../Widget/accountModel.dart';
+import '../Widget/bottomNavigationBar.dart';
 
 
 class personalPageScreen extends StatefulWidget {
@@ -32,6 +33,15 @@ class personalPageScreenState extends State<personalPageScreen> {
     //===============================================================
     _loadImage();
     super.initState();
+  }
+
+  int currentTabIndex = 4;
+
+  void onTabTapped(int index) {
+    setState(() {
+      currentTabIndex = index;
+    });
+    print("Tab $index selected");
   }
 
   Future<void> _loadImage() async {
@@ -339,96 +349,11 @@ class personalPageScreenState extends State<personalPageScreen> {
                       color: Colors.grey,
                     ),
                     Expanded(
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Material(
-                              color: Colors.white,
-                              child: InkWell(
-                                onTap: () {
-                                  print("Home button tapped");
-                                  // Điều hướng hoặc thực hiện hành động
-                                },
-                                splashColor: Colors.grey.withOpacity(0.3), // Màu hiệu ứng sóng
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(Icons.home, size: 35,),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              color: Colors.white,
-                              child: InkWell(
-                                onTap: () {
-                                  print("Map button tapped");
-                                },
-                                splashColor: Colors.grey.withOpacity(0.3), // Màu hiệu ứng sóng
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(Icons.map_outlined, size: 35,),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              color: Colors.white,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => MainScreenCamera()),
-                                  );
-                                },
-                                borderRadius: BorderRadius.circular(50),
-                                splashColor: Colors.grey.withOpacity(0.3), // Màu hiệu ứng sóng
-                                child: Container(
-                                  width: 75,
-                                  height: 75,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(60),
-                                  ),
-                                  child: Icon(Icons.photo_camera, size: 65, color: Colors.white,),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              color: Colors.white,
-                              child: InkWell(
-                                onTap: () {
-                                  print("Favorites button tapped");
-                                },
-                                splashColor: Colors.grey.withOpacity(0.3), // Màu hiệu ứng sóng
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(Icons.favorite_border, size: 35,),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              color: Colors.white,
-                              child: InkWell(
-                                onTap: () {
-                                  print("Account button tapped");
-                                  // Điều hướng hoặc thực hiện hành động
-                                },
-                                splashColor: Colors.grey.withOpacity(0.3), // Màu hiệu ứng sóng
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: Icon(Icons.account_circle, size: 35,color: Colors.deepOrange,),
-                                ),
-                              ),
-                            ),
-
-                          ],
-                        ),
+                      child: CustomBottomNav(
+                        onTabTapped: onTabTapped,
+                        currentIndex: currentTabIndex,
                       ),
-                    )
+                    ),
                   ],
                 ),
               )
