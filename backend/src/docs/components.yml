@@ -55,24 +55,59 @@ components:
         - ended_at
         - updated_at
         - status
+        - updatedByUser
+        - isAutomaticAdded
       properties:
-        user_id:
+        userId:
           type: string
-        trip_id:
+        tripIds:
           type: array
           items:
             type: string
         title:
           type: string
-        started_at:
+        startedAt:
           type: number
-        ended_at:
+        endedAt:
           type: number
-        updated_at:
+        updatedAt:
           type: number
         status:
           type: boolean
-
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+    Trip:
+      type: object
+      required:
+        - userId
+        - journeyId
+        - startedAt
+        - endedAt
+        - updatedAt
+        - status
+      properties:
+        userId:
+          type: string
+        journeyId:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        startedAt:
+          type: number
+        endedAt:
+          type: number
+        updatedAt:
+          type: number
+        status:
+          type: boolean
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
   responses:
     DuplicateEmail:
       description: Email already taken

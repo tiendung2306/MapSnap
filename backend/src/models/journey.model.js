@@ -9,7 +9,7 @@ const journeySchema = new Schema({
     ref: 'Users',
     required: true,
   },
-  tripId: [
+  tripIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Trip',
