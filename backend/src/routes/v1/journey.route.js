@@ -5,18 +5,18 @@ const journeyController = require('../../controllers/journey.controller');
 
 const router = express.Router();
 
+// create journey
+router.post(
+  '/:userId/create-journey',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  journeyController.createJourney
+);
+
 // get all journey of user
 router.get('/:userId/get-journeys', journeyController.getJourneysByUserId);
 
 // get all journey of user today
 router.route('/:userId/get-journeys-today').get(journeyController.getJourneysToday);
-
-// create journey
-router.post(
-  '/create-journey',
-  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
-  journeyController.createJourney
-);
 
 router
   .route('/:journeyId')

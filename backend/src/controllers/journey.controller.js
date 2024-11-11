@@ -4,7 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 const journeyService = require('../services/journey.service');
 
 const createJourney = catchAsync(async (req, res) => {
-  const journey = await journeyService.createJourney(req.body);
+  const requestBody = req.body;
+  requestBody.userId = req.params;
+  const journey = await journeyService.createJourney(requestBody);
   res.status(httpStatus.CREATED).send({
     code: httpStatus.CREATED,
     message: Message.journeyMsg.created,
