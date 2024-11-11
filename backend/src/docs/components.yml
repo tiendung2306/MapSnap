@@ -73,7 +73,7 @@ components:
         updatedAt:
           type: number
         status:
-          type: boolean
+          type: string
         updatedByUser:
           type: boolean
         isAutomaticAdded:
@@ -94,6 +94,10 @@ components:
           type: array
           items:
             type: string
+        visitIds:
+          type: array
+          items:
+            type: string
         title:
           type: string
         startedAt:
@@ -108,6 +112,79 @@ components:
           type: boolean
         isAutomaticAdded:
           type: boolean
+    Visit:
+      type: object
+      required:
+        - userId
+        - journeyId
+        - tripId
+        - locationId
+        - startedAt
+        - endedAt
+        - updatedAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        userId:
+          type: string
+        journeyId:
+          type: string
+        tripId:
+          type: string
+        locationId:
+          type: string
+        visitedTime:
+          type: number
+        title:
+          type: string
+        startedAt:
+          type: number
+        endedAt:
+          type: number
+        updatedAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+        pictures:
+          type: array
+          items:
+            type: object
+    Location:
+      type: object
+      required:
+        - locationName
+        - role
+        - visitedTime
+        - createdAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        locationName:
+          type: string
+        role:
+          type: string
+        visitedTime:
+          type: number
+        title:
+          type: string
+        createdAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+        pictures:
+          type: array
+          items:
+            type: object
   responses:
     DuplicateEmail:
       description: Email already taken
