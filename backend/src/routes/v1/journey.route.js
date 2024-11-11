@@ -24,13 +24,6 @@ module.exports = router;
 
 /**
  * @swagger
- * tags:
- *   name: Journeys
- *   description: Journey management and retrieval
- */
-
-/**
- * @swagger
  * /journey/create-journey:
  *   post:
  *     summary: Create a journey
@@ -48,65 +41,53 @@ module.exports = router;
  *               - started_at
  *               - ended_at
  *             properties:
+ *               title:
+ *                 type: string
+ *                 description: title
  *               started_at:
  *                 type: number
  *                 description: Epoch time started at
  *               ended_at:
  *                 type: number
  *                 description: Epoch time ended at
+ *               status:
+ *                 type: boolean
+ *                 description: status of journey (enabled/ disabled)
  *             example:
+ *               title: Ngayhomnayemcuoiroi
  *               started_at: 1731072409
  *               ended_at: 1731072409
+ *               updated_at: 1731072409
  *     responses:
- *       "201":
+ *       "200":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Journey'
  *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
+ *         $ref: '#/components/responses/DuplicateJourney'
  *
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
+ *     summary: Get all journeys of user
+ *     description: Get all journeys of user.
+ *     tags: [Journeys]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: username
- *         schema:
- *           type: string
- *         description: Username for filtering results
- *       - in: query
- *         name: role
- *         schema:
- *           type: string
- *         description: User role for filtering results
- *       - in: query
- *         name: sortBy
- *         schema:
- *           type: string
- *         description: Sort by query in the form of field:desc/asc (e.g., name:asc)
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *         default: 10
- *         description: Maximum number of users to retrieve
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *         default: 1
- *         description: Page number for pagination
+ *     requestBody:
+ *       required: true
+ *        content:
+ *         application/json:
+ *           schema:git
+ *             type: object
+ *             required:
+ *               - userId
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 description: Id of user
+ *             example:
+ *               userId: DkmthgSon
  *     responses:
  *       "200":
  *         description: OK
@@ -118,7 +99,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/Journey'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -139,11 +120,10 @@ module.exports = router;
 
 /**
  * @swagger
- * /users/{id}:
+ * /journeys/{id}:
  *   get:
- *     summary: Get a user
- *     description: Logged-in users can fetch only their own information. Only admins can fetch other users.
- *     tags: [Users]
+ *     summary: Get a journey
+ *     tags: [Journeys]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -152,25 +132,20 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User ID
+ *         description: Journey ID
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
+ *                $ref: '#/components/schemas/Journey'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user
- *     description: Logged-in users can update their own information. Only admins can update other users.
- *     tags: [Users]
+ *     summary: Update a journey
+ *     tags: [Journeys]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -179,7 +154,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User ID
+ *         description: Journey ID
  *     requestBody:
  *       required: true
  *       content:
@@ -187,45 +162,38 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               title:
  *                 type: string
- *               email:
- *                 type: string
- *                 format: email
- *                 description: Must be unique
- *               password:
- *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
+ *               started_at:
+ *                 type: number
+ *                 description: Epoch time started at
+ *               ended_at:
+ *                 type: number
+ *                 description: Epoch time ended at
+ *               updated_at:
+ *                 type: number
+ *                 description: Epoch time updated at
+ *               status:
+ *                 type: boolean
+ *                 description: status
  *             example:
- *               username: fakename
- *               email: fake@example.com
- *               password: password1
- *               avatar: "https://example.com/picture/1"
- *               phoneNumber: "01234567899"
- *               address: 123 Fake Street
- *               dateOfBirth: 1990-01-01
- *               country: USA
+ *               title: emcuoiroia
+ *               started_at: 1731072409
+ *               ended_at: 1731072409
+ *               updated_at: 1731072409
+ *               status: disabled
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
- *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
+ *                $ref: '#/components/schemas/Journey'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a user
- *     description: Logged-in users can delete only themselves. Only admins can delete other users.
+ *     summary: Delete a journey
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -235,14 +203,10 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User ID
+ *         description: Journey ID
  *     responses:
  *       "204":
  *         description: No content
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
