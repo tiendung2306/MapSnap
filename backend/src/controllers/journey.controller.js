@@ -13,8 +13,9 @@ const createJourney = catchAsync(async (req, res) => {
 });
 
 const getJourneysByUserId = catchAsync(async (req, res) => {
-  const journeys = await journeyService.getJourneysByUserId(req);
-  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys.results });
+  const { userId } = req.params;
+  const journeys = await journeyService.getJourneysByUserId({ userId });
+  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
 });
 
 const getJourneyByJourneyId = catchAsync(async (req, res) => {
@@ -42,10 +43,16 @@ const deleteJourney = catchAsync(async (req, res) => {
   });
 });
 
+const getJourneysToday = catchAsync(async (req, res) => {
+  const journeys = await journeyService.getJourneysToday(req.params.userId);
+  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
+});
+
 module.exports = {
   createJourney,
   getJourneysByUserId,
   getJourneyByJourneyId,
   updateJourney,
   deleteJourney,
+  getJourneysToday,
 };

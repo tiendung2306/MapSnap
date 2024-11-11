@@ -6,7 +6,11 @@ const journeyController = require('../../controllers/journey.controller');
 const router = express.Router();
 
 // get all journey of user
-router.get('/', journeyController.getJourneysByUserId);
+router.get('/:userId/get-journeys', journeyController.getJourneysByUserId);
+
+// get all journey of user today
+router.route('/:userId/get-journeys-today').get(journeyController.getJourneysToday);
+
 // create journey
 router.post(
   '/create-journey',
