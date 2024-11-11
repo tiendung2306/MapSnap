@@ -11,8 +11,15 @@ const tripSchema = new Schema({
   },
   journeyId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Journey',
     required: true,
   },
+  visitIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Visit',
+    },
+  ],
   title: {
     type: String,
   },

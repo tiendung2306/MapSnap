@@ -3,9 +3,25 @@ const { toJSON } = require('./plugins');
 
 const { Schema } = mongoose;
 
+// Define the Picture schema
+const pictureSchema = new Schema({
+  link: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Number,
+    required: true,
+  },
+});
+
 // Define the Location schema
 const locationSchema = new Schema({
-  location_name: {
+  locationName: {
+    type: String,
+    required: true,
+  },
+  title: {
     type: String,
     required: true,
   },
@@ -13,10 +29,27 @@ const locationSchema = new Schema({
     type: String,
     required: true,
   },
-  visited_time: {
+  visitedTime: {
     type: Number,
     required: true,
   },
+  createdAt: {
+    type: Number,
+    required: true,
+  },
+  status: {
+    type: Boolean,
+    required: true,
+  },
+  updatedByUser: {
+    type: Boolean,
+    required: true,
+  },
+  isAutomaticAdded: {
+    type: Boolean,
+    required: true,
+  },
+  pictures: [pictureSchema],
 });
 
 locationSchema.plugin(toJSON);
