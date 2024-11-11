@@ -68,9 +68,9 @@ module.exports = router;
  *                 description: define if this journey add by user or BE
  *             example:
  *               title: Ngayhomnayemcuoiroi
- *               started_at: 1731072409
- *               ended_at: 1731072409
- *               updated_at: 1731072409
+ *               startedAt: 1731072409
+ *               endedAt: 1731072409
+ *               updatedAt: 1731072409
  *               status: enabled
  *               updatedByUser: true
  *               isAutomaticAdded: true
