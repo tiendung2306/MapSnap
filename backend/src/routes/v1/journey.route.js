@@ -74,20 +74,6 @@ module.exports = router;
  *     tags: [Journeys]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *        content:
- *         application/json:
- *           schema:git
- *             type: object
- *             required:
- *               - userId
- *             properties:
- *               userId:
- *                 type: string
- *                 description: Id of user
- *             example:
- *               userId: DkmthgSon
  *     responses:
  *       "200":
  *         description: OK
