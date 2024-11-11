@@ -50,10 +50,10 @@ components:
     Journey:
       type: object
       required:
-        - user_id
-        - started_at
-        - ended_at
-        - updated_at
+        - userId
+        - startedAt
+        - endedAt
+        - updatedAt
         - status
         - updatedByUser
         - isAutomaticAdded
@@ -160,6 +160,9 @@ components:
         - locationName
         - role
         - visitedTime
+        - longitude
+        - latitude
+        - altitude
         - createdAt
         - status
         - updatedByUser
@@ -170,6 +173,12 @@ components:
         role:
           type: string
         visitedTime:
+          type: number
+        longitude:
+          type: number
+        latitude:
+          type: number
+        altitude:
           type: number
         title:
           type: string
@@ -185,6 +194,27 @@ components:
           type: array
           items:
             type: object
+    Position:
+      type: object
+      required:
+        - userId
+        - longitude
+        - latitude
+        - altitude
+        - timeAt
+      properties:
+        userId:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+        altitude:
+          type: number
+        timeAt:
+          type: number
+        locationid:
+          type: string
   responses:
     DuplicateEmail:
       description: Email already taken

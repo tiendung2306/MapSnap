@@ -33,6 +33,18 @@ const locationSchema = new Schema({
     type: Number,
     required: true,
   },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+  latitude: {
+    type: Number,
+    required: true,
+  },
+  altitude: {
+    type: Number,
+    required: true,
+  },
   createdAt: {
     type: Number,
     required: true,
