@@ -38,18 +38,6 @@ const pictureSchema = new Schema({
 
 pictureSchema.plugin(toJSON);
 
-/**
- * check if picture is already exist
- */
-pictureSchema.statics.isPictureExists = async function (link) {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const picture = await this.findOne({ link });
-    return picture !== null;
-  } catch (error) {
-    throw error;
-  }
-};
 // Create the Picture model
 const Picture = mongoose.model('Picture', pictureSchema);
 
