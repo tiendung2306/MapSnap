@@ -49,7 +49,15 @@ const getJourneysToday = async (userId) => {
     userId: mongoose.Types.ObjectId(userId),
     startedAt: { $gte: startOfDay, $lte: endOfDay },
   };
+  const journeys = await Journey.find(filter);
+  return journeys;
+};
 
+const getJourneysCreatedByUser = async (userId) => {
+  const filter = {
+    userId: mongoose.Types.ObjectId(userId),
+    updatedByUser: true,
+  };
   const journeys = await Journey.find(filter);
   return journeys;
 };
@@ -61,4 +69,5 @@ module.exports = {
   updateJourney,
   deleteJourney,
   getJourneysToday,
+  getJourneysCreatedByUser,
 };

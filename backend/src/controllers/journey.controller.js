@@ -50,6 +50,11 @@ const getJourneysToday = catchAsync(async (req, res) => {
   res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
 });
 
+const getJourneysCreatedByUser = catchAsync(async (req, res) => {
+  const journeys = await journeyService.getJourneysCreatedByUser(req.params.userId);
+  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
+});
+
 module.exports = {
   createJourney,
   getJourneysByUserId,
@@ -57,4 +62,5 @@ module.exports = {
   updateJourney,
   deleteJourney,
   getJourneysToday,
+  getJourneysCreatedByUser,
 };

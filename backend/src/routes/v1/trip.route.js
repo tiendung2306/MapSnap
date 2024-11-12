@@ -83,6 +83,8 @@ module.exports = router;
  *       "400":
  *         $ref: '#/components/responses/DuplicateTrip'
  *
+ * @swagger
+ * /trip/get-trips:
  *   get:
  *     summary: Get all trips of user
  *     description: Get all trips of user.
@@ -117,9 +119,7 @@ module.exports = router;
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
- */
-
-/**
+ *
  * @swagger
  * /trip/{id}:
  *   get:

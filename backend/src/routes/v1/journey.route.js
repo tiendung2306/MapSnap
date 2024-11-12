@@ -18,6 +18,9 @@ router.get('/:userId/get-journeys', journeyController.getJourneysByUserId);
 // get all journey of user today
 router.route('/:userId/get-journeys-today').get(journeyController.getJourneysToday);
 
+// get all journey of user today
+router.route('/:userId/get-journeys-updated-by-user').get(journeyController.getJourneysCreatedByUser);
+
 router
   .route('/:journeyId')
   .get(journeyController.getJourneyByJourneyId)
@@ -84,6 +87,8 @@ module.exports = router;
  *       "400":
  *         $ref: '#/components/responses/DuplicateJourney'
  *
+ * @swagger
+ * /journey/get-journeys:
  *   get:
  *     summary: Get all journeys of user
  *     description: Get all journeys of user.
@@ -118,9 +123,81 @@ module.exports = router;
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
- */
-
-/**
+ *
+ * @swagger
+ * /journey/get-journeys-today:
+ *   get:
+ *     summary: Get all journeys of user today
+ *     description: Get all journeys of user today.
+ *     tags: [Journeys]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Journey'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *
+ * @swagger
+ * /journey/get-journeys-created-by-user:
+ *   get:
+ *     summary: Get all journeys that user created
+ *     description: Get all journeys that user created.
+ *     tags: [Journeys]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Journey'
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 totalResults:
+ *                   type: integer
+ *                   example: 1
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *
  * @swagger
  * /journeys/{id}:
  *   get:
