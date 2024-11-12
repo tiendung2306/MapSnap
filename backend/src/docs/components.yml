@@ -47,6 +47,174 @@ components:
         message:
           type: string
 
+    Journey:
+      type: object
+      required:
+        - userId
+        - startedAt
+        - endedAt
+        - updatedAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        userId:
+          type: string
+        tripIds:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        startedAt:
+          type: number
+        endedAt:
+          type: number
+        updatedAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+    Trip:
+      type: object
+      required:
+        - userId
+        - journeyId
+        - startedAt
+        - endedAt
+        - updatedAt
+        - status
+      properties:
+        userId:
+          type: string
+        journeyId:
+          type: array
+          items:
+            type: string
+        visitIds:
+          type: array
+          items:
+            type: string
+        title:
+          type: string
+        startedAt:
+          type: number
+        endedAt:
+          type: number
+        updatedAt:
+          type: number
+        status:
+          type: boolean
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+    Visit:
+      type: object
+      required:
+        - userId
+        - journeyId
+        - tripId
+        - locationId
+        - startedAt
+        - endedAt
+        - updatedAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        userId:
+          type: string
+        journeyId:
+          type: string
+        tripId:
+          type: string
+        locationId:
+          type: string
+        visitedTime:
+          type: number
+        title:
+          type: string
+        startedAt:
+          type: number
+        endedAt:
+          type: number
+        updatedAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+        pictures:
+          type: array
+          items:
+            type: object
+    Location:
+      type: object
+      required:
+        - locationName
+        - role
+        - visitedTime
+        - longitude
+        - latitude
+        - altitude
+        - createdAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        locationName:
+          type: string
+        role:
+          type: string
+        visitedTime:
+          type: number
+        longitude:
+          type: number
+        latitude:
+          type: number
+        altitude:
+          type: number
+        title:
+          type: string
+        createdAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+        pictures:
+          type: array
+          items:
+            type: object
+    Position:
+      type: object
+      required:
+        - userId
+        - longitude
+        - latitude
+        - altitude
+        - timeAt
+      properties:
+        userId:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+        altitude:
+          type: number
+        timeAt:
+          type: number
+        locationid:
+          type: string
   responses:
     DuplicateEmail:
       description: Email already taken

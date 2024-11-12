@@ -4,7 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 const journeyService = require('../services/journey.service');
 
 const createJourney = catchAsync(async (req, res) => {
-  const journey = await journeyService.createJourney(req.body);
+  const requestBody = req.body;
+  requestBody.userId = req.params;
+  const journey = await journeyService.createJourney(requestBody);
   res.status(httpStatus.CREATED).send({
     code: httpStatus.CREATED,
     message: Message.journeyMsg.created,
@@ -13,8 +15,9 @@ const createJourney = catchAsync(async (req, res) => {
 });
 
 const getJourneysByUserId = catchAsync(async (req, res) => {
-  const journeys = await journeyService.getJourneysByUserId(req);
-  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys.results });
+  const { userId } = req.params;
+  const journeys = await journeyService.getJourneysByUserId({ userId });
+  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
 });
 
 const getJourneyByJourneyId = catchAsync(async (req, res) => {
@@ -42,10 +45,16 @@ const deleteJourney = catchAsync(async (req, res) => {
   });
 });
 
+const getJourneysToday = catchAsync(async (req, res) => {
+  const journeys = await journeyService.getJourneysToday(req.params.userId);
+  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
+});
+
 module.exports = {
   createJourney,
   getJourneysByUserId,
   getJourneyByJourneyId,
   updateJourney,
   deleteJourney,
+  getJourneysToday,
 };

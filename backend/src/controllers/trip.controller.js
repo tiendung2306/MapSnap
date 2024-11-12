@@ -4,7 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 const tripService = require('../services/trip.service');
 
 const createTrip = catchAsync(async (req, res) => {
-  const trip = await tripService.createTrip(req.body);
+  const requestBody = req.body;
+  requestBody.userId = req.params.userId;
+  const trip = await tripService.createTrip(requestBody);
   res.status(httpStatus.CREATED).send({
     code: httpStatus.CREATED,
     message: Message.tripMsg.created,

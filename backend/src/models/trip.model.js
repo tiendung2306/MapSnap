@@ -4,31 +4,46 @@ const { Schema } = mongoose;
 
 // Define the Trip schema
 const tripSchema = new Schema({
-  user_id: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true,
   },
-  journey_id: {
+  journeyId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Journey',
     required: true,
   },
+  visitIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Visit',
+    },
+  ],
   title: {
     type: String,
   },
-  started_at: {
-    type: Date,
+  startedAt: {
+    type: Number,
     required: true,
   },
-  ended_at: {
-    type: Date,
+  endedAt: {
+    type: Number,
     required: true,
   },
-  updated_at: {
-    type: Date,
+  updatedAt: {
+    type: Number,
     default: Date.now,
   },
   status: {
+    type: Boolean,
+    required: true,
+  },
+  updatedByUser: {
+    type: Boolean,
+    required: true,
+  },
+  isAutomaticAdded: {
     type: Boolean,
     required: true,
   },

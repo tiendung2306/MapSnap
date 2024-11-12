@@ -9,30 +9,60 @@ const pictureSchema = new Schema({
     type: String,
     required: true,
   },
-  created_at: {
-    type: Date,
-    default: Date.now,
+  createdAt: {
+    type: Number,
+    required: true,
   },
 });
 
 // Define the Visit schema
 const visitSchema = new Schema({
-  user_id: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true,
   },
-  location_id: {
+  journeyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Journeys',
+    required: true,
+  },
+  tripId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Trips',
+    required: true,
+  },
+  locationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Locations',
     required: true,
   },
-  started_at: {
-    type: Date,
+  title: {
+    type: String,
     required: true,
   },
-  ended_at: {
-    type: Date,
+  startedAt: {
+    type: Number,
+    required: true,
+  },
+  endedAt: {
+    type: Number,
+    required: true,
+  },
+  updatedAt: {
+    type: Number,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  updatedByUser: {
+    type: Boolean,
+    required: true,
+  },
+  isAutomaticAdded: {
+    type: Boolean,
     required: true,
   },
   pictures: [pictureSchema],
@@ -40,7 +70,7 @@ const visitSchema = new Schema({
 
 visitSchema.plugin(toJSON);
 
-// Create the Journey model
+// Create the Visit model
 const Visit = mongoose.model('Visit', visitSchema);
 
 module.exports = Visit;
