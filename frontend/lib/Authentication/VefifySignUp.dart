@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Authentication/SignIn.dart';
 import 'CreateNewPassword.dart';
 import 'SignUp.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
@@ -58,7 +59,7 @@ class _VerifySignUpState extends State<VerifySignUp> {
     if(mess == 'Verify success'){
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Finish()),
+        MaterialPageRoute(builder: (context) => SignIn()),
       );
     }
 

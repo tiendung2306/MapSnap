@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../Widget/AutoRefreshToken.dart';
 import 'securityScreen.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
@@ -27,6 +29,8 @@ class settingScreenState extends State<settingScreen> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -50,6 +54,7 @@ class settingScreenState extends State<settingScreen> {
                   GestureDetector(
                     onTap: () {
                       print("Thoat ra");
+                      Navigator.pop(context);
                     },
                     child: Container(
                         width: screenWidth / 8,
@@ -77,36 +82,19 @@ class settingScreenState extends State<settingScreen> {
               Container(
                 child: Row(
                   children: [
-                    // Container(
-                    //   width: 80,
-                    //   height: 80,
-                    //   decoration: BoxDecoration(
-                    //     shape: BoxShape.circle,
-                    //     color: Colors.red,
-                    //   ),
-                    // ),
                     Container(
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.grey,
-                        image: accountModel.image != null
+                        image: accountModel.avatar.isNotEmpty
                             ? DecorationImage(
-                          image: FileImage(File(accountModel.image!.path)), // Sử dụng FileImage để hiển thị ảnh
+                          image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
                           fit: BoxFit.cover,
                         )
                             : null,
                       ),
-                      child: accountModel.image == null
-                          ? Center(
-                            child: Icon(
-                              Icons.person_2_rounded,
-                              color: Colors.black12,
-                              size: 60,
-                            ),
-                           )
-                          : null,
                     ),
 
                     SizedBox(width: screenWidth / 20),
