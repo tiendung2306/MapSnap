@@ -5,14 +5,18 @@ const journeyController = require('../../controllers/journey.controller');
 
 const router = express.Router();
 
-// get all journey of user
-router.get('/', journeyController.getJourneysByUserId);
 // create journey
 router.post(
-  '/create-journey',
+  '/:userId/create-journey',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
   journeyController.createJourney
 );
+
+// get all journey of user
+router.get('/:userId/get-journeys', journeyController.getJourneysByUserId);
+
+// get all journey of user today
+router.route('/:userId/get-journeys-today').get(journeyController.getJourneysToday);
 
 router
   .route('/:journeyId')
@@ -38,26 +42,38 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - started_at
- *               - ended_at
+ *               - startedAt
+ *               - endedAt
+ *               - status
+ *               - updatedByUser
+ *               - isAutomaticAdded
  *             properties:
  *               title:
  *                 type: string
  *                 description: title
- *               started_at:
+ *               startedAt:
  *                 type: number
  *                 description: Epoch time started at
- *               ended_at:
+ *               endedAt:
  *                 type: number
  *                 description: Epoch time ended at
  *               status:
  *                 type: boolean
  *                 description: status of journey (enabled/ disabled)
+ *               updatedByUser:
+ *                 type: boolean
+ *                 description: define if user have updated or not
+ *               isAutomaticAdded:
+ *                 type: boolean
+ *                 description: define if this journey add by user or BE
  *             example:
  *               title: Ngayhomnayemcuoiroi
- *               started_at: 1731072409
- *               ended_at: 1731072409
- *               updated_at: 1731072409
+ *               startedAt: 1731072409
+ *               endedAt: 1731072409
+ *               updatedAt: 1731072409
+ *               status: enabled
+ *               updatedByUser: true
+ *               isAutomaticAdded: true
  *     responses:
  *       "200":
  *         description: Created
@@ -150,24 +166,32 @@ module.exports = router;
  *             properties:
  *               title:
  *                 type: string
- *               started_at:
+ *               startedAt:
  *                 type: number
  *                 description: Epoch time started at
- *               ended_at:
+ *               endedAt:
  *                 type: number
  *                 description: Epoch time ended at
- *               updated_at:
+ *               updatedAt:
  *                 type: number
  *                 description: Epoch time updated at
  *               status:
  *                 type: boolean
  *                 description: status
+ *               updatedByUser:
+ *                 type: boolean
+ *                 description: status
+ *               isAutomaticAdded:
+ *                 type: boolean
+ *                 description: status
  *             example:
  *               title: emcuoiroia
- *               started_at: 1731072409
- *               ended_at: 1731072409
- *               updated_at: 1731072409
+ *               startedAt: 1731072409
+ *               endedAt: 1731072409
+ *               updatedAt: 1731072409
  *               status: disabled
+ *               updatedByUser: false
+ *               isAutomaticAdded: true
  *     responses:
  *       "200":
  *         description: OK
@@ -180,7 +204,7 @@ module.exports = router;
  *
  *   delete:
  *     summary: Delete a journey
- *     tags: [Users]
+ *     tags: [Journeys]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -195,60 +219,4 @@ module.exports = router;
  *         description: No content
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- */
-
-/**
- * @swagger
- * /users/avatar/{userId}:
- *   post:
- *     summary: Upload user avatar
- *     description: Uploads an avatar image for the specified user.
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         description: The ID of the user to update the avatar for.
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               avatar:
- *                 type: string
- *                 format: binary
- *                 description: The avatar image file to upload.
- *     responses:
- *       '200':
- *         description: Avatar uploaded successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 avatar:
- *                   type: string
- *                   description: The URL of the uploaded avatar image
- *       '400':
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *       '500':
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
  */

@@ -3,11 +3,16 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mapsnap_fe/Authentication/Onboarding_content_model.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Model/User_2.dart';
+import '../Widget/AutoRefreshToken.dart';
 import '../Widget/accountModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mapsnap_fe/Widget/UpdateUser.dart';
+import '../main.dart';
 
 
 
@@ -23,13 +28,16 @@ class _accountScreenState extends State<accountScreen> {
 
   late TextEditingController usernameController;
   late TextEditingController emailController;
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController numberPhoneController = TextEditingController();
+  late TextEditingController addressController ;
+  late TextEditingController numberPhoneController;
 
   String Notification = "";
   late Color colorNotification;
 
 
+
+
+  //List giới tính
   final List<String> sex = [
     'Male',
     'Female',
@@ -54,61 +62,69 @@ class _accountScreenState extends State<accountScreen> {
 
   String sexController = 'Chọn giới tính của bạn';
 
-
   void initState() {
     super.initState();
     _loadImage();
     var accountModel = Provider.of<AccountModel>(context, listen: false);
+    // startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
     usernameController = TextEditingController(text: accountModel.username);
     emailController = TextEditingController(text: accountModel.email);
+    addressController = TextEditingController(text: accountModel.address);
+    numberPhoneController = TextEditingController(text: accountModel.phoneNumber);
     _loadUserData();  // Tải dữ liệu khi khởi tạo màn hình
   }
 
+
+  // Hàm load ảnh lưu ở database
   Future<void> _loadImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final imagePath = prefs.getString('imagePath'); // Lấy đường dẫn ảnh
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    final imagePath =  'http://10.0.2.2:3000${accountModel.avatar}';// Lấy đường dẫn ảnh
     if (imagePath != null) {
       setState(() {
-        _image = XFile(imagePath); // Chuyển đường dẫn thành XFile
+        _image = XFile(imagePath); //Chuyển đường dẫn thành ảnh
       });
+    } else {
+      print("Đường dẫn ảnh không hợp lệ");
     }
   }
 
+
+  //Khi ấn vào ảnh thì sẽ gọi API để gửi ảnh lên sever
   Future<void> _onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    Avatar? avatar = await uploadAvatar(accountModel.token_access, accountModel.idUser, image!);
+    if (avatar != null) {
       setState(() {
         _image = image;
-        Provider.of<AccountModel>(context, listen: false)
-            .updateImage(image);
+        getImage();
       });
-      // Lưu đường dẫn ảnh vào SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('imagePath', image.path);
+      print('Avatar updated successfully');
+    } else {
+      print('Avatar update failed');
     }
   }
+
+  void getImage() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    //Tạo 1 biến User
+    User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
+    //Cập nhật biến User mới vừa đẩy lên database
+    accountModel.setUser(updatedUser!);
+  }
+
+
   // Hàm để tải dữ liệu từ SharedPreferences
   _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      sexController = prefs.getString('sex') ?? '';
-      usernameController.text = prefs.getString('username') ?? '';
-      emailController.text = prefs.getString('email') ?? '';
-      addressController.text = prefs.getString('address') ?? '';
-      numberPhoneController.text = prefs.getString('numberPhone') ?? '';
+      sexController = prefs.getString('sex') ?? 'Chọn giới tính của bạn';
     });
   }
 
-  // Hàm để lưu dữ liệu vào SharedPreferences
-  _saveUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('username', usernameController.text);
-    await prefs.setString('email', emailController.text);
-    await prefs.setString('address', addressController.text);
-    await prefs.setString('numberPhone', numberPhoneController.text);
-  }
 
+  //Lưu giới tính trong bộ nhớ cục bộ
   _saveSexData(String sex) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('sex', sexController);
@@ -116,6 +132,7 @@ class _accountScreenState extends State<accountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
@@ -200,24 +217,15 @@ class _accountScreenState extends State<accountScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.grey,
-                                image: _image != null
-                                  ? DecorationImage(
-                                    image: FileImage(File(_image!.path)), // Sử dụng FileImage để hiển thị ảnh
-                                    fit: BoxFit.cover,
-                                  )
-                                  : null,
-                                ),
-                                child: _image == null
-                                 ? Center(
-                                    child: Icon(
-                                    Icons.person_2_rounded,
-                                    color: Colors.black12,
-                                    size: 60,
-                                  ),
+                                image: accountModel.avatar.isNotEmpty
+                                    ? DecorationImage(
+                                  image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
+                                  fit: BoxFit.cover,
                                 )
                                 : null,
+                              ),
+                              ),
                             ),
-                          ),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: GestureDetector(
@@ -257,7 +265,7 @@ class _accountScreenState extends State<accountScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Giới tính", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                const Text("Giới tính", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 5),
                                 Container(
                                   decoration: BoxDecoration(
@@ -276,7 +284,7 @@ class _accountScreenState extends State<accountScreen> {
                                       ),
                                       value: sexController == 'Chọn giới tính của bạn' ? null : sexController,
                                       hint: Text(sexController),
-                                      iconStyleData: IconStyleData(
+                                      iconStyleData: const IconStyleData(
                                         icon: Icon(Icons.arrow_drop_down), // Biểu tượng mũi tên
                                         iconSize: 30,
                                       ),
@@ -298,7 +306,7 @@ class _accountScreenState extends State<accountScreen> {
                               ],
                             ),
                             const SizedBox(height: 15),
-                            buildTextField("Email", emailController, "Nhập email của bạn", TextInputType.emailAddress),
+                            buildTextField("Email", emailController, "Nhập email của bạn", TextInputType.emailAddress, enabled: false),
                             const SizedBox(height: 15),
                             buildTextField("Địa chỉ", addressController, "Nhập địa chỉ của bạn", TextInputType.text),
                             const SizedBox(height: 15),
@@ -313,15 +321,9 @@ class _accountScreenState extends State<accountScreen> {
                       color: Colors.blueAccent,
                       borderRadius: BorderRadius.circular(15),
                       child: InkWell(
-                          onTap: () {
-                            if(usernameController.text.isEmpty) {
-                              Notification = "Chưa nhập tên";
-                              colorNotification = Colors.red;
-                            } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$').hasMatch(emailController.text)) {
+                          onTap:  () async {
+                           if (!RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$').hasMatch(emailController.text)) {
                               Notification = "Nhập sai gmail rồi";
-                              colorNotification = Colors.red;
-                            } else if (addressController.text.isEmpty) {
-                              Notification = "Chưa nhập địa chỉ";
                               colorNotification = Colors.red;
                             } else if (!RegExp(r'^[0-9]+$').hasMatch(numberPhoneController.text)) {
                               Notification = "Nhập sai số điện thoại rồi";
@@ -331,13 +333,16 @@ class _accountScreenState extends State<accountScreen> {
                               colorNotification = Colors.red;
                             } else {
                               // Nếu tất cả đều hợp lệ, lưu dữ liệu
+                              var accountModel = Provider.of<AccountModel>(context, listen: false);
                               Notification = "Lưu thông tin thành công";
                               colorNotification = Colors.blue;
-                              _saveUserData();
-                              Provider.of<AccountModel>(context, listen: false)
-                                  .updateUsername(usernameController.text);
-                              Provider.of<AccountModel>(context, listen: false)
-                                  .updateEmail(emailController.text);
+                              // Cập nhật dữ liệu lên database
+                              await updateUser(accountModel.idUser,usernameController.text,emailController.text,addressController.text,numberPhoneController.text,accountModel.avatar,accountModel.token_access);
+                              //Tạo 1 biến User
+                              User? updatedUser = await fetchData(accountModel.idUser,accountModel.token_access);
+
+                              //Cập nhật biến User mới vừa đẩy lên database
+                              accountModel.setUser(updatedUser!);
                             }
 
                             showDialog(
@@ -366,7 +371,7 @@ class _accountScreenState extends State<accountScreen> {
                           child: Container(
                             width: screenWidth * 2 / 3,
                             height: 50,
-                            child: Center(
+                            child: const Center(
                               child: Text("Lưu thay đổi", style: TextStyle(color: Colors.white,
                                   fontSize: 20, fontWeight: FontWeight.bold),),
                             ),
@@ -384,7 +389,7 @@ class _accountScreenState extends State<accountScreen> {
     );
   }
 
-  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType) {
+  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType, {bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -397,6 +402,7 @@ class _accountScreenState extends State<accountScreen> {
           textEditingController: controller,
           hintText: hintText,
           textInputType: inputType,
+          isEnabled: enabled,
         ),
       ],
     );

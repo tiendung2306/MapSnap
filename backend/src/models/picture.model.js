@@ -30,7 +30,7 @@ const pictureSchema = new Schema({
     type: String,
     required: true,
   },
-  created_at: {
+  createdAt: {
     type: Number,
     required: true,
   },

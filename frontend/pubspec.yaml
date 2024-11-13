@@ -28,6 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  path_provider: ^2.0.10
+  mime: ^2.0.0
+  http_parser: ^4.0.2
+  flutter_image_compress: ^2.3.0
+  http: ^1.2.2
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.8
   flutter:
@@ -39,6 +44,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  geolocator: ^13.0.1
   provider: ^6.1.2
   flutter_secure_storage: ^9.2.2
 

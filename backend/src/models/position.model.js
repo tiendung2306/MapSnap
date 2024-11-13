@@ -5,24 +5,28 @@ const { Schema } = mongoose;
 
 // Define the Position schema
 const positionSchema = new Schema({
-  user_id: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  time_at: {
+  timeAt: {
     type: Number,
     required: true,
   },
-  coordinate_x: {
+  longitude: {
     type: Number,
     required: true,
   },
-  coordinate_y: {
+  latitude: {
     type: Number,
     required: true,
   },
-  location_id: {
+  altitude: {
+    type: Number,
+    required: true,
+  },
+  locationId: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
     required: true,

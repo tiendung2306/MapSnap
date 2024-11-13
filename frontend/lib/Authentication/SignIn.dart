@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
+import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
+import '../Model/Token_2.dart';
+import '../Model/User_2.dart';
+import '../Widget/UpdateUser.dart';
+import '../Widget/accountModel.dart';
 import 'ForgotPassword.dart';
 import 'SignUp.dart';
 import 'Finish.dart';
@@ -6,7 +12,10 @@ import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import 'Service.dart';
-import 'package:mapsnap_fe/Model/User.dart';
+import 'package:mapsnap_fe/main.dart';
+import 'package:provider/provider.dart'; // Import file model
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 
@@ -41,17 +50,27 @@ class _SignInState extends State<SignIn> {
     _passwordController.dispose();
     super.dispose();
   }
+
+
+
   void post_login() async {
     final response = await _authService.Login(_emailController.text, _passwordController.text);
     final mess = response['mess'];
 
     if(mess == 'Login success'){
       final data = response['data'];
-      final user = User.fromJson(data);
-      await _authService.saveUser(user);
+      // final user = User.fromJson(data);
+
+      var accountModel = Provider.of<AccountModel>(context, listen: false);
+      Token token = await Login(_emailController.text, _passwordController.text);
+      accountModel.setToken(token);
+      User? user = await fetchData(token.idUser,token.token_access);
+      accountModel.setUser(user!);
+
+      // await _authService.saveUser(user);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Finish()),
+        MaterialPageRoute(builder: (context) => personalPageScreen()),
       );
     }
 
@@ -240,5 +259,25 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+}
+
+Future<Token> Login(String email,String password) async {
+  final response = await http.post(
+    Uri.parse('http://10.0.2.2:3000/v1/auth/login'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'email': email,
+      'password': password,
+    }),
+  );
+  if (response.statusCode == 200) {
+    print("Đăng nhập thành công");
+    var data = jsonDecode(response.body);
+    return Token.fromJson(data);
+  } else {
+    throw Exception(response.statusCode);
   }
 }
