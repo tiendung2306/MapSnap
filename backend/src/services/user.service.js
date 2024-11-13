@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const upload = require('../middlewares/upload');
+const { upload_avatar } = require('../middlewares/upload');
 
 /**
  * Create a user
@@ -67,37 +67,35 @@ const updateUserById = async (userId, updateBody) => {
 };
 
 const updateUserAvatarByID = async (req, res) => {
-  upload(req, res, async (err) => {
+  upload_avatar(req, res, async (err) => {
     if (err) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid file');
+      return res.status(httpStatus.BAD_REQUEST).send({ message: 'Invalid file' });
     }
     if (!req.file) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'No file uploaded');
+      return res.status(httpStatus.BAD_REQUEST).send({ message: 'No file uploaded' });
     }
 
     try {
-      const userId = req.params.userId;
+      const { userId } = req.params;
 
       // Validate user
       const user = await getUserById(userId);
       if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+        return res.status(httpStatus.NOT_FOUND).send({ message: 'User not found' });
       }
 
       // Update avatar field with the path of the uploaded image
-      const filePath = `/uploads/avatars/${req.file.filename}`;
-      const fileURL = `${req.protocol}://${req.get('host')}${filePath}`;
-      user.avatar = fileURL;
+      const filePath = `/uploads/pictures/${req.file.filename}`;
+      user.avatar = filePath;
       await user.save();
-      return user.avatar;
+
+      // Return the updated avatar URL
+      return res.status(httpStatus.OK).send({ avatar: user.avatar });
     } catch (error) {
-      console.error(error);
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Server Error');
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: 'Server Error' });
     }
   });
-  const user = await getUserById(req.params.userId);
-  return user.avatar;
-}
+};
 
 /**
  * Delete user by id

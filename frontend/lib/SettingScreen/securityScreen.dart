@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class securityScreen extends StatefulWidget {
   const securityScreen({Key? key}) : super(key: key);
@@ -12,10 +14,12 @@ class securityScreen extends StatefulWidget {
 
 class _securityScreenState extends State<securityScreen> {
 
+
   String Notification = "";
   late Color colorNotification;
 
-  final TextEditingController passwordController = TextEditingController();
+  int checkPassword = -1;
+  late TextEditingController passwordController = TextEditingController();
   final TextEditingController newPasswordController1 = TextEditingController();
   final TextEditingController newPasswordController2 = TextEditingController();
 
@@ -117,26 +121,32 @@ class _securityScreenState extends State<securityScreen> {
                           color: Colors.blueAccent,
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 if(passwordController.text.isEmpty || newPasswordController1.text.isEmpty || newPasswordController2.text.isEmpty) {
                                   Notification = "Vui lòng nhập thông tin";
-                                  colorNotification = Colors.red;
-                                } else if(passwordController.text != accountModel.password) {
-                                  Notification = "Sai mật khẩu rồi";
                                   colorNotification = Colors.red;
                                 } else if (newPasswordController1.text != newPasswordController2.text){
                                   Notification = "Nhập sai mật khẩu mới";
                                   colorNotification = Colors.red;
-                                } else if (newPasswordController1.text.length < 6) {
-                                  Notification = "Mật khẩu phải nhiều hơn 6 ký tự";
+                                }
+                                else if (newPasswordController1.text.length < 8){
+                                  Notification = "Mật khẩu phải lớn hơn 7 ký tự";
+                                  colorNotification = Colors.red;
+                                } else if (!newPasswordController1.text.contains(RegExp(r'\d'))) {
+                                  Notification = "Mật khẩu phải chứa ít nhất một số";
                                   colorNotification = Colors.red;
                                 } else {
-                                  Notification = "Đổi mật khẩu thành công";
-                                  colorNotification = Colors.blue;
-                                  // Cập nhật mật khẩu mới
-                                  Provider.of<AccountModel>(context, listen: false)
-                                      .updatePassword(newPasswordController1.text);
+                                  await changePassword(passwordController.text,newPasswordController1.text);
+                                  if(checkPassword == 0) {
+                                    Notification = "Nhập sai mật khẩu";
+                                    colorNotification = Colors.red;
+                                  }
+                                  if(checkPassword == 1) {
+                                    Notification = "Đổi mật khẩu thành công";
+                                    colorNotification = Colors.blue;
+                                  }
                                 }
+
 
                                 showDialog(
                                   context: context,
@@ -183,7 +193,7 @@ class _securityScreenState extends State<securityScreen> {
     );
   }
 
-  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType,bool isPass) {
+  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType,bool isPass,  {bool enabled = true}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,8 +207,31 @@ class _securityScreenState extends State<securityScreen> {
           hintText: hintText,
           textInputType: inputType,
           isPass: isPass,
+          isEnabled: enabled,
         ),
       ],
     );
+  }
+
+  Future<void> changePassword(String oldPassword,String newPassword) async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:3000/v1/auth/change-password'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'id': accountModel.idUser,
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      }),
+    );
+    if (response.statusCode == 200) {
+      checkPassword = 1;
+      print("Đổi mk thành công");
+    } else {
+      checkPassword = 0;
+      print("Đổi mk không thành công");
+    }
   }
 }

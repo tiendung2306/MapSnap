@@ -205,7 +205,15 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Token'
+ *               type: object
+ *               properties:
+ *                 resetPasswordToken:
+ *                   type: string
+ *                 expires:
+ *                   type: string
+ *               example:
+ *                 "resetPasswordToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzIzNTYzMzE1OWY4MzUwZmNlODMwMzMiLCJpYXQiOjE3MzA3OTQ2MjMsImV4cCI6MTczMDc5NTIyMywidHlwZSI6InJlc2V0UGFzc3dvcmQifQ.ttLzlRBbPe-I-B0AlHr6xnnRgSD97Dfx1moz2Gg99U4"
+ *                 "expires": "2024-11-05T08:27:03.072Z"
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
@@ -279,7 +287,7 @@ module.exports = router;
  *                              id: "5ebac534954b54139806c112"
  *                              oldPassword: "password1"
  *                              newPassword: "password2"
- *          responses:  
+ *          responses:
  *              "200":
  *                  description: Change password success
  *              "401":
@@ -343,7 +351,7 @@ module.exports = router;
  *         description: No content
  *         content:
  *           application/json:
- *             schema: 
+ *             schema:
  *               type: object
  *               properties:
  *                 verifyEmailToken:

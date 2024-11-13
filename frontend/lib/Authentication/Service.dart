@@ -7,7 +7,7 @@ import 'package:mapsnap_fe/Model/Token.dart';
 
 class AuthService {
   final _storage = FlutterSecureStorage();
-  final _baseUrl = 'http://localhost:3000/v1';
+  final _baseUrl = 'http://10.0.2.2:3000/v1';
 
   Future<void> save(String key, String value) async {
     await _storage.write(key: key, value: value);
@@ -22,7 +22,7 @@ class AuthService {
     await _storage.write(key: 'user', value: userJson);
   }
 
-  Future<User> getUser(User user) async {
+  Future<User> getUser() async {
     String userJson = await _storage.read(key: 'user') ?? 'null';
     return User.fromJson(jsonDecode(userJson));
   }
@@ -235,7 +235,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>>  ResetPassword(String pinCode, String resetPasswordToken) async {
+  Future<Map<String, dynamic>>  ResetPassword(String password, String resetPasswordToken) async {
     final url = Uri.parse('$_baseUrl/auth/reset-password').replace(queryParameters: {'token' : resetPasswordToken});
 
     try {
@@ -243,7 +243,7 @@ class AuthService {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "pinCode": pinCode,
+          "password": password,
         }),
       );
       if(response.statusCode == 204)

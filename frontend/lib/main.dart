@@ -3,11 +3,9 @@ import 'package:mapsnap_fe/Authentication/ForgotPassword.dart';
 import 'package:mapsnap_fe/Authentication/SignIn.dart';
 import 'package:mapsnap_fe/Authentication/SignUp.dart';
 import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
-import 'package:mapsnap_fe/Screen/AccountScreen.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
-import 'package:mapsnap_fe/Screen/settingScreen.dart';
-import 'package:mapsnap_fe/Screen/helpScreen.dart';
-import 'package:mapsnap_fe/Screen/generalSettings.dart';
+import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
+import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart'; // Import file model
@@ -15,7 +13,14 @@ import 'package:mapsnap_fe/Authentication/Onboarding.dart';
 import 'InApp/HomePage.dart';
 import 'dev.dart';
 
-void main() {
+import 'Authentication/Onboarding.dart';
+import 'Widget/AutoRefreshToken.dart';
+import 'Widget/UpdateUser.dart';
+
+
+
+Future<void> main() async {
+  // Token token = await Login('linhson7a127@gmail.com', 'a1234567');
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   runApp(
@@ -30,15 +35,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: ThemeData(
-      //   brightness: Brightness.dark,
-      //   // brightness: Brightness.light,
-      //   // colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-      //   useMaterial3: true,
-      // ),
       home: SafeArea(
         child: Scaffold(
           body: Container(
