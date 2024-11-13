@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const upload_avatar = require('../middlewares/upload');
+const { upload_avatar } = require('../middlewares/upload');
 
 /**
  * Create a user
