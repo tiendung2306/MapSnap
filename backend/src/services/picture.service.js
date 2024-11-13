@@ -46,7 +46,7 @@ const getPictureById = async (id) => {
 }
 
 const getPictures = async (req, res) => {
-  return Picture.find(req.params);
+  return Picture.find(req.query);
 }
 
 const deletePictureById = async (id) => {

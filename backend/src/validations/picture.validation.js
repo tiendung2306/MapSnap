@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const getPictures = {
-    body: Joi.object().keys({
+    query: Joi.object().keys({
         user_id: Joi.string(),
         location_id: Joi.string(),
         visit_id: Joi.string(),

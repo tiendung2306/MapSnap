@@ -29,8 +29,8 @@ module.exports = router;
  * @swagger
  * /pictures:
  *   post:
- *     summary: Create a picture
- *     description: Upload a new picture.
+ *     summary: Create some pictures
+ *     description: Upload new pictures.
  *     tags: [Pictures]
  *     requestBody:
  *       required: true
@@ -61,13 +61,13 @@ module.exports = router;
  *                 type: string
  *                 format: date-time
  *                 description: The date and time when the picture was created
- *               file:
+ *               picture:
  *                 type: string
  *                 format: binary
- *                 description: The picture file to upload
+ *                 description: The picture files to upload
  *     responses:
  *       "200":
- *         description: Picture uploaded successfully
+ *         description: Pictures uploaded successfully
  *         content:
  *           application/json:
  *             schema:
