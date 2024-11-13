@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const upload = require('../middlewares/upload');
+const { upload_avatar } = require('../middlewares/upload');
 
 /**
  * Create a user
@@ -67,7 +67,7 @@ const updateUserById = async (userId, updateBody) => {
 };
 
 const updateUserAvatarByID = async (req, res) => {
-  upload(req, res, async (err) => {
+  upload_avatar(req, res, async (err) => {
     if (err) {
       return res.status(httpStatus.BAD_REQUEST).send({ message: 'Invalid file' });
     }
@@ -85,7 +85,7 @@ const updateUserAvatarByID = async (req, res) => {
       }
 
       // Update avatar field with the path of the uploaded image
-      const filePath = `/uploads/avatars/${req.file.filename}`;
+      const filePath = `/uploads/pictures/${req.file.filename}`;
       user.avatar = filePath;
       await user.save();
 
