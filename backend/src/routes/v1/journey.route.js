@@ -28,11 +28,18 @@ module.exports = router;
 
 /**
  * @swagger
- * /journey/create-journey:
+ * /journey/{userId}/create-journey:
  *   post:
  *     summary: Create a journey
  *     description: Only admins can create other journeys.
  *     tags: [Journeys]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -83,11 +90,19 @@ module.exports = router;
  *                $ref: '#/components/schemas/Journey'
  *       "400":
  *         $ref: '#/components/responses/DuplicateJourney'
- *
+ * @swagger
+ * /journey/{userId}/get-journeys:
  *   get:
  *     summary: Get all journeys of user
  *     description: Get all journeys of user.
  *     tags: [Journeys]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
  *     security:
  *       - bearerAuth: []
  *     responses:
