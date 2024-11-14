@@ -43,23 +43,22 @@ module.exports = router;
  *               - location_id
  *               - visit_id
  *               - journey_id
- *               - created_at
+ *               - createdAt
  *             properties:
  *               user_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the user uploading the picture
  *               location_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the location where the picture was taken
  *               visit_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the visit during which the picture was taken
  *               journey_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the journey associated with the picture
- *               created_at:
- *                 type: string
- *                 format: date-time
+ *               createdAt:
+ *                 type: number
  *                 description: The date and time when the picture was created
  *               picture:
  *                 type: string
@@ -209,6 +208,9 @@ module.exports = router;
  *           type: string
  *           format: date-time
  *           description: The date and time when the picture was created
+ *         id:
+ *           type: string
+ *           description: Picture ID
  *       example:
  *         user_id: "60c72b2f9af1b8124cf74c9a"
  *         location_id: "60c72b2f9af1b8124cf74c9b"
@@ -216,6 +218,7 @@ module.exports = router;
  *         journey_id: "60c72b2f9af1b8124cf74c9d"
  *         link: "http://example.com/image1.jpg"
  *         created_at: "2023-04-12T10:00:00.000Z"
+ *         id: "6734dab6bb4a94160c1f419a"
  *   responses:
  *     BadRequest:
  *       description: Invalid request
