@@ -43,23 +43,22 @@ module.exports = router;
  *               - location_id
  *               - visit_id
  *               - journey_id
- *               - created_at
+ *               - createdAt
  *             properties:
  *               user_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the user uploading the picture
  *               location_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the location where the picture was taken
  *               visit_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the visit during which the picture was taken
  *               journey_id:
- *                 type: string
+ *                 type: Schema.Types.ObjectId
  *                 description: ID of the journey associated with the picture
- *               created_at:
- *                 type: string
- *                 format: date-time
+ *               createdAt:
+ *                 type: number
  *                 description: The date and time when the picture was created
  *               file:
  *                 type: string
