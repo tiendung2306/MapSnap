@@ -14,7 +14,7 @@ import 'dart:convert';
 
 import 'Authentication/Onboarding.dart';
 import 'FavouriteScreen.dart';
-import 'HomeScreen/HomeScreen.dart';
+import 'PictureScreen/HomeScreen.dart';
 import 'MapScreen.dart';
 import 'Widget/AutoRefreshToken.dart';
 import 'Widget/UpdateUser.dart';

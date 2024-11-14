@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/HomeScreen/pictureManager.dart';
+import 'package:mapsnap_fe/PictureScreen/pictureManager.dart';
 import '../Widget/bottomNavigationBar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: GestureDetector(
           onTap: () {
-            print("Heheh");
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => pictureManager()),

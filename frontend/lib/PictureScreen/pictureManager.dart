@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mapsnap_fe/HomeScreen/daySavePicture.dart';
-import 'package:mapsnap_fe/HomeScreen/lacationSavePicture.dart';
+import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
+import 'package:mapsnap_fe/PictureScreen/lacationSavePicture.dart';
 
 import '../Widget/bottomNavigationBar.dart';
 
