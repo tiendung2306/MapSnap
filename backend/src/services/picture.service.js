@@ -70,7 +70,7 @@ module.exports = {
 //     visit_id: '60c72b2f9af1b8124cf74c9c', // ID giả định
 //     journey_id: '60c72b2f9af1b8124cf74c9d', // ID giả định
 //     link: 'http://example.com/image1.jpg',
-//     created_at: new Date()
+//     createdAt: new Date()
 // });
 
 // newPicture.save()
