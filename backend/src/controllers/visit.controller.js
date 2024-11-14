@@ -15,8 +15,7 @@ const createVisit = catchAsync(async (req, res) => {
 });
 
 const getVisitByVisitId = catchAsync(async (req, res) => {
-  const { visitId } = req.params.visitId;
-  const visit = await visitService.getVisitByVisitId(visitId);
+  const visit = await visitService.getVisitByVisitId(req.params.visitId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: visit });
 });
 
@@ -31,11 +30,10 @@ const updateVisit = catchAsync(async (req, res) => {
 });
 
 const deleteVisit = catchAsync(async (req, res) => {
-  const { visitId } = req.params.visitId;
-  await visitService.deleteVisit(visitId);
+  await visitService.deleteVisit(req.params.visitId);
   res.send({
     code: httpStatus.OK,
-    message: Message.visitMsg.delete,
+    message: Message.visitMsg.deleted,
   });
 });
 

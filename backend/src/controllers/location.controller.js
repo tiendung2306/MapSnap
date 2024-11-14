@@ -4,7 +4,9 @@ const catchAsync = require('../utils/catchAsync');
 const locationService = require('../services/location.service');
 
 const createLocation = catchAsync(async (req, res) => {
-  const location = await locationService.createLocation(req.body);
+  const requestBody = req.body;
+  requestBody.userId = req.params.userId;
+  const location = await locationService.createLocation(requestBody);
   res.status(httpStatus.CREATED).send({
     code: httpStatus.CREATED,
     message: Message.locationMsg.created,
@@ -13,8 +15,7 @@ const createLocation = catchAsync(async (req, res) => {
 });
 
 const getLocationByLocationId = catchAsync(async (req, res) => {
-  const { locationId } = req.params;
-  const location = await locationService.getLocationByLocationId(locationId);
+  const location = await locationService.getLocationByLocationId(req.params.locationId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: location });
 });
 
@@ -29,11 +30,10 @@ const updateLocation = catchAsync(async (req, res) => {
 });
 
 const deleteLocation = catchAsync(async (req, res) => {
-  const { locationId } = req.params;
-  await locationService.deleteLocation(locationId);
+  await locationService.deleteLocation(req.params.locationId);
   res.send({
     code: httpStatus.OK,
-    message: Message.locationMsg.delete,
+    message: Message.locationMsg.deleted,
   });
 });
 

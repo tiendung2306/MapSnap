@@ -10,7 +10,7 @@ const positionSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  timeAt: {
+  createdAt: {
     type: Number,
     required: true,
   },
@@ -22,14 +22,9 @@ const positionSchema = new Schema({
     type: Number,
     required: true,
   },
-  altitude: {
-    type: Number,
-    required: true,
-  },
   locationId: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
-    required: true,
   },
 });
 

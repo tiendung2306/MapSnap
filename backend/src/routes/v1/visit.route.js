@@ -13,7 +13,7 @@ router.post(
 );
 
 router
-  .route('/:locationId')
+  .route('/:visitId')
   .get(visitController.getVisitByVisitId)
   .patch(visitController.updateVisit)
   .delete(visitController.deleteVisit);
@@ -72,7 +72,8 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this visit add by user or BE
  *             example:
- *               journeyId: 123432423141234
+ *               journeyId: 6731d86e2745d6189c244932
+ *               locationId: 6731d0bbdf4673b3683eb7a5
  *               title: Ngayhomnayemcuoiroi
  *               startedAt: 1731072409
  *               endedAt: 1731072409
@@ -89,6 +90,9 @@ module.exports = router;
  *                $ref: '#/components/schemas/Visit'
  *       "400":
  *         $ref: '#/components/responses/DuplicateVisit'
+ */
+
+/**
  * @swagger
  * /visit/{id}:
  *   get:
@@ -118,6 +122,13 @@ module.exports = router;
  *     tags: [Visits]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Visit ID
  *     requestBody:
  *       required: true
  *       content:
