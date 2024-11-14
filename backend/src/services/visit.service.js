@@ -9,7 +9,7 @@ const Message = require('../utils/Message');
 
 const _addVisitInJourney = async ({ journeyId, visitId }) => {
   const journey = await Journey.findById(journeyId);
-  if (!_.includes(journey.visitIds, visitId)) _.push(journey.visitIds, visitId);
+  if (!_.includes(journey.visitIds, visitId)) journey.visitIds.push(visitId);
   await journey.save();
 };
 
@@ -25,7 +25,9 @@ const createVisit = async (requestBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, Message.visitMsg.nameExisted);
   }
   const visit = await Visit.create(requestBody);
-  await _addVisitInJourney(requestBody);
+  const journeyId = _.get(requestBody, 'journeyId');
+  const visitId = _.get(visit, '_id');
+  await _addVisitInJourney({ journeyId, visitId });
   return visit;
 };
 
@@ -42,8 +44,8 @@ const updateVisit = async ({ visitId, requestBody }) => {
   const lastJourneyId = _.get(existedVisit, 'journeyId');
   const nextJourneyId = _.get(requestBody, 'journeyId');
   if (lastJourneyId !== nextJourneyId || requestBody.status === 'disabled') {
-    await _addVisitInJourney({ nextJourneyId, visitId });
-    await _deleteVisitInJourney({ lastJourneyId, visitId });
+    if (nextJourneyId) await _addVisitInJourney({ journeyId: nextJourneyId, visitId });
+    if (lastJourneyId) await _deleteVisitInJourney({ journeyId: lastJourneyId, visitId });
   }
   const visit = await Visit.findByIdAndUpdate(visitId, requestBody, { new: true });
   return visit;

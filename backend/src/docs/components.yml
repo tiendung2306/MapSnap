@@ -126,7 +126,6 @@ components:
         - visitedTime
         - longitude
         - latitude
-        - altitude
         - createdAt
         - status
         - updatedByUser
@@ -141,8 +140,6 @@ components:
         longitude:
           type: number
         latitude:
-          type: number
-        altitude:
           type: number
         title:
           type: string
@@ -164,8 +161,7 @@ components:
         - userId
         - longitude
         - latitude
-        - altitude
-        - timeAt
+        - createdAt
       properties:
         userId:
           type: string
@@ -173,9 +169,7 @@ components:
           type: number
         latitude:
           type: number
-        altitude:
-          type: number
-        timeAt:
+        createdAt:
           type: number
         locationid:
           type: string

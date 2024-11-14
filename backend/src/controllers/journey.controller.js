@@ -40,7 +40,7 @@ const deleteJourney = catchAsync(async (req, res) => {
   await journeyService.deleteJourney(journeyId);
   res.send({
     code: httpStatus.OK,
-    message: Message.journeyMsg.delete,
+    message: Message.journeyMsg.deleted,
   });
 });
 
