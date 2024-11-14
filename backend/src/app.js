@@ -60,6 +60,12 @@ if (config.env === 'production') {
 // v1 api routes
 app.use('/v1', routes);
 
+// Middleware to handle /socket.io/ requests
+app.use('/socket.io/*', (req, res) => {
+  console.log('Intercepted Socket.IO request:', req.url);
+  res.status(404).json({ message: 'Not found' });
+});
+
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));

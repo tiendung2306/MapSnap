@@ -1,19 +1,8 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
 
-const createPicture = {
-    body: Joi.object().keys({
-        user_id: Joi.string().required(),
-        location_id: Joi.string().required(),
-        visit_id: Joi.string().required(),
-        journey_id: Joi.string().required(),
-        link: Joi.string().required(),
-        created_at: Joi.date().required()
-    }),
-};
-
 const getPictures = {
-    body: Joi.object().keys({
+    query: Joi.object().keys({
         user_id: Joi.string(),
         location_id: Joi.string(),
         visit_id: Joi.string(),
@@ -36,7 +25,6 @@ const deletePicture = {
 }
 
 module.exports = {
-    createPicture,
     getPictures,
     getPictureById,
     deletePicture,
