@@ -6,28 +6,28 @@ const { Schema } = mongoose;
 // Define the Picture schema
 const pictureSchema = new Schema({
   user_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
     index: true,
   },
   location_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Location',
     required: true,
   },
   visit_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Visit',
     required: true,
   },
   journey_id: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Journey',
     required: true,
   },
   link: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   createdAt: {
