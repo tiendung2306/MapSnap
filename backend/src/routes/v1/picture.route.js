@@ -29,8 +29,8 @@ module.exports = router;
  * @swagger
  * /pictures:
  *   post:
- *     summary: Create a picture
- *     description: Upload a new picture.
+ *     summary: Create some pictures
+ *     description: Upload new pictures.
  *     tags: [Pictures]
  *     requestBody:
  *       required: true
@@ -60,13 +60,13 @@ module.exports = router;
  *               createdAt:
  *                 type: number
  *                 description: The date and time when the picture was created
- *               file:
+ *               picture:
  *                 type: string
  *                 format: binary
- *                 description: The picture file to upload
+ *                 description: The picture files to upload
  *     responses:
  *       "200":
- *         description: Picture uploaded successfully
+ *         description: Pictures uploaded successfully
  *         content:
  *           application/json:
  *             schema:
@@ -208,6 +208,9 @@ module.exports = router;
  *           type: string
  *           format: date-time
  *           description: The date and time when the picture was created
+ *         id:
+ *           type: string
+ *           description: Picture ID
  *       example:
  *         user_id: "60c72b2f9af1b8124cf74c9a"
  *         location_id: "60c72b2f9af1b8124cf74c9b"
@@ -215,6 +218,7 @@ module.exports = router;
  *         journey_id: "60c72b2f9af1b8124cf74c9d"
  *         link: "http://example.com/image1.jpg"
  *         created_at: "2023-04-12T10:00:00.000Z"
+ *         id: "6734dab6bb4a94160c1f419a"
  *   responses:
  *     BadRequest:
  *       description: Invalid request
