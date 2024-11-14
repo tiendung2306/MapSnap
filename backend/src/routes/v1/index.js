@@ -5,7 +5,7 @@ const docsRoute = require('./docs.route');
 const journeyRoute = require('./journey.route');
 const pictureRoute = require('./picture.route');
 const locationRoute = require('./location.route');
-const tripRoute = require('./trip.route');
+const visitRoute = require('./visit.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -28,8 +28,8 @@ const defaultRoutes = [
     route: journeyRoute,
   },
   {
-    path: '/trip',
-    route: tripRoute,
+    path: '/visit',
+    route: visitRoute,
   },
   {
     path: '/location',

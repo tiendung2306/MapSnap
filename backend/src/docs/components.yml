@@ -60,40 +60,6 @@ components:
       properties:
         userId:
           type: string
-        tripIds:
-          type: array
-          items:
-            type: string
-        title:
-          type: string
-        startedAt:
-          type: number
-        endedAt:
-          type: number
-        updatedAt:
-          type: number
-        status:
-          type: string
-        updatedByUser:
-          type: boolean
-        isAutomaticAdded:
-          type: boolean
-    Trip:
-      type: object
-      required:
-        - userId
-        - journeyId
-        - startedAt
-        - endedAt
-        - updatedAt
-        - status
-      properties:
-        userId:
-          type: string
-        journeyId:
-          type: array
-          items:
-            type: string
         visitIds:
           type: array
           items:
@@ -107,7 +73,7 @@ components:
         updatedAt:
           type: number
         status:
-          type: boolean
+          type: string
         updatedByUser:
           type: boolean
         isAutomaticAdded:
@@ -117,7 +83,7 @@ components:
       required:
         - userId
         - journeyId
-        - tripId
+        - journeyId
         - locationId
         - startedAt
         - endedAt
@@ -129,8 +95,6 @@ components:
         userId:
           type: string
         journeyId:
-          type: string
-        tripId:
           type: string
         locationId:
           type: string
