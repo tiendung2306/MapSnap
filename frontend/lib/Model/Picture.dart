@@ -5,7 +5,7 @@ class Picture {
   String visit_id;
   String journey_id;
   String link;
-  DateTime created_at;
+  // DateTime created_at;
 
   Picture({
     required this.id,
@@ -14,7 +14,7 @@ class Picture {
     required this.visit_id,
     required this.journey_id,
     required this.link,
-    required this.created_at,
+    // required this.created_at,
   });
 
   factory Picture.fromJson(Map<String, dynamic> json) {
@@ -25,7 +25,7 @@ class Picture {
         visit_id: json['visit_id'],
         journey_id: json['journey_id'],
         link: json['link'],
-        created_at: json['created_at']
+        // created_at: json['created_at']
     );
   }
 }
@@ -36,7 +36,7 @@ class CreatePicture {
   String visit_id;
   String journey_id;
   String link;
-  DateTime created_at;
+  DateTime createdAt;
 
   CreatePicture({
     required this.user_id,
@@ -44,7 +44,7 @@ class CreatePicture {
     required this.visit_id,
     required this.journey_id,
     required this.link,
-    required this.created_at,
+    required this.createdAt,
   });
 
   factory CreatePicture.fromJson(Map<String, dynamic> json) {
@@ -54,7 +54,7 @@ class CreatePicture {
         visit_id: json['visit_id'],
         journey_id: json['journey_id'],
         link: json['link'],
-        created_at: json['createdAt']
+        createdAt: json['createdAt']
     );
   }
 }

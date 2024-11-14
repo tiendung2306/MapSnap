@@ -27,7 +27,7 @@ const pictureSchema = new Schema({
     required: true,
   },
   link: {
-    type: Schema.Types.ObjectId,
+    type: String,
     required: true,
   },
   createdAt: {

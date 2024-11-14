@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Model/Picture.dart';
+
+import '../PictureManager/CURD_picture.dart';
 
 class ImageScreen extends StatefulWidget {
-  final String imagePath;
-  final Function(String) onDelete; // Thêm hàm callback để xóa ảnh
+  final Picture picture;
+  final Function(Picture) onDelete; // Thêm hàm callback để xóa ảnh
 
   const ImageScreen({
     Key? key,
-    required this.imagePath,
+    required this.picture,
     required this.onDelete,
   }) : super(key: key);
 
@@ -19,6 +22,9 @@ class ImageScreen extends StatefulWidget {
 }
 
 class ImageScreenState extends State<ImageScreen> {
+
+
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -81,14 +87,12 @@ class ImageScreenState extends State<ImageScreen> {
               const SizedBox(height: 5),
               Container(
                 height: screenHeight - 150,
-                child: widget.imagePath.startsWith('/')
-                    ? Image.file(
-                  File(widget.imagePath),
-                  fit: BoxFit.contain,
-                )
-                    : Image.asset(
-                  widget.imagePath,
-                  fit: BoxFit.contain,
+                decoration: BoxDecoration(
+                    color: Colors.red,
+                    image: DecorationImage(
+                      image: NetworkImage('http://10.0.2.2:3000${widget.picture.link}'),
+                      fit: BoxFit.cover,
+                    )
                 ),
               ),
               const SizedBox(height: 5),
@@ -120,8 +124,9 @@ class ImageScreenState extends State<ImageScreen> {
                           _showConfirmationDialog(
                             title: "Xác nhận xóa",
                             content: "Bạn có chắc chắn muốn xóa ảnh này không?",
-                            onConfirm: () {
-                              widget.onDelete(widget.imagePath);
+                            onConfirm: () async {
+                              widget.onDelete(widget.picture);
+                              await RemoveImage(widget.picture.id);
                               Navigator.pop(context); // Quay về màn hình trước
                             },
                           );

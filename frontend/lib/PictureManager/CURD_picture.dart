@@ -10,7 +10,7 @@ import 'package:mime/mime.dart';
 
 
 // API để gọi tải ảnh lên Database
-Future<void> upLoadImage(CreatePicture createPicture) async {
+Future<List<Picture>?> upLoadImage(CreatePicture createPicture) async {
   if (createPicture.link == null) {
     print('Không có ảnh nào được chọn!');
     return null;
@@ -37,7 +37,7 @@ Future<void> upLoadImage(CreatePicture createPicture) async {
   request.fields['location_id'] = createPicture.location_id;
   request.fields['visit_id'] = createPicture.visit_id;
   request.fields['journey_id'] = createPicture.journey_id;
-  request.fields['createdAt'] = createPicture.created_at.to();
+  request.fields['createdAt'] = createPicture.createdAt.millisecondsSinceEpoch.toString();
 
   // Gửi yêu cầu
   final response = await request.send();
@@ -45,9 +45,9 @@ Future<void> upLoadImage(CreatePicture createPicture) async {
   // Xử lý phản hồi
   if (response.statusCode == 200) {
     final responseData = await response.stream.bytesToString();
-    final data = jsonDecode(responseData);
-    print('Ảnh đã được tải lên thành công!');
-    print(data);
+    List<dynamic> data = jsonDecode(responseData);
+    List<Picture> pictures = data.map((json) => Picture.fromJson(json)).toList();
+    return pictures;
   } else {
     print('Lỗi: ${response.statusCode} ');
   }
@@ -56,38 +56,40 @@ Future<void> upLoadImage(CreatePicture createPicture) async {
 
 
 // Gọi API để lấy thông tin tất cả ảnh theo .....
-Future<Picture?> getInfoImage(String Parameters,String check) async {
+Future<List<Picture>> getInfoImages(String parameters, String check) async {
   Uri? url;
-  if(check == 'user_id') {
-    url = Uri.parse('http://10.0.2.2:3000/v1/pictures?user_id=$Parameters');
-  }
 
-  if(check == 'created_at') {
-    url = Uri.parse('http://10.0.2.2:3000/v1/pictures?created_at=$Parameters');
-  }
-
-  if(check == 'journey_id') {
-    url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journey_id=$Parameters');
-  }
-
-  if(check == 'visit_id') {
-    url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visit_id=$Parameters');
+  // Xác định URL dựa trên giá trị của `check`
+  switch (check) {
+    case 'user_id':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?user_id=$parameters');
+      break;
+    case 'created_at':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?created_at=$parameters');
+      break;
+    case 'journey_id':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journey_id=$parameters');
+      break;
+    case 'visit_id':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visit_id=$parameters');
+      break;
+    default:
+      print('Tham số không hợp lệ');
+      return [];
   }
 
   try {
-    // Kiểm tra nếu `url` hợp lệ trước khi gửi request
     if (url != null) {
       final response = await http.get(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        print(data);
-        return Picture.fromJson(data);
+        // Giải mã JSON và ánh xạ vào danh sách Picture
+        List<dynamic> data = jsonDecode(response.body);
+        List<Picture> pictures = data.map((json) => Picture.fromJson(json)).toList();
+        return pictures;
       } else {
         print('Lỗi: ${response.statusCode}');
       }
@@ -95,8 +97,9 @@ Future<Picture?> getInfoImage(String Parameters,String check) async {
   } catch (e) {
     print('Lỗi khi gọi API: $e');
   }
-  return null;
+  return [];
 }
+
 
 
 // Gọi API để lấy thông tin ảnh theo ID

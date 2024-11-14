@@ -120,12 +120,13 @@ class ConfirmScreen extends StatelessWidget {
 
     CreatePicture createPicture = CreatePicture(
       user_id: accountModel.idUser,
-      location_id: "location_id",
-      visit_id: "visit_id",
-      journey_id: "journey_id",
+      location_id: "60c72b2f9af1b8124cf74c9b",
+      visit_id: "60c72b2f9af1b8124cf74c9c",
+      journey_id: "60c72b2f9af1b8124cf74c9d",
       link: imagePath,
-      created_at: vietnamTime,
+      createdAt: vietnamTime,
     );
+
 
 
     return Scaffold(
@@ -153,12 +154,10 @@ class ConfirmScreen extends StatelessWidget {
                       child: button(Icons.close, Alignment.bottomLeft, (screenHeight / 5) * 1 / 2, screenHeight / 20, screenWidth / 10, Colors.red),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        upLoadImage(createPicture);
-                        print(vietnamTime);
-                        print("=====================");
+                      onTap: () async {
+                        List<Picture>? picture = await upLoadImage(createPicture);
                         // Cập nhật ảnh vào ImageManager
-                        Provider.of<AccountModel>(context, listen: false).addImageDay(imagePath);
+                        Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0]);
                         Navigator.pop(context); // Quay lại màn hình trước đó
                       },
                       child: button(Icons.check, Alignment.bottomRight, (screenHeight / 5) * 1 / 2, screenHeight / 20, screenWidth / 10, Colors.green),
