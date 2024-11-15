@@ -15,8 +15,8 @@ const createJourney = async (journeyBody) => {
   return journeyModel;
 };
 
-const getJourneysByUserId = async ({ userId }) => {
-  const filter = { userId: mongoose.Types.ObjectId(userId) };
+const getJourneysByUserId = async (userId) => {
+  const filter = { userId: mongoose.Types.ObjectId(userId), status: 'enabled' };
   const journeys = await Journey.find(filter);
   return journeys;
 };

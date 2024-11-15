@@ -60,40 +60,6 @@ components:
       properties:
         userId:
           type: string
-        tripIds:
-          type: array
-          items:
-            type: string
-        title:
-          type: string
-        startedAt:
-          type: number
-        endedAt:
-          type: number
-        updatedAt:
-          type: number
-        status:
-          type: string
-        updatedByUser:
-          type: boolean
-        isAutomaticAdded:
-          type: boolean
-    Trip:
-      type: object
-      required:
-        - userId
-        - journeyId
-        - startedAt
-        - endedAt
-        - updatedAt
-        - status
-      properties:
-        userId:
-          type: string
-        journeyId:
-          type: array
-          items:
-            type: string
         visitIds:
           type: array
           items:
@@ -107,7 +73,7 @@ components:
         updatedAt:
           type: number
         status:
-          type: boolean
+          type: string
         updatedByUser:
           type: boolean
         isAutomaticAdded:
@@ -117,7 +83,7 @@ components:
       required:
         - userId
         - journeyId
-        - tripId
+        - journeyId
         - locationId
         - startedAt
         - endedAt
@@ -129,8 +95,6 @@ components:
         userId:
           type: string
         journeyId:
-          type: string
-        tripId:
           type: string
         locationId:
           type: string
@@ -162,7 +126,6 @@ components:
         - visitedTime
         - longitude
         - latitude
-        - altitude
         - createdAt
         - status
         - updatedByUser
@@ -177,8 +140,6 @@ components:
         longitude:
           type: number
         latitude:
-          type: number
-        altitude:
           type: number
         title:
           type: string
@@ -200,8 +161,7 @@ components:
         - userId
         - longitude
         - latitude
-        - altitude
-        - timeAt
+        - createdAt
       properties:
         userId:
           type: string
@@ -209,9 +169,7 @@ components:
           type: number
         latitude:
           type: number
-        altitude:
-          type: number
-        timeAt:
+        createdAt:
           type: number
         locationid:
           type: string

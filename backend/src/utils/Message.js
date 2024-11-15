@@ -18,19 +18,37 @@ const journeyMsg = {
   notFound: 'hành trình này không tồn tại',
   description: 'không được để trống miêu tả',
   update: 'cập nhập thành công',
-  delete: 'xoá thành công',
+  deleted: 'xoá thành công',
 };
 
 const visitMsg = {
   created: 'tạo điểm thăm thành công',
   name: 'không được để trống tên',
+  nameExisted: 'điểm thăm này đã tồn tại',
   notFound: 'điểm thăm này không tồn tại',
+  deleted: 'Xóa điểm thăm thành công',
+};
+
+const locationMsg = {
+  created: 'tạo điểm cố định thành công',
+  name: 'không được để trống tên',
+  nameExisted: 'điểm cố định này đã tồn tại',
+  notFound: 'điểm cố định này không tồn tại',
+  deleted: 'Xóa điểm cố định thành công',
+};
+
+const positionMsg = {
+  created: 'tạo vị trí người dùng thành công',
+  name: 'không được để trống tên',
+  notFound: 'vị trí người dùng không tồn tại',
+  deleted: 'Xóa vị trí người dùng thành công',
 };
 
 const pictureMsg = {
   created: 'tạo ảnh thành công ',
   nameExisted: 'ảnh đã tồn tại',
   notFound: 'ảnh không tồn tại',
+  deleted: 'Xóa ảnh thăm thành công',
 };
 
 const userMsg = {
@@ -79,4 +97,6 @@ module.exports = {
   userMsg,
   validationMsg,
   uploadMsg,
+  locationMsg,
+  positionMsg,
 };

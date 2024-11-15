@@ -6,17 +6,16 @@ const validate = require('../../middlewares/validate');
 const router = express.Router();
 
 router
-    .route('/')
-    .post(pictureController.createPicture)
-    .get(validate(pictureValidation.getPictures), pictureController.getPictures);
+  .route('/')
+  .post(pictureController.createPicture)
+  .get(validate(pictureValidation.getPictures), pictureController.getPictures);
 
 router
-    .route('/:id')
-    .get(validate(pictureValidation.getPictureById), pictureController.getPictureById)
-    .delete(validate(pictureValidation.deletePicture), pictureController.deletePicture);
+  .route('/:id')
+  .get(validate(pictureValidation.getPictureById), pictureController.getPictureById)
+  .delete(validate(pictureValidation.deletePicture), pictureController.deletePicture);
 
 module.exports = router;
-
 
 /**
  * @swagger
@@ -45,16 +44,16 @@ module.exports = router;
  *               - journey_id
  *               - capturedAt
  *             properties:
- *               user_id:
+ *               userId:
  *                 type: Schema.Types.ObjectId
  *                 description: ID of the user uploading the picture
- *               location_id:
+ *               locationId:
  *                 type: Schema.Types.ObjectId
  *                 description: ID of the location where the picture was taken
- *               visit_id:
+ *               visitId:
  *                 type: Schema.Types.ObjectId
  *                 description: ID of the visit during which the picture was taken
- *               journey_id:
+ *               journeyId:
  *                 type: Schema.Types.ObjectId
  *                 description: ID of the journey associated with the picture
  *               capturedAt:
@@ -84,22 +83,22 @@ module.exports = router;
  *     tags: [Pictures]
  *     parameters:
  *       - in: query
- *         name: user_id
+ *         name: userId
  *         schema:
  *           type: string
  *         description: ID of the user
  *       - in: query
- *         name: location_id
+ *         name: locationId
  *         schema:
  *           type: string
  *         description: ID of the location
  *       - in: query
- *         name: visit_id
+ *         name: visitId
  *         schema:
  *           type: string
  *         description: ID of the visit
  *       - in: query
- *         name: journey_id
+ *         name: journeyId
  *         schema:
  *           type: string
  *         description: ID of the journey
@@ -109,7 +108,7 @@ module.exports = router;
  *           type: string
  *         description: Link to the picture
  *       - in: query
- *         name: created_at
+ *         name: createdAt
  *         schema:
  *           type: string
  *           format: date-time
@@ -182,29 +181,29 @@ module.exports = router;
  *     Picture:
  *       type: object
  *       required:
- *         - user_id
- *         - location_id
- *         - visit_id
- *         - journey_id
+ *         - userId
+ *         - locationId
+ *         - visitId
+ *         - journeyId
  *         - link
- *         - created_at
+ *         - createdAt
  *       properties:
- *         user_id:
+ *         userId:
  *           type: string
  *           description: ID of the user who uploaded the picture
- *         location_id:
+ *         locationId:
  *           type: string
  *           description: ID of the location where the picture was taken
- *         visit_id:
+ *         visitId:
  *           type: string
  *           description: ID of the visit during which the picture was taken
- *         journey_id:
+ *         journeyId:
  *           type: string
  *           description: ID of the journey associated with the picture
  *         link:
  *           type: string
  *           description: URL link to the picture
- *         created_at:
+ *         createdAt:
  *           type: string
  *           format: date-time
  *           description: The date and time when the picture was created
@@ -212,12 +211,12 @@ module.exports = router;
  *           type: string
  *           description: Picture ID
  *       example:
- *         user_id: "60c72b2f9af1b8124cf74c9a"
- *         location_id: "60c72b2f9af1b8124cf74c9b"
- *         visit_id: "60c72b2f9af1b8124cf74c9c"
- *         journey_id: "60c72b2f9af1b8124cf74c9d"
+ *         userId: "60c72b2f9af1b8124cf74c9a"
+ *         locationId: "60c72b2f9af1b8124cf74c9b"
+ *         visitId: "60c72b2f9af1b8124cf74c9c"
+ *         journeyId: "60c72b2f9af1b8124cf74c9d"
  *         link: "http://example.com/image1.jpg"
- *         created_at: "2023-04-12T10:00:00.000Z"
+ *         createdAt: "2023-04-12T10:00:00.000Z"
  *         id: "6734dab6bb4a94160c1f419a"
  *   responses:
  *     BadRequest:
