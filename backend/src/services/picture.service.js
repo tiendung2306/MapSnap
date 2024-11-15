@@ -19,7 +19,7 @@ const createPicture = async (req, res) => {
     }
 
     try {
-      const { user_id, location_id, visit_id, journey_id, createdAt } = req.body;
+      const { user_id, location_id, visit_id, journey_id, capturedAt } = req.body;
 
       const pictures = await Promise.all(req.files.map(file => {
         const filePath = `/uploads/pictures/${file.filename}`;
@@ -29,7 +29,7 @@ const createPicture = async (req, res) => {
           visit_id,
           journey_id,
           link: filePath,
-          createdAt,
+          capturedAt,
         })
         return picture;
       }));
