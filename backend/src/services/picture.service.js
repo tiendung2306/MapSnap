@@ -18,20 +18,17 @@ const createPicture = async (req, res) => {
     }
 
     try {
-      const { userId, locationId, visitId, journeyId, createdAt } = req.body;
+      const { user_id, location_id, visit_id, journey_id, capturedAt } = req.body;
 
-      const pictures = await Promise.all(
-        req.files.map((file) => {
-          const filePath = `/uploads/pictures/${file.filename}`;
-          const picture = Picture.create({
-            userId,
-            locationId,
-            visitId,
-            journeyId,
-            link: filePath,
-            createdAt,
-          });
-          return picture;
+      const pictures = await Promise.all(req.files.map(file => {
+        const filePath = `/uploads/pictures/${file.filename}`;
+        const picture = Picture.create({
+          user_id,
+          location_id,
+          visit_id,
+          journey_id,
+          link: filePath,
+          capturedAt,
         })
       );
       return res.status(httpStatus.OK).send(pictures);
