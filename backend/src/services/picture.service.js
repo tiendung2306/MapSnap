@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Picture } = require('../models'); // Đường dẫn tới file chứa model Picture
-const { updatePicture } = require('../middlewares/upload');
+const { uploadPicture } = require('../middlewares/upload');
 
 /**
  * Create a user
@@ -9,7 +9,7 @@ const { updatePicture } = require('../middlewares/upload');
  * @returns {Promise<Picture>}
  */
 const createPicture = async (req, res) => {
-  updatePicture(req, res, async (err) => {
+  uploadPicture(req, res, async (err) => {
     if (err) {
       return res.status(httpStatus.BAD_REQUEST).send({ message: 'Invalid file' });
     }
@@ -30,7 +30,8 @@ const createPicture = async (req, res) => {
           link: filePath,
           capturedAt,
         })
-      );
+        return picture;
+      }));
       return res.status(httpStatus.OK).send(pictures);
     } catch (error) {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: 'Server Error' });
