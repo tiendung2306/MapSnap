@@ -41,16 +41,12 @@ const locationSchema = new Schema({
     type: Number,
     required: true,
   },
-  altitude: {
-    type: Number,
-    required: true,
-  },
   createdAt: {
     type: Number,
     required: true,
   },
   status: {
-    type: Boolean,
+    type: String,
     required: true,
   },
   updatedByUser: {

@@ -27,11 +27,6 @@ const visitSchema = new Schema({
     ref: 'Journeys',
     required: true,
   },
-  tripId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Trips',
-    required: true,
-  },
   locationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Locations',

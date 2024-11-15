@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 });
 
 // Initialize upload
-const upload_avatar = multer({
+const uploadAvatar = multer({
   storage,
   limits: { fileSize: 1000000 }, // Limit file size to 1MB
   fileFilter(req, file, cb) {
@@ -20,13 +20,13 @@ const upload_avatar = multer({
   },
 }).single('avatar'); // 'avatar' is the name of the field in the form
 
-const upload_picture = multer({
+const uploadPicture = multer({
   storage,
   limits: { fileSize: 1000000 }, // Limit file size to 1MB
   fileFilter(req, file, cb) {
     // eslint-disable-next-line no-use-before-define
     checkFileType(file, cb);
-  }
+  },
 }).array('picture', 10);
 
 // Check file type
@@ -42,6 +42,6 @@ function checkFileType(file, cb) {
 }
 
 module.exports = {
-  upload_avatar,
-  upload_picture,
+  uploadAvatar,
+  uploadPicture,
 };
