@@ -38,11 +38,11 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - userId
- *               - locationId
- *               - visitId
- *               - journeyId
- *               - createdAt
+ *               - user_id
+ *               - location_id
+ *               - visit_id
+ *               - journey_id
+ *               - capturedAt
  *             properties:
  *               userId:
  *                 type: Schema.Types.ObjectId
@@ -56,7 +56,7 @@ module.exports = router;
  *               journeyId:
  *                 type: Schema.Types.ObjectId
  *                 description: ID of the journey associated with the picture
- *               createdAt:
+ *               capturedAt:
  *                 type: number
  *                 description: The date and time when the picture was created
  *               picture:
