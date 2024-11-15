@@ -5,23 +5,23 @@ const { Schema } = mongoose;
 
 // Define the Picture schema
 const pictureSchema = new Schema({
-  userId: {
+  user_id: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
     index: true,
   },
-  locationId: {
+  location_id: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
     required: true,
   },
-  visitId: {
+  visit_id: {
     type: Schema.Types.ObjectId,
     ref: 'Visit',
     required: true,
   },
-  JourneyId: {
+  journey_id: {
     type: Schema.Types.ObjectId,
     ref: 'Journey',
     required: true,
