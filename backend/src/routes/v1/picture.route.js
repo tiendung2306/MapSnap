@@ -38,10 +38,10 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - user_id
- *               - location_id
- *               - visit_id
- *               - journey_id
+ *               - userId
+ *               - locationId
+ *               - visitId
+ *               - journeyId
  *               - capturedAt
  *             properties:
  *               userId:
@@ -108,11 +108,13 @@ module.exports = router;
  *           type: string
  *         description: Link to the picture
  *       - in: query
- *         name: createdAt
+ *         name: captureddAt
  *         schema:
  *           type: string
- *           format: date-time
- *         description: Date and time when the picture was created
+ *       - in: query
+ *         name: public_id
+ *         schema:
+ *           type: string
  *     responses:
  *       "200":
  *         description: A list of pictures
@@ -186,7 +188,8 @@ module.exports = router;
  *         - visitId
  *         - journeyId
  *         - link
- *         - createdAt
+ *         - capturedAt
+ *         - public_id
  *       properties:
  *         userId:
  *           type: string
@@ -203,10 +206,13 @@ module.exports = router;
  *         link:
  *           type: string
  *           description: URL link to the picture
- *         createdAt:
+ *         capturedAt:
  *           type: string
  *           format: date-time
  *           description: The date and time when the picture was created
+ *         public_id:
+ *           type: string
+ *           description: Public ID in cloudinary
  *         id:
  *           type: string
  *           description: Picture ID
@@ -216,7 +222,8 @@ module.exports = router;
  *         visitId: "60c72b2f9af1b8124cf74c9c"
  *         journeyId: "60c72b2f9af1b8124cf74c9d"
  *         link: "http://example.com/image1.jpg"
- *         createdAt: "2023-04-12T10:00:00.000Z"
+ *         capturedAt: "2023-04-12T10:00:00.000Z"
+ *         public_id: "uploads/picture-77380651-f817-4123-b879-8fe8ab8f5771"
  *         id: "6734dab6bb4a94160c1f419a"
  *   responses:
  *     BadRequest:

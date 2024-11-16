@@ -5,19 +5,46 @@ components:
       properties:
         id:
           type: string
+        username:
+          type: string
+        displayName:
+          type: string
         email:
           type: string
           format: email
-        username:
+        password:
           type: string
+          format: password
+          minLength: 8
         role:
           type: string
           enum: [user, admin]
+        avatar:
+          type: string
+        avatar_public_id:
+          type: string
+        phoneNumber:
+          type: string
+        address:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        country:
+          type: string
       example:
-        id: 5ebac534954b54139806c112
+        id: 6726412af59c8c32601d22c0
+        username: fakeusername
+        displayName: Fake Name
         email: fake@example.com
-        username: fake name
+        password: password1
         role: user
+        avatar: "https://example.com/picture/1"
+        avatar_public_id: "uploads/avatar-cc8c49a8-8dbd-486c-bd63-25e42189db0d"
+        phoneNumber: "01234567899"
+        address: 123 Fake Street
+        dateOfBirth: 1990-01-01
+        country: USA
 
     Token:
       type: object
