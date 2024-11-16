@@ -3,12 +3,12 @@ const { objectId } = require('./custom.validation');
 
 const getPictures = {
   query: Joi.object().keys({
-    userId: Joi.string(),
-    locationId: Joi.string(),
-    visitId: Joi.string(),
-    journeyId: Joi.string(),
+    user_id: Joi.string(),
+    location_id: Joi.string(),
+    visit_id: Joi.string(),
+    journey_id: Joi.string(),
     link: Joi.string(),
-    createdAt: Joi.date(),
+    capturedAt: Joi.date(),
   }),
 };
 
