@@ -39,81 +39,33 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Thông báo thay đổi
   }
 
-  //====================== Phần cho image ===================================
+
+  //================== Quản lý ảnh theo ngày =====================
 
 
-  // List<List<String>> _imageManager= [
-  //   ["assets/Image/1.jpg",
-  //   "assets/Image/2.jpg",
-  //   "assets/Image/3.jpg",
-  //   "assets/Image/4.jpg",
-  //   "assets/Image/5.jpg",
-  //   "assets/Image/6.jpg",],
-  // ];
-  //
-  //
-  // List<List<String>> get imageManager => _imageManager;
-  //
-  //
-  // // Hàm xóa một ảnh từ danh sách của một ngày cụ thể
-  // void removeImageDay(String imagePath, int dayIndex) {
-  //   if (dayIndex < imageManager.length) {
-  //     imageManager[dayIndex].remove(imagePath);
-  //     // Nếu ngày đó không còn ảnh nào, xóa cả ngày (tuỳ chọn)
-  //     if (imageManager[dayIndex].isEmpty) {
-  //       imageManager.removeAt(dayIndex);
-  //     }
-  //     notifyListeners(); // Cập nhật giao diện
-  //   }
-  // }
-  //
-  // // Hàm thêm ngày mới
-  // void addImageManager(List<String> images) {
-  //   imageManager.add(images);
-  //   notifyListeners();
-  // }
-  //
-  // // Hàm thêm ảnh vào ngày hiện tại (ngày cuối cùng)
-  // void addImageDay(String imagePath) {
-  //   if (imageManager.isNotEmpty) {
-  //     imageManager.last.insert(0, imagePath);
-  //     notifyListeners();
-  //   }
-  // }
+  Map<String, List<Picture>> _groupedImages = {};
+  Map<String, List<Picture>> get groupedImages => _groupedImages;
 
 
-  List<List<Picture>> _imageManager= [
-    []
-  ];
-
-
-
-  List<List<Picture>> get imageManager => _imageManager;
-
-
-  // Hàm xóa một ảnh từ danh sách của một ngày cụ thể
-  void removeImageDay(Picture imagePath, int dayIndex) {
-    if (dayIndex < imageManager.length) {
-      imageManager[dayIndex].remove(imagePath);
-      // Nếu ngày đó không còn ảnh nào, xóa cả ngày (tuỳ chọn)
-      if (imageManager[dayIndex].isEmpty) {
-        imageManager.removeAt(dayIndex);
-      }
-      notifyListeners(); // Cập nhật giao diện
+  // Hàm lưu ảnh theo ngày
+  void addImageDay(Picture image,String dayString) {
+    if (groupedImages.containsKey(dayString)) {
+      groupedImages[dayString]!.insert(0,image);
+    } else {
+      groupedImages[dayString] = [image];
     }
-  }
-
-  // Hàm thêm ngày mới
-  void addImageManager(List<Picture> images) {
-    imageManager.add(images);
     notifyListeners();
   }
 
-  // Hàm thêm ảnh vào ngày hiện tại (ngày cuối cùng)
-  void addImageDay(Picture imagePath) {
-    if (imageManager.isNotEmpty) {
-      imageManager.last.insert(0, imagePath);
-      notifyListeners();
+  // Hàm lưu ảnh theo ngày
+  void removeImageDay(Picture image,int dayIndex,String dayString) {
+    if (dayIndex < groupedImages.length) {
+      groupedImages[dayString]!.remove(image);
+      // Nếu ngày đó không còn ảnh nào, xóa cả ngày (tuỳ chọn)
+      if (groupedImages[dayString]!.isEmpty) {
+        groupedImages.remove(dayString);
+      }
+      notifyListeners(); // Cập nhật giao diện
     }
   }
 
@@ -121,5 +73,4 @@ class AccountModel extends ChangeNotifier {
     isFetchedImage = value;
     notifyListeners();
   }
-
 }

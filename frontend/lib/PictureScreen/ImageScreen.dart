@@ -90,7 +90,7 @@ class ImageScreenState extends State<ImageScreen> {
                 decoration: BoxDecoration(
                     color: Colors.red,
                     image: DecorationImage(
-                      image: NetworkImage('http://10.0.2.2:3000${widget.picture.link}'),
+                      image: NetworkImage(widget.picture.link),
                       fit: BoxFit.cover,
                     )
                 ),

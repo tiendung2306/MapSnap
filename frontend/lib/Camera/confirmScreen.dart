@@ -117,14 +117,15 @@ class ConfirmScreen extends StatelessWidget {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     DateTime now = DateTime.now();
     DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Chuyển sang múi giờ UTC+7
+    String dayString = '${vietnamTime.day}-${vietnamTime.month}-${vietnamTime.year}';
 
     CreatePicture createPicture = CreatePicture(
-      user_id: accountModel.idUser,
-      location_id: "60c72b2f9af1b8124cf74c9b",
-      visit_id: "60c72b2f9af1b8124cf74c9c",
-      journey_id: "60c72b2f9af1b8124cf74c9d",
+      userId: accountModel.idUser,
+      locationId: "60c72b2f9af1b8124cf74c9b",
+      visitId: "60c72b2f9af1b8124cf74c9c",
+      journeyId: "60c72b2f9af1b8124cf74c9d",
       link: imagePath,
-      createdAt: vietnamTime,
+      capturedAt: vietnamTime,
     );
 
 
@@ -157,7 +158,8 @@ class ConfirmScreen extends StatelessWidget {
                       onTap: () async {
                         List<Picture>? picture = await upLoadImage(createPicture);
                         // Cập nhật ảnh vào ImageManager
-                        Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0]);
+                        // Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0]);
+                        Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0], dayString);
                         Navigator.pop(context); // Quay lại màn hình trước đó
                       },
                       child: button(Icons.check, Alignment.bottomRight, (screenHeight / 5) * 1 / 2, screenHeight / 20, screenWidth / 10, Colors.green),

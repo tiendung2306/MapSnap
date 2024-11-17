@@ -66,6 +66,7 @@ class pictureManagerState extends State<pictureManager> {
                               GestureDetector(
                                 onTap: () {
                                   print("Hehheheh");
+                                  Navigator.pop(context);
                                 },
                                 child: Container(
                                   width: 50,

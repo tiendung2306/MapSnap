@@ -33,11 +33,11 @@ Future<List<Picture>?> upLoadImage(CreatePicture createPicture) async {
 
   // Thêm file ảnh vào yêu cầu `multipart`
   request.files.add(multipartFile);
-  request.fields['user_id'] = createPicture.user_id;
-  request.fields['location_id'] = createPicture.location_id;
-  request.fields['visit_id'] = createPicture.visit_id;
-  request.fields['journey_id'] = createPicture.journey_id;
-  request.fields['createdAt'] = createPicture.createdAt.millisecondsSinceEpoch.toString();
+  request.fields['userId'] = createPicture.userId;
+  request.fields['locationId'] = createPicture.locationId;
+  request.fields['visitId'] = createPicture.visitId;
+  request.fields['journeyId'] = createPicture.journeyId;
+  request.fields['capturedAt'] = createPicture.capturedAt.millisecondsSinceEpoch.toString();
 
   // Gửi yêu cầu
   final response = await request.send();
@@ -62,16 +62,19 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
   // Xác định URL dựa trên giá trị của `check`
   switch (check) {
     case 'user_id':
-      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?user_id=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?userId=$parameters');
       break;
     case 'created_at':
-      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?created_at=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?locationId=$parameters');
       break;
     case 'journey_id':
-      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journey_id=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journeyId=$parameters');
       break;
     case 'visit_id':
-      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visit_id=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visitId=$parameters');
+      break;
+    case '':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures');
       break;
     default:
       print('Tham số không hợp lệ');
@@ -88,6 +91,7 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
       if (response.statusCode == 200) {
         // Giải mã JSON và ánh xạ vào danh sách Picture
         List<dynamic> data = jsonDecode(response.body);
+        print(data);
         List<Picture> pictures = data.map((json) => Picture.fromJson(json)).toList();
         return pictures;
       } else {

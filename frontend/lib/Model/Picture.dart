@@ -1,60 +1,60 @@
 class Picture {
   String id;
-  String user_id;
-  String location_id;
-  String visit_id;
-  String journey_id;
+  String userId;
+  String locationId;
+  String visitId;
+  String journeyId;
   String link;
-  // DateTime created_at;
+  int capturedAt;
 
   Picture({
     required this.id,
-    required this.user_id,
-    required this.location_id,
-    required this.visit_id,
-    required this.journey_id,
+    required this.userId,
+    required this.locationId,
+    required this.visitId,
+    required this.journeyId,
     required this.link,
-    // required this.created_at,
+    required this.capturedAt,
   });
 
   factory Picture.fromJson(Map<String, dynamic> json) {
     return Picture(
-        id: json['id'],
-        user_id: json['user_id'],
-        location_id: json['location_id'],
-        visit_id: json['visit_id'],
-        journey_id: json['journey_id'],
-        link: json['link'],
-        // created_at: json['created_at']
+      id: json['id'],
+      userId: json['userId'],
+      locationId: json['locationId'],
+      visitId: json['visitId'],
+      journeyId: json['journeyId'],
+      link: json['link'],
+      capturedAt: json['capturedAt']
     );
   }
 }
 
 class CreatePicture {
-  String user_id;
-  String location_id;
-  String visit_id;
-  String journey_id;
+  String userId;
+  String locationId;
+  String visitId;
+  String journeyId;
   String link;
-  DateTime createdAt;
+  DateTime capturedAt;
 
   CreatePicture({
-    required this.user_id,
-    required this.location_id,
-    required this.visit_id,
-    required this.journey_id,
+    required this.userId,
+    required this.locationId,
+    required this.visitId,
+    required this.journeyId,
     required this.link,
-    required this.createdAt,
+    required this.capturedAt,
   });
 
   factory CreatePicture.fromJson(Map<String, dynamic> json) {
     return CreatePicture(
-        user_id: json['user_id'],
-        location_id: json['location_id'],
-        visit_id: json['visit_id'],
-        journey_id: json['journey_id'],
+        userId: json['userId'],
+        locationId: json['locationId'],
+        visitId: json['visitId'],
+        journeyId: json['journeyId'],
         link: json['link'],
-        createdAt: json['createdAt']
+        capturedAt: json['capturedAt']
     );
   }
 }
