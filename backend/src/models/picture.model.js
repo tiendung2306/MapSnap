@@ -21,7 +21,7 @@ const pictureSchema = new Schema({
     ref: 'Visit',
     required: true,
   },
-  JourneyId: {
+  journeyId: {
     type: Schema.Types.ObjectId,
     ref: 'Journey',
     required: true,
@@ -30,10 +30,14 @@ const pictureSchema = new Schema({
     type: String,
     required: true,
   },
-  createdAt: {
+  capturedAt: {
     type: Number,
     required: true,
   },
+  public_id: {
+    type: String,
+    required: true,
+  }
 });
 
 pictureSchema.plugin(toJSON);
