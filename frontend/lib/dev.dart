@@ -1,50 +1,39 @@
 import 'package:flutter/material.dart';
+import 'Services/APIService.dart';
 
-class ResizableWidget extends StatefulWidget {
+class DevScreen extends StatefulWidget {
+  const DevScreen({super.key});
+
   @override
-  _ResizableWidgetState createState() => _ResizableWidgetState();
+  State<DevScreen> createState() => _DevScreenState();
 }
 
-class _ResizableWidgetState extends State<ResizableWidget> {
-  double _width = 150; // Chiều rộng ban đầu của widget
-  double _height = 150; // Chiều cao ban đầu của widget
+class _DevScreenState extends State<DevScreen> {
+  final  _apiService = ApiService();
+
+  void test() async{
+    _apiService.GetJourney('673a12ecbd6c5308f8788ab7');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Resizable Widget")),
+      appBar: AppBar(
+        title: const Text('Button in Center'),
+      ),
       body: Center(
-        child: Stack(
-          children: [
-            Container(
-              width: _width,
-              height: _height,
-              color: Colors.blueAccent,
-              alignment: Alignment.topRight,
-              child: Text(
-                "Drag to Resize",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              top: 0,
-              child: GestureDetector(
-                onPanUpdate: (details) {
-                  setState(() {
-                    // _width -= details.delta.dx;
-                    _height -= details.delta.dy;
-                  });
-                },
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  color: Colors.red,
-                  child: Icon(Icons.drag_handle, color: Colors.white, size: 16),
-                ),
-              ),
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: () {
+            test();
+
+          },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          ),
+          child: const Text(
+            'Bấm vào đây',
+            style: TextStyle(fontSize: 18),
+          ),
         ),
       ),
     );

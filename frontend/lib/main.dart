@@ -4,6 +4,7 @@ import 'package:mapsnap_fe/Authentication/SignIn.dart';
 import 'package:mapsnap_fe/Authentication/SignUp.dart';
 import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
+import 'package:mapsnap_fe/InApp/Map.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           body: Container(
             // child: ResizableWidget(),
-            child: HomePage(),
+            child: DevScreen(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),

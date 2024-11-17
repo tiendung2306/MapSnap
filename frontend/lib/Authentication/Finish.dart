@@ -8,7 +8,7 @@ import 'package:mapsnap_fe/Widget/UpdateUser.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../main.dart';
-import 'Service.dart';
+import '../Services/AuthService.dart';
 import 'SignIn.dart';
 
 import '../SettingScreen/settingScreen.dart';

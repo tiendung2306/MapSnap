@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon:  Image.asset("assets/Common/Logo.png"),
+              icon:  Image.asset("assets/Common/logo.png"),
               onPressed: () {},
             ),
             Expanded(
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 side: BorderSide(

@@ -5,7 +5,7 @@ import 'Finish.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
-import 'Service.dart';
+import '../Services/AuthService.dart';
 import 'package:mapsnap_fe/Model/Token.dart';
 
 

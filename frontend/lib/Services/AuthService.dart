@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
 import 'package:mapsnap_fe/Model/User.dart';
 import 'package:mapsnap_fe/Model/Token.dart';
 
@@ -197,7 +196,6 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>>  VerifyEmail(String pinCode, String resetPasswordToken) async {
-    print(resetPasswordToken);
     final url = Uri.parse('$_baseUrl/auth/verify-pin-code');
 
     try {
