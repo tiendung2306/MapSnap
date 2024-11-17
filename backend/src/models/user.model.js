@@ -31,11 +31,7 @@ const userSchema = mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: 'https://res.cloudinary.com/dz1unnas2/image/upload/v1731769028/default_avatar/default_avatar.png',
-    },
-    avatar_public_id: {
-      type: String,
-      default: 'default_avatar/default_avatar',
+      default: '/uploads/avatars/default_avatar.png',
     },
     address: {
       type: String,

@@ -1,8 +1,7 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { Picture } = require('../models'); // Đường dẫn tới file chứa model Picture
-const { uploadPicture } = require('../middlewares/upload');
-const cloudinary = require('../config/cloudinary'); // Import Cloudinary config
+const { updatePicture } = require('../middlewares/upload');
 
 /**
  * Create a user
@@ -10,7 +9,7 @@ const cloudinary = require('../config/cloudinary'); // Import Cloudinary config
  * @returns {Promise<Picture>}
  */
 const createPicture = async (req, res) => {
-  uploadPicture(req, res, async (err) => {
+  updatePicture(req, res, async (err) => {
     if (err) {
       return res.status(httpStatus.BAD_REQUEST).send({ message: 'Invalid file' });
     }
@@ -19,21 +18,22 @@ const createPicture = async (req, res) => {
     }
 
     try {
-      const { userId, locationId, visitId, journeyId, capturedAt } = req.body;
+      const { userId, locationId, visitId, journeyId, createdAt } = req.body;
 
-      const pictures = await Promise.all(req.files.map(file => {
-        const filePath = file.path;
-        const picture = Picture.create({
-          userId,
-          locationId,
-          visitId,
-          journeyId,
-          link: filePath,
-          capturedAt,
-          public_id: file.filename,
+      const pictures = await Promise.all(
+        req.files.map((file) => {
+          const filePath = `/uploads/pictures/${file.filename}`;
+          const picture = Picture.create({
+            userId,
+            locationId,
+            visitId,
+            journeyId,
+            link: filePath,
+            createdAt,
+          });
+          return picture;
         })
-        return picture;
-      }));
+      );
       return res.status(httpStatus.OK).send(pictures);
     } catch (error) {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: 'Server Error' });
@@ -53,16 +53,6 @@ const getPictures = async (req, res) => {
 const deletePictureById = async (id) => {
   const picture = await getPictureById(id);
   if (!picture) throw new ApiError(httpStatus.NOT_FOUND, 'Picture Not Found!');
-
-  // Xóa ảnh từ Cloudinary
-  try {
-    const result = await cloudinary.uploader.destroy(picture.public_id); // Xóa bằng public_id
-    if (result.result !== 'ok') {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete picture from Cloudinary');
-    }
-  } catch (error) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error while deleting picture from Cloudinary');
-  }
   await picture.remove();
   return picture;
 };
@@ -73,3 +63,20 @@ module.exports = {
   getPictures,
   deletePictureById,
 };
+
+// const newPicture = new Picture({
+//     user_id: '60c72b2f9af1b8124cf74c9a', // ID giả định
+//     location_id: '60c72b2f9af1b8124cf74c9b', // ID giả định
+//     visit_id: '60c72b2f9af1b8124cf74c9c', // ID giả định
+//     journey_id: '60c72b2f9af1b8124cf74c9d', // ID giả định
+//     link: 'http://example.com/image1.jpg',
+//     createdAt: new Date()
+// });
+
+// newPicture.save()
+//     .then((doc) => {
+//         console.log('Picture saved successfully:', doc);
+//     })
+//     .catch((err) => {
+//         console.error('Error saving picture:', err);
+//     });

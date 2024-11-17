@@ -70,9 +70,6 @@ module.exports = router;
  *               avatar:
  *                 type: string
  *                 description: User's avatar URL
- *               avatar_public_id:
- *                 type: string
- *                 description: User's avatar public id
  *               phoneNumber:
  *                 type: string
  *                 description: User's phone number
@@ -93,7 +90,6 @@ module.exports = router;
  *               password: password1
  *               role: user
  *               avatar: "https://example.com/picture/1"
- *               avatar_public_id: "uploads/avatar-cc8c49a8-8dbd-486c-bd63-25e42189db0d"
  *               phoneNumber: "01234567899"
  *               address: 123 Fake Street
  *               dateOfBirth: 1990-01-01
@@ -244,7 +240,6 @@ module.exports = router;
  *               email: fake@example.com
  *               password: password1
  *               avatar: "https://example.com/picture/1"
- *               avatar_public_id: "uploads/avatar-cc8c49a8-8dbd-486c-bd63-25e42189db0d"
  *               phoneNumber: "01234567899"
  *               address: 123 Fake Street
  *               dateOfBirth: 1990-01-01

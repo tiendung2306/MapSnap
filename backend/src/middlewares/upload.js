@@ -1,30 +1,45 @@
-// Import các thư viện cần thiết
+// eslint-disable-next-line import/no-unresolved
 const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinary'); // Import cấu hình Cloudinary
-const { v4: uuidv4 } = require('uuid'); // Import UUID
+const path = require('path');
 
-// Cấu hình lưu trữ với Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'uploads', // Thư mục trong Cloudinary
-    allowed_formats: ['jpeg', 'jpg', 'png', 'gif'], // Các định dạng được phép
-    public_id: (req, file) => `${file.fieldname}-${uuidv4()}`, // Tạo tên file với UUID
+// Set storage engine
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, '../../uploads/pictures'),
+  filename(req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
-// Middleware cho avatar (single upload)
+// Initialize upload
 const uploadAvatar = multer({
   storage,
-  limits: { fileSize: 1000000 }, // Giới hạn kích thước file (1MB)
-}).single('avatar'); // 'avatar' là tên field trong form
+  limits: { fileSize: 1000000 }, // Limit file size to 1MB
+  fileFilter(req, file, cb) {
+    // eslint-disable-next-line no-use-before-define
+    checkFileType(file, cb);
+  },
+}).single('avatar'); // 'avatar' is the name of the field in the form
 
-// Middleware cho pictures (multiple uploads)
 const uploadPicture = multer({
   storage,
-  limits: { fileSize: 1000000 }, // Giới hạn kích thước file (1MB)
-}).array('picture', 100); // Cho phép upload tối đa 100 file
+  limits: { fileSize: 1000000 }, // Limit file size to 1MB
+  fileFilter(req, file, cb) {
+    // eslint-disable-next-line no-use-before-define
+    checkFileType(file, cb);
+  },
+}).array('picture', 10);
+
+// Check file type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  }
+  cb('Error: Images Only!');
+}
 
 module.exports = {
   uploadAvatar,

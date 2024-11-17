@@ -42,7 +42,7 @@ module.exports = router;
  *               - locationId
  *               - visitId
  *               - journeyId
- *               - capturedAt
+ *               - createdAt
  *             properties:
  *               userId:
  *                 type: Schema.Types.ObjectId
@@ -56,7 +56,7 @@ module.exports = router;
  *               journeyId:
  *                 type: Schema.Types.ObjectId
  *                 description: ID of the journey associated with the picture
- *               capturedAt:
+ *               createdAt:
  *                 type: number
  *                 description: The date and time when the picture was created
  *               picture:
@@ -108,13 +108,11 @@ module.exports = router;
  *           type: string
  *         description: Link to the picture
  *       - in: query
- *         name: captureddAt
+ *         name: createdAt
  *         schema:
  *           type: string
- *       - in: query
- *         name: public_id
- *         schema:
- *           type: string
+ *           format: date-time
+ *         description: Date and time when the picture was created
  *     responses:
  *       "200":
  *         description: A list of pictures
@@ -188,8 +186,7 @@ module.exports = router;
  *         - visitId
  *         - journeyId
  *         - link
- *         - capturedAt
- *         - public_id
+ *         - createdAt
  *       properties:
  *         userId:
  *           type: string
@@ -206,13 +203,10 @@ module.exports = router;
  *         link:
  *           type: string
  *           description: URL link to the picture
- *         capturedAt:
+ *         createdAt:
  *           type: string
  *           format: date-time
  *           description: The date and time when the picture was created
- *         public_id:
- *           type: string
- *           description: Public ID in cloudinary
  *         id:
  *           type: string
  *           description: Picture ID
@@ -222,8 +216,7 @@ module.exports = router;
  *         visitId: "60c72b2f9af1b8124cf74c9c"
  *         journeyId: "60c72b2f9af1b8124cf74c9d"
  *         link: "http://example.com/image1.jpg"
- *         capturedAt: "2023-04-12T10:00:00.000Z"
- *         public_id: "uploads/picture-77380651-f817-4123-b879-8fe8ab8f5771"
+ *         createdAt: "2023-04-12T10:00:00.000Z"
  *         id: "6734dab6bb4a94160c1f419a"
  *   responses:
  *     BadRequest:

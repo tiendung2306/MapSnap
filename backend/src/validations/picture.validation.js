@@ -8,8 +8,7 @@ const getPictures = {
     visitId: Joi.string(),
     journeyId: Joi.string(),
     link: Joi.string(),
-    capturedAt: Joi.date(),
-    public_id: Joi.string(),
+    createdAt: Joi.date(),
   }),
 };
 
