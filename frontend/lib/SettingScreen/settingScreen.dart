@@ -38,10 +38,10 @@ class settingScreenState extends State<settingScreen> {
     var screenWidth = MediaQuery.of(context).size.width;
     var accountModel = Provider.of<AccountModel>(context);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Container(
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
           padding: EdgeInsets.symmetric(horizontal: screenWidth / 15),
           width: double.infinity,
           color: Colors.white,
@@ -90,7 +90,7 @@ class settingScreenState extends State<settingScreen> {
                         color: Colors.grey,
                         image: accountModel.avatar.isNotEmpty
                             ? DecorationImage(
-                          image: NetworkImage('http://10.0.2.2:3000${accountModel.avatar}'),
+                          image: NetworkImage(accountModel.avatar),
                           fit: BoxFit.cover,
                         )
                             : null,

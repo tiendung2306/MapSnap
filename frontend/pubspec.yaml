@@ -72,7 +72,7 @@ flutter:
 
   assets:
     - assets/Login/
-    - assets/Image/Donate.png
+    - assets/Image/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

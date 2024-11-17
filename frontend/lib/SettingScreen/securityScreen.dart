@@ -28,7 +28,6 @@ class _securityScreenState extends State<securityScreen> {
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-    var accountModel = Provider.of<AccountModel>(context, listen: false);
 
 
     return Scaffold(
