@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import '../Model/Picture.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
 import '../main.dart';
@@ -8,8 +11,10 @@ import 'UpdateUser.dart';
 // Class để quản lý các biến dùng chung
 class AccountModel extends ChangeNotifier {
 
+  // ================ Phần cho user =================================
   User? _user;
   late Token _token;
+  bool isFetchedImage = false;
 
   String get avatar => _user?.avatar ?? ".....";
   String get phoneNumber => _user?.numberPhone ?? "??????";
@@ -32,5 +37,40 @@ class AccountModel extends ChangeNotifier {
   void setToken(Token newToken) {
     _token = newToken;
     notifyListeners(); // Thông báo thay đổi
+  }
+
+
+  //================== Quản lý ảnh theo ngày =====================
+
+
+  Map<String, List<Picture>> _groupedImages = {};
+  Map<String, List<Picture>> get groupedImages => _groupedImages;
+
+
+  // Hàm lưu ảnh theo ngày
+  void addImageDay(Picture image,String dayString) {
+    if (groupedImages.containsKey(dayString)) {
+      groupedImages[dayString]!.insert(0,image);
+    } else {
+      groupedImages[dayString] = [image];
+    }
+    notifyListeners();
+  }
+
+  // Hàm lưu ảnh theo ngày
+  void removeImageDay(Picture image,int dayIndex,String dayString) {
+    if (dayIndex < groupedImages.length) {
+      groupedImages[dayString]!.remove(image);
+      // Nếu ngày đó không còn ảnh nào, xóa cả ngày (tuỳ chọn)
+      if (groupedImages[dayString]!.isEmpty) {
+        groupedImages.remove(dayString);
+      }
+      notifyListeners(); // Cập nhật giao diện
+    }
+  }
+
+  void setFetchedImage(bool value) {
+    isFetchedImage = value;
+    notifyListeners();
   }
 }

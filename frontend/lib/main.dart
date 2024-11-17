@@ -15,6 +15,9 @@ import 'InApp/HomePage.dart';
 import 'dev.dart';
 
 import 'Authentication/Onboarding.dart';
+import 'FavouriteScreen.dart';
+import 'PictureScreen/HomeScreen.dart';
+import 'MapScreen.dart';
 import 'Widget/AutoRefreshToken.dart';
 import 'Widget/UpdateUser.dart';
 
@@ -40,6 +43,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => Onboarding(),
+        '/home': (context) => const HomeScreen(),
+        '/map': (context) => const MapScreen(),
+        '/camera': (context) => const MainScreenCamera(),
+        '/favorites': (context) => const FavoritesScreen(),
+        '/account': (context) => const personalPageScreen(),
+      },
       home: SafeArea(
         child: Scaffold(
           body: Container(
@@ -56,4 +68,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
