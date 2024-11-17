@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { uploadAvatar } = require('../middlewares/upload');
+const cloudinary = require('../config/cloudinary'); // Import Cloudinary config
 
 /**
  * Create a user
@@ -84,9 +85,22 @@ const updateUserAvatarByID = async (req, res) => {
         return res.status(httpStatus.NOT_FOUND).send({ message: 'User not found' });
       }
 
+      // Delete old avatar in cloudinary
+      try {
+        var result = null;
+        if (user.avatar_public_id !== 'default_avatar/default_avatar')
+          result = await cloudinary.uploader.destroy(user.avatar_public_id); // Xóa bằng public_id
+        if (!!result && result.result !== 'ok') {
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to delete user avatar from Cloudinary');
+        }
+      } catch (error) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error while deleting user avatar from Cloudinary');
+      }
+
       // Update avatar field with the path of the uploaded image
-      const filePath = `/uploads/pictures/${req.file.filename}`;
+      const filePath = req.file.path;
       user.avatar = filePath;
+      user.avatar_public_id = req.file.filename;
       await user.save();
 
       // Return the updated avatar URL
