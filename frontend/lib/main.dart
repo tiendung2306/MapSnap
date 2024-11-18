@@ -13,11 +13,10 @@ import 'package:provider/provider.dart'; // Import file model
 import 'package:mapsnap_fe/Authentication/Onboarding.dart';
 import 'InApp/HomePage.dart';
 import 'dev.dart';
-
+import 'package:mapsnap_fe/InApp/Map.dart';
 import 'Authentication/Onboarding.dart';
 import 'FavouriteScreen.dart';
 import 'PictureScreen/HomeScreen.dart';
-import 'MapScreen.dart';
 import 'Widget/AutoRefreshToken.dart';
 import 'Widget/UpdateUser.dart';
 
@@ -43,20 +42,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => Onboarding(),
-        '/home': (context) => const HomeScreen(),
-        '/map': (context) => const MapScreen(),
-        '/camera': (context) => const MainScreenCamera(),
-        '/favorites': (context) => const FavoritesScreen(),
-        '/account': (context) => const personalPageScreen(),
-      },
+      // initialRoute: '/login',
+      // routes: {
+      //   '/login': (context) => Onboarding(),
+      //   '/home': (context) => const HomeScreen(),
+      //   '/camera': (context) => const MainScreenCamera(),
+      //   '/favorites': (context) => const FavoritesScreen(),
+      //   '/account': (context) => const personalPageScreen(),
+      // },
       home: SafeArea(
         child: Scaffold(
           body: Container(
             // child: ResizableWidget(),
-            child: DevScreen(),
+            child: MapScreen(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),

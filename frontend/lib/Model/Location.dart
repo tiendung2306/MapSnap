@@ -7,7 +7,7 @@ class Location {
   final String title;
   final int createdAt;
   final String status;
-  final String updatedByUser;
+  final bool updatedByUser;
   final bool isAutomaticAdded;
   final List<String> pictures;
 
@@ -35,7 +35,7 @@ class Location {
       longitude: json['longitude'],
       latitude: json['latitude'],
       title: json['title'],
-      createdAt: json['createdAt'],
+      createdAt: 1731319800,
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],

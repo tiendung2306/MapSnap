@@ -55,10 +55,12 @@ class ApiService {
         url,
         headers: {'Content-Type': 'application/json'},
       );
-      if(response.statusCode == 200)
+      if(response.statusCode == 200){
         return {
           'mess': "Get Journey success",
+          'data': json.decode(response.body),
         };
+      }
       else{
         try{
           return {
@@ -123,5 +125,78 @@ class ApiService {
       };
     }
   }
+
+    Future<Map<String, dynamic>> GetVisit (String visitId) async {
+    final url = Uri.parse('$_baseUrl/visit/{visitId}'.replaceFirst("{visitId}", visitId));
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get Visit success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get Visit failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get Visit failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
+    Future<Map<String, dynamic>> GetLocation (String locationId) async {
+    final url = Uri.parse('$_baseUrl/location/{locationId}'.replaceFirst("{locationId}", locationId));
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get Locaton success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get Locaton failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get Locaton failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
 
 }

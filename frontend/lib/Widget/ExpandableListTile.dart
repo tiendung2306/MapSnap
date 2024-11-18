@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 class ExpandableListTile extends StatefulWidget {
   const ExpandableListTile({
     super.key,
+    required this.index,
+    required this.isFocus,
     required this.title,
     required this.subtitle,
     required this.content,
+    required this.onTapFunc,
     // required this.icon,
   });
-
+  final int index;
+  final bool isFocus;
   final String title;
   final String subtitle;
   final String content;
+  final Function(int) onTapFunc;
   // final String icon;
 
   @override
@@ -20,21 +25,9 @@ class ExpandableListTile extends StatefulWidget {
 }
 
 class _ExpandableListTileState extends State<ExpandableListTile> {
-  late String titleText, subtitleText, contentText;
-  bool isExpaned = false;
-
-  @override
-  void initState() {
-    titleText = widget.title;
-    subtitleText = widget.subtitle;
-    contentText = widget.content;
-    super.initState();
-  }
 
   void onTap(){
-    setState(() {
-      isExpaned = !isExpaned;
-    });
+    widget.onTapFunc(widget.index);
   }
 
   Container lead(){
@@ -82,14 +75,17 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
         children: [
           Row(
             children: [
-              Text(
-                titleText,
-                style: TextStyle(
-                    fontSize: 20
+              Container(
+                width: 200,
+                child: Text(
+                  widget.title,
+                  style: TextStyle(
+                      fontSize: 20
+                  ),
                 ),
               ),
               Expanded(child: Container()),
-              if(isExpaned)
+              if(widget.isFocus)
                 Row(
                   children: [
                     IconButton(
@@ -113,14 +109,14 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              subtitleText,
+              widget.subtitle,
             ),
           ),
-          if(isExpaned)
+          if(widget.isFocus)
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                contentText,
+                widget.content,
               ),
             ),
         ],

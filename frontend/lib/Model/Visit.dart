@@ -2,7 +2,6 @@ class Visit {
   final String userId;
   final String journeyId;
   final String locationId;
-  final int visitedTime;
   final String title;
   final int startedAt;
   final int endedAt;
@@ -17,7 +16,6 @@ class Visit {
     required this.userId,
     required this.journeyId,
     required this.locationId,
-    required this.visitedTime,
     required this.title,
     required this.startedAt,
     required this.endedAt,
@@ -34,11 +32,10 @@ class Visit {
       userId: json['userId'],
       journeyId: json['journeyId'],
       locationId: json['locationId'],
-      visitedTime: json['visitedTime'],
       title: json['title'],
       startedAt: json['startedAt'],
       endedAt: json['endedAt'],
-      updatedAt: json['updatedAt'],
+      updatedAt: 1731072409,
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],
@@ -52,7 +49,6 @@ class Visit {
       'userId': userId,
       'journeyId': journeyId,
       'locationId': locationId,
-      'visitedTime': visitedTime,
       'title': title,
       'startedAt': startedAt,
       'endedAt': endedAt,

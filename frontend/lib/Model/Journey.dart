@@ -1,6 +1,6 @@
 class Journey {
   final String userId;
-  final List<String> tripIds;
+  final List<String> visitIds;
   final String title;
   final int startedAt;
   final int endedAt;
@@ -11,7 +11,7 @@ class Journey {
 
   Journey({
     required this.userId,
-    required this.tripIds,
+    required this.visitIds,
     required this.title,
     required this.startedAt,
     required this.endedAt,
@@ -25,7 +25,7 @@ class Journey {
   factory Journey.fromJson(Map<String, dynamic> json) {
     return Journey(
       userId: json['userId'],
-      tripIds: List<String>.from(json['tripIds']),
+      visitIds: List<String>.from(json['visitIds']),
       title: json['title'],
       startedAt: json['startedAt'],
       endedAt: json['endedAt'],
@@ -40,7 +40,7 @@ class Journey {
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
-      'tripIds': tripIds,
+      'visitIds': visitIds,
       'title': title,
       'startedAt': startedAt,
       'endedAt': endedAt,

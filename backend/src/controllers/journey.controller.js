@@ -20,7 +20,7 @@ const getJourneysByUserId = catchAsync(async (req, res) => {
 });
 
 const getJourneyByJourneyId = catchAsync(async (req, res) => {
-  const { journeyId } = req.params.journeyId;
+  const { journeyId } = req.params;
   const journey = await journeyService.getJourneyByJourneyId(journeyId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: journey });
 });
