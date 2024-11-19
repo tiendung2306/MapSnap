@@ -1,89 +1,78 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class FitMarkersToBounds extends StatefulWidget {
+class CustomMarkerExample extends StatefulWidget {
   @override
-  _FitMarkersToBoundsState createState() => _FitMarkersToBoundsState();
+  _CustomMarkerExampleState createState() => _CustomMarkerExampleState();
 }
 
-class _FitMarkersToBoundsState extends State<FitMarkersToBounds> {
-  late GoogleMapController _mapController;
+class _CustomMarkerExampleState extends State<CustomMarkerExample> {
+  late GoogleMapController _controller;
 
-  // Danh sách marker
-  final List<Marker> _markers = [
-    Marker(
-      markerId: MarkerId('marker_1'),
-      position: LatLng(21.0285, 105.8542), // Hà Nội
-      infoWindow: InfoWindow(title: 'Marker 1'),
-    ),
-    Marker(
-      markerId: MarkerId('marker_2'),
-      position: LatLng(21.0366, 105.8342), // Một vị trí khác
-      infoWindow: InfoWindow(title: 'Marker 2'),
-    ),
-  ];
+  final List<Marker> markers = [];
 
-  // Polyline nối các marker
-  final List<LatLng> _polylinePoints = [
-    LatLng(21.0285, 105.8542), // Marker 1
-    LatLng(21.0366, 105.8342), // Marker 2
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _createMarkers();
+  }
+
+  Future<void> _createMarkers() async {
+    // Tạo marker nhỏ hơn từ một hình ảnh
+    final customIcon = await _resizeMarkerAsset("assets/marker.png", 50, 50);
+
+    setState(() {
+      markers.addAll([
+        Marker(
+          markerId: MarkerId("marker1"),
+          position: LatLng(10.762622, 106.660172), // TP HCM
+          icon: customIcon,
+          infoWindow: InfoWindow(title: "TP HCM"),
+        ),
+        Marker(
+          markerId: MarkerId("marker2"),
+          position: LatLng(21.028511, 105.804817), // Hà Nội
+          icon: customIcon,
+          infoWindow: InfoWindow(title: "Hà Nội"),
+        ),
+      ]);
+    });
+  }
+
+  Future<BitmapDescriptor> _resizeMarkerAsset(
+      String assetPath, int width, int height) async {
+    // Load hình ảnh từ tài nguyên
+    final ByteData data = await DefaultAssetBundle.of(context).load("assets/Common/VN.png");
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+      targetWidth: width,
+      targetHeight: height,
+    );
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+
+    // Chuyển đổi hình ảnh thành byte array
+    final ByteData? resizedData =
+    await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+
+    return BitmapDescriptor.fromBytes(resizedData!.buffer.asUint8List());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Custom Marker Example")),
       body: GoogleMap(
-        onMapCreated: (controller) {
-          _mapController = controller;
-          _fitBounds(); // Căn chỉnh bản đồ sau khi khởi tạo
+        onMapCreated: (GoogleMapController controller) {
+          _controller = controller;
         },
+        markers: markers.toSet(),
         initialCameraPosition: CameraPosition(
-          target: LatLng(21.0285, 105.8542), // Vị trí ban đầu
-          zoom: 14,
+          target: LatLng(16.047079, 108.206230), // Đà Nẵng
+          zoom: 5,
         ),
-        markers: _markers.toSet(),
-        polylines: {
-          Polyline(
-            polylineId: PolylineId('route'),
-            points: _polylinePoints,
-            color: Colors.blue,
-            width: 5,
-          ),
-        },
       ),
-    );
-  }
-
-  // Hàm căn chỉnh bản đồ để hiển thị tất cả marker và polyline
-  void _fitBounds() {
-    if (_markers.isEmpty) return;
-
-    // Tạo LatLngBounds bao quanh tất cả các điểm
-    LatLngBounds bounds = _getLatLngBounds(
-      _markers.map((m) => m.position).toList(),
-    );
-
-    // Điều chỉnh camera để phù hợp với LatLngBounds
-    _mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50)); // Padding 50px
-  }
-
-  // Hàm tính toán LatLngBounds từ danh sách LatLng
-  LatLngBounds _getLatLngBounds(List<LatLng> positions) {
-    double south = positions.first.latitude;
-    double north = positions.first.latitude;
-    double west = positions.first.longitude;
-    double east = positions.first.longitude;
-
-    for (var latLng in positions) {
-      if (latLng.latitude < south) south = latLng.latitude;
-      if (latLng.latitude > north) north = latLng.latitude;
-      if (latLng.longitude < west) west = latLng.longitude;
-      if (latLng.longitude > east) east = latLng.longitude;
-    }
-
-    return LatLngBounds(
-      southwest: LatLng(south, west),
-      northeast: LatLng(north, east),
     );
   }
 }
