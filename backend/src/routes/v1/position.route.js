@@ -61,14 +61,21 @@ module.exports = router;
  *               createdAt: 1731319800
  *               locationId: "60c72b2f5f1b2c001f8e4e39"
  *     responses:
- *       "200":
+ *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Position'
- *       "400":
- *         $ref: '#/components/responses/DuplicatePosition'
+ *                type: object
+ *                properties:
+ *                  code:
+ *                    type: integer
+ *                    example: 201
+ *                  message:
+ *                    type: string
+ *                    example: tạo vị trí người dùng thành công
+ *                  results:
+ *                    $ref: '#/components/schemas/Position'
  */
 
 /**
@@ -87,8 +94,19 @@ module.exports = router;
  *           type: string
  *         description: Position Id
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: Delete position successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: xóa thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */

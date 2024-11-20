@@ -17,7 +17,7 @@ const journeyMsg = {
   name: 'không được để trống tên',
   notFound: 'hành trình này không tồn tại',
   description: 'không được để trống miêu tả',
-  update: 'cập nhập thành công',
+  updated: 'cập nhập thành công',
   deleted: 'xoá thành công',
 };
 
@@ -35,6 +35,7 @@ const locationMsg = {
   nameExisted: 'điểm cố định này đã tồn tại',
   notFound: 'điểm cố định này không tồn tại',
   deleted: 'Xóa điểm cố định thành công',
+  updated: 'Cập nhật location thành công',
 };
 
 const positionMsg = {
@@ -42,6 +43,7 @@ const positionMsg = {
   name: 'không được để trống tên',
   notFound: 'vị trí người dùng không tồn tại',
   deleted: 'Xóa vị trí người dùng thành công',
+  updated: 'Cập nhật position thành công',
 };
 
 const pictureMsg = {

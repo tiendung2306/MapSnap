@@ -25,7 +25,7 @@ const updateLocation = catchAsync(async (req, res) => {
   await locationService.updateLocation({ locationId, requestBody });
   res.send({
     code: httpStatus.OK,
-    message: Message.locationMsg.update,
+    message: Message.locationMsg.updated,
   });
 });
 
