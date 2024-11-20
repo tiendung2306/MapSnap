@@ -75,19 +75,28 @@ module.exports = router;
  *               journeyId: 6731d86e2745d6189c244932
  *               locationId: 6731d0bbdf4673b3683eb7a5
  *               title: Ngayhomnayemcuoiroi
- *               startedAt: 1731072409
- *               endedAt: 1731072409
- *               updatedAt: 1731072409
+ *               startedAt: 1731072409000
+ *               endedAt: 1731072409000
+ *               updatedAt: 1731072409000
  *               status: enabled
  *               updatedByUser: true
  *               isAutomaticAdded: true
  *     responses:
- *       "200":
+ *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Visit'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: tạo điểm thăm thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Visit'
  *       "400":
  *         $ref: '#/components/responses/DuplicateVisit'
  */
@@ -113,7 +122,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Visit'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   $ref: '#/components/schemas/Visit'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
@@ -158,9 +176,9 @@ module.exports = router;
  *                 description: status
  *             example:
  *               title: emcuoiroia
- *               startedAt: 1731072409
- *               endedAt: 1731072409
- *               updatedAt: 1731072409
+ *               startedAt: 1731072409000
+ *               endedAt: 1731072409000
+ *               updatedAt: 1731072409000
  *               status: disabled
  *               updatedByUser: false
  *               isAutomaticAdded: true
@@ -170,7 +188,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Visit'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   $ref: '#/components/schemas/Visit'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
@@ -187,8 +214,19 @@ module.exports = router;
  *           type: string
  *         description: Visit ID
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: Delete visit successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: xóa điểm thăm thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */

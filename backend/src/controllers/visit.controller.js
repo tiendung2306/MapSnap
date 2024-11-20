@@ -20,12 +20,13 @@ const getVisitByVisitId = catchAsync(async (req, res) => {
 });
 
 const updateVisit = catchAsync(async (req, res) => {
-  const { visitId } = req.params.visitId;
+  const { visitId } = req.params;
   const requestBody = req.body;
-  await visitService.updateVisit({ visitId, requestBody });
+  const visit = await visitService.updateVisit({ visitId, requestBody });
   res.send({
     code: httpStatus.OK,
     message: Message.visitMsg.update,
+    result: visit,
   });
 });
 
