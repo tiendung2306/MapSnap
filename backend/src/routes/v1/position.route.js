@@ -54,12 +54,16 @@ module.exports = router;
  *                 description: Longitude of position
  *               latitude:
  *                 type: number
- *                 description: Latitude of positio
+ *                 description: Latitude of position
+ *               positionName:
+ *                 type: string
+ *                 description: Reverse Geocoding of position
  *             example:
  *               longitude: 3
  *               latitude: 4
  *               createdAt: 1731319800
  *               locationId: "60c72b2f5f1b2c001f8e4e39"
+ *               positionName: "24 Hoa Lu District"
  *     responses:
  *       "201":
  *         description: Created

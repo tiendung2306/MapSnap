@@ -22,6 +22,9 @@ const positionSchema = new Schema({
     type: Number,
     required: true,
   },
+  positionName: {
+    type: String,
+  },
   locationId: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
