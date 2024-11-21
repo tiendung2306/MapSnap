@@ -17,6 +17,11 @@ const pictureSchema = new Schema({
 
 // Define the Location schema
 const locationSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+    required: true,
+  },
   locationName: {
     type: String,
     required: true,

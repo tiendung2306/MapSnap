@@ -93,12 +93,21 @@ module.exports = router;
  *               updatedByUser: true
  *               isAutomaticAdded: true
  *     responses:
- *       "200":
+ *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Location'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: tạo điểm cố định thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Location'
  *       "400":
  *         $ref: '#/components/responses/DuplicateLocation'
  */
@@ -124,7 +133,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Location'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   $ref: '#/components/schemas/Location'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
@@ -181,7 +199,7 @@ module.exports = router;
  *               visitedTime: 213
  *               longitude: 123
  *               latitude: 123
- *               createdAt: 1731319800
+ *               createdAt: 17313198000
  *               status: "disabled"
  *               updatedByUser: true
  *               isAutomaticAdded: false
@@ -191,7 +209,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Location'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   $ref: '#/components/schemas/Location'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
@@ -208,8 +235,19 @@ module.exports = router;
  *           type: string
  *         description: Location ID
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: Delete location successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: xóa điểm cố định thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */

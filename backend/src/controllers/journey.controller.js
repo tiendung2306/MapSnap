@@ -20,24 +20,23 @@ const getJourneysByUserId = catchAsync(async (req, res) => {
 });
 
 const getJourneyByJourneyId = catchAsync(async (req, res) => {
-  const { journeyId } = req.params;
-  const journey = await journeyService.getJourneyByJourneyId(journeyId);
+  const journey = await journeyService.getJourneyByJourneyId(req.params.journeyId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: journey });
 });
 
 const updateJourney = catchAsync(async (req, res) => {
-  const { journeyId } = req.params.journeyId;
+  const { journeyId } = req.params;
   const requestBody = req.body;
-  await journeyService.updateJourney({ journeyId, requestBody });
+  const journey = await journeyService.updateJourney({ journeyId, requestBody });
   res.send({
     code: httpStatus.OK,
-    message: Message.journeyMsg.update,
+    message: Message.journeyMsg.updated,
+    result: journey,
   });
 });
 
 const deleteJourney = catchAsync(async (req, res) => {
-  const { journeyId } = req.params.journeyId;
-  await journeyService.deleteJourney(journeyId);
+  await journeyService.deleteJourney(req.params.journeyId);
   res.send({
     code: httpStatus.OK,
     message: Message.journeyMsg.deleted,

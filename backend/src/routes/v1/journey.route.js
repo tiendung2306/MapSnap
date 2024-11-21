@@ -75,19 +75,28 @@ module.exports = router;
  *                 description: define if this journey add by user or BE
  *             example:
  *               title: Ngayhomnayemcuoiroi
- *               startedAt: 1731072409
- *               endedAt: 1731072409
- *               updatedAt: 1731072409
+ *               startedAt: 1731072409000
+ *               endedAt: 1731072409000
+ *               updatedAt: 1731072409000
  *               status: enabled
  *               updatedByUser: true
  *               isAutomaticAdded: true
  *     responses:
- *       "200":
- *         description: Created
+ *       "201":
+ *         description: Journey created successfully
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Journey'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: tạo hành trình thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Journey'
  *       "400":
  *         $ref: '#/components/responses/DuplicateJourney'
  * @swagger
@@ -113,6 +122,12 @@ module.exports = router;
  *             schema:
  *               type: object
  *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
  *                 results:
  *                   type: array
  *                   items:
@@ -129,10 +144,39 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
+ * @swagger
+ * /journey/{userId}/get-journeys-today:
+ *   get:
+ *     summary: Get all journeys of user created today
+ *     description: Get all journeys of user created today.
+ *     tags: [Journeys]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Journey'
  */
 
 /**
@@ -156,7 +200,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Journey'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   $ref: '#/components/schemas/Journey'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
@@ -201,9 +254,9 @@ module.exports = router;
  *                 description: status
  *             example:
  *               title: emcuoiroia
- *               startedAt: 1731072409
- *               endedAt: 1731072409
- *               updatedAt: 1731072409
+ *               startedAt: 1731072409000
+ *               endedAt: 1731072409000
+ *               updatedAt: 1731072409000
  *               status: disabled
  *               updatedByUser: false
  *               isAutomaticAdded: true
@@ -213,7 +266,16 @@ module.exports = router;
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Journey'
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: ok
+ *                 results:
+ *                   $ref: '#/components/schemas/Journey'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
@@ -230,8 +292,19 @@ module.exports = router;
  *           type: string
  *         description: Journey ID
  *     responses:
- *       "204":
- *         description: No content
+ *       "200":
+ *         description: Delete journey successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: xóa thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
