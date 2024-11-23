@@ -49,6 +49,8 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   flutter_map: ^7.0.2
   google_maps_flutter: ^2.10.0
+  flutter_background_service: ^5.0.10
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -5,7 +5,6 @@ import 'package:mapsnap_fe/Model/Journey.dart';
 import 'package:mapsnap_fe/Model/Visit.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
-import 'dart:math' as math;
 
 class MapScreen extends StatefulWidget {
   @override
@@ -138,7 +137,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       isMapLoad = true;
     });
   }
-
+  // Có thể dùng BitmapDescriptor để custom marker
   void _addMarker(LatLng position, String id) {
     setState(() {
       _markers.add(Marker(
@@ -245,6 +244,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       right: 0,
       child: Column(
         children: [
+          //Thanh cuộn
           Container(
             height: 15,
             width: double.infinity,
@@ -269,6 +269,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
               ),
             ),
           ),
+          //Các feature
           Container(
             width: double.infinity,
             color: Colors.white,
@@ -289,6 +290,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
               ],
             ),
           ),
+          //Hiệu ứng đổ bóng
           Container(
             height: 5, width: double.infinity,
             color: Colors.white,
@@ -305,6 +307,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
               ),
             ),
           ),
+          //Journey
           Expanded(
             child: TabBarView(
               controller: _tabController,

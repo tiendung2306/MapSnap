@@ -198,5 +198,46 @@ class ApiService {
     }
   }
 
+    Future<Map<String, dynamic>> CreatePositon (String userId, double latitude, double longitude, int createdAt, String positionName) async {
+    final url = Uri.parse('$_baseUrl/position/{userId}/create-position'.replaceFirst("{userId}", userId));
 
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "longitude": longitude,
+          "latitude": latitude,
+          "createdAt": createdAt,
+          "locationId": "60c72b2f5f1b2c001f8e4e39",
+          "positionName": positionName
+        }),
+      );
+      if(response.statusCode == 201)
+        return {
+          'mess': "Create success",
+          'data': json.decode(response.body),
+        };
+      else{
+        try{
+          return {
+            'mess': "Create failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Create failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+    
 }
