@@ -12,7 +12,7 @@ router.post(
   locationController.createLocation
 );
 
-router.get(
+router.post(
   '/:userId/get-location',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
   locationController.getLocation

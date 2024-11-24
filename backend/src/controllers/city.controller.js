@@ -17,7 +17,7 @@ const createCity = catchAsync(async (req, res) => {
 const getCities = catchAsync(async (req, res) => {
   const request = req.body;
   request.userId = req.params.userId;
-  const city = await cityService.getLocation(request);
+  const city = await cityService.getCities(request);
   res.send({ code: httpStatus.OK, message: Message.ok, result: city });
 });
 
