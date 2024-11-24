@@ -14,9 +14,11 @@ const createJourney = catchAsync(async (req, res) => {
   });
 });
 
-const getJourneysByUserId = catchAsync(async (req, res) => {
-  const journeys = await journeyService.getJourneysByUserId(req.params.userId);
-  res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
+const getJourney = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const journey = await journeyService.getJourney(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: journey });
 });
 
 const getJourneyByJourneyId = catchAsync(async (req, res) => {
@@ -50,7 +52,7 @@ const getJourneysToday = catchAsync(async (req, res) => {
 
 module.exports = {
   createJourney,
-  getJourneysByUserId,
+  getJourney,
   getJourneyByJourneyId,
   updateJourney,
   deleteJourney,

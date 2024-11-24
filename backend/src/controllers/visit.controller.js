@@ -14,6 +14,13 @@ const createVisit = catchAsync(async (req, res) => {
   });
 });
 
+const getVisit = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const visit = await visitService.getVisit(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: visit });
+});
+
 const getVisitByVisitId = catchAsync(async (req, res) => {
   const visit = await visitService.getVisitByVisitId(req.params.visitId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: visit });
@@ -40,6 +47,7 @@ const deleteVisit = catchAsync(async (req, res) => {
 
 module.exports = {
   createVisit,
+  getVisit,
   getVisitByVisitId,
   updateVisit,
   deleteVisit,
