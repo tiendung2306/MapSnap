@@ -12,7 +12,7 @@ router.post(
   cityController.createCity
 );
 
-router.get(
+router.post(
   '/:userId/get-cities',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
   cityController.getCities
