@@ -23,6 +23,16 @@ const getLocationByLocationId = async (locationId) => {
   return location;
 };
 
+const getLocation = async (locationBody) => {
+  const { userId, cityId, locationCategoryId, name } = locationBody;
+  const filter = { userId };
+  if (cityId) filter.cityId = cityId;
+  if (locationCategoryId) filter.locationCategoryId = locationCategoryId;
+  if (name) filter.name = name;
+  const location = await Location.find(filter);
+  return location;
+};
+
 const updateLocation = async ({ locationId, requestBody }) => {
   const location = await Location.findByIdAndUpdate(locationId, requestBody, { new: true });
   return location;
@@ -37,4 +47,5 @@ module.exports = {
   getLocationByLocationId,
   updateLocation,
   deleteLocation,
+  getLocation,
 };

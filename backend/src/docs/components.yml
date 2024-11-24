@@ -151,7 +151,9 @@ components:
       type: object
       required:
         - userId
-        - locationName
+        - cityId
+        - categoryId
+        - name
         - role
         - visitedTime
         - longitude
@@ -161,7 +163,11 @@ components:
         - updatedByUser
         - isAutomaticAdded
       properties:
-        locationName:
+        name:
+          type: string
+        cityId:
+          type: string
+        categoryId:
           type: string
         role:
           type: string
@@ -208,6 +214,54 @@ components:
         userId:
           type: string
         positionName:
+          type: string
+        id:
+          type: string
+    City:
+      type: object
+      required:
+        - userId
+        - name
+        - visitedTime
+        - createdAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        name:
+          type: string
+        visitedTime:
+          type: number
+        createdAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+        userId:
+          type: string
+        id:
+          type: string
+    LocationCategory:
+      type: object
+      required:
+        - userId
+        - name
+        - createdAt
+        - title
+        - status
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        createdAt:
+          type: number
+        status:
+          type: string
+        userId:
           type: string
         id:
           type: string
