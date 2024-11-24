@@ -12,8 +12,12 @@ router.post(
   journeyController.createJourney
 );
 
-// get all journey of user
-router.get('/:userId/get-journeys', journeyController.getJourneysByUserId);
+// get journey
+router.post(
+  '/:userId/get-journeys',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  journeyController.getJourney
+);
 
 // get all journey of user today
 router.route('/:userId/get-journeys-today').get(journeyController.getJourneysToday);
@@ -99,11 +103,13 @@ module.exports = router;
  *                   $ref: '#/components/schemas/Journey'
  *       "400":
  *         $ref: '#/components/responses/DuplicateJourney'
+ */
+
+/**
  * @swagger
- * /journey/{userId}/get-journeys:
- *   get:
- *     summary: Get all journeys of user
- *     description: Get all journeys of user.
+ * /location/{userId}/get-journeys:
+ *   post:
+ *     summary: Get journeys
  *     tags: [Journeys]
  *     parameters:
  *       - in: path
@@ -114,9 +120,41 @@ module.exports = router;
  *         description: User ID
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isAutomaticAdded:
+ *                 type: boolean
+ *                 description: Add by BE or User
+ *               updatedByUser:
+ *                 type: boolean
+ *                 description: Has user updated this?
+ *               status:
+ *                 type: string
+ *                 description: What status wanna filter?
+ *               sortType:
+ *                 type: string
+ *                 description: Which type? (asc or desc)
+ *               sortField:
+ *                 type: string
+ *                 description: Which field wanna sort?
+ *               searchText:
+ *                 type: string
+ *                 description: Using Search
+ *             example:
+ *               isAutomaticAdded: true
+ *               updatedByUser: true
+ *               status: enabled
+ *               sortType: asc
+ *               sortField: startedAt
+ *               searchText: Emcuoiroi
  *     responses:
  *       "200":
- *         description: OK
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
@@ -127,23 +165,12 @@ module.exports = router;
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: ok
- *                 results:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Journey'
- *                 page:
- *                   type: integer
- *                   example: 1
- *                 limit:
- *                   type: integer
- *                   example: 10
- *                 totalPages:
- *                   type: integer
- *                   example: 1
- *                 totalResults:
- *                   type: integer
- *                   example: 1
+ *                   example: lấy hành trình thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Journey'
+ */
+
+/**
  * @swagger
  * /journey/{userId}/get-journeys-today:
  *   get:

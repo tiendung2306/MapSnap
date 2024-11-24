@@ -39,10 +39,6 @@ const locationSchema = new Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    required: true,
-  },
   visitedTime: {
     type: Number,
     required: true,

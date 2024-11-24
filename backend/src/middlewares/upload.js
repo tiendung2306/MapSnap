@@ -1,12 +1,12 @@
 // Import các thư viện cần thiết
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const cloudinary = require('../config/cloudinary'); // Import cấu hình Cloudinary
 const { v4: uuidv4 } = require('uuid'); // Import UUID
+const cloudinary = require('../config/cloudinary'); // Import cấu hình Cloudinary
 
 // Cấu hình lưu trữ với Cloudinary
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary,
   params: {
     folder: 'uploads', // Thư mục trong Cloudinary
     allowed_formats: ['jpeg', 'jpg', 'png', 'gif'], // Các định dạng được phép

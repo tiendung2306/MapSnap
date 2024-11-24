@@ -33,13 +33,17 @@ const getLocation = async (locationBody) => {
     updatedByUser,
     sortType = 'desc',
     sortField = 'createdAt',
+    searchText,
   } = locationBody;
   const filter = { userId };
   if (cityId) filter.cityId = cityId;
   if (locationCategoryId) filter.locationCategoryId = locationCategoryId;
   if (name) filter.name = name;
-  if (isAutomaticAdded !== null) filter.isAutomaticAdded = isAutomaticAdded;
-  if (updatedByUser !== null) filter.updatedByUser = updatedByUser;
+  if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
+  if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
+  if (searchText) {
+    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }, { name: { $regex: searchText, $options: 'i' } }];
+  }
   const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
   const location = await Location.find(filter).sort(sortOption);
   return location;

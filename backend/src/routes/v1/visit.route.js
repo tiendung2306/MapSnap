@@ -12,6 +12,13 @@ router.post(
   visitController.createVisit
 );
 
+// get all journey of user
+router.post(
+  '/:userId/get-visits',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  visitController.getVisit
+);
+
 router
   .route('/:visitId')
   .get(visitController.getVisitByVisitId)
@@ -99,6 +106,85 @@ module.exports = router;
  *                   $ref: '#/components/schemas/Visit'
  *       "400":
  *         $ref: '#/components/responses/DuplicateVisit'
+ */
+
+/**
+ * @swagger
+ * /visit/{userId}/get-visits:
+ *   post:
+ *     summary: Get visits
+ *     tags: [Visits]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               isAutomaticAdded:
+ *                 type: boolean
+ *                 description: Add by BE or User
+ *               updatedByUser:
+ *                 type: boolean
+ *                 description: Has user updated this?
+ *               status:
+ *                 type: string
+ *                 description: What status wanna filter?
+ *               journeyId:
+ *                 type: string
+ *                 description: Belong to which Journey
+ *               locationId:
+ *                 type: string
+ *                 description: Belong to which Location
+ *               from:
+ *                 type: number
+ *                 description: Filter the start time of Visit
+ *               to:
+ *                 type: number
+ *                 description: Filter the end time of Visit
+ *               sortType:
+ *                 type: string
+ *                 description: Which type? (asc or desc)
+ *               sortField:
+ *                 type: string
+ *                 description: Which field wanna sort?
+ *               searchText:
+ *                 type: string
+ *                 description: Using Search
+ *             example:
+ *               isAutomaticAdded: true
+ *               updatedByUser: true
+ *               status: enabled
+ *               from: 1731072409
+ *               to: 1731073000
+ *               sortType: asc
+ *               sortField: startedAt
+ *               searchText: Emcuoiroi
+ *     responses:
+ *       "200":
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: lấy hành trình thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Journey'
  */
 
 /**

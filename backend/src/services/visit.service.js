@@ -31,6 +31,40 @@ const createVisit = async (requestBody) => {
   return visit;
 };
 
+const getVisit = async (locationBody) => {
+  const {
+    userId,
+    isAutomaticAdded,
+    updatedByUser,
+    sortType = 'desc',
+    sortField = 'createdAt',
+    journeyId,
+    locationId,
+    from,
+    to,
+    searchText,
+  } = locationBody;
+  const filter = { userId };
+  if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
+  if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
+  if (journeyId) filter.journeyId = journeyId;
+  if (locationId) filter.locationId = locationId;
+  if (searchText) {
+    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }, { name: { $regex: searchText, $options: 'i' } }];
+  }
+  if (from) {
+    filter.startedAt = {};
+    filter.startedAt.$gte = from;
+  }
+  if (to) {
+    filter.endedAt = {};
+    filter.endedAt.$lte = to;
+  }
+  const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
+  const visit = await Visit.find(filter).sort(sortOption);
+  return visit;
+};
+
 const getVisitByVisitId = async (visitId) => {
   const visit = await Visit.findById(visitId);
   if (!visit) {
@@ -57,6 +91,7 @@ const deleteVisit = async (visitId) => {
 
 module.exports = {
   createVisit,
+  getVisit,
   getVisitByVisitId,
   updateVisit,
   deleteVisit,
