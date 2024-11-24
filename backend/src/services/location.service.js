@@ -24,12 +24,24 @@ const getLocationByLocationId = async (locationId) => {
 };
 
 const getLocation = async (locationBody) => {
-  const { userId, cityId, locationCategoryId, name } = locationBody;
+  const {
+    userId,
+    cityId,
+    locationCategoryId,
+    name,
+    isAutomaticAdded,
+    updatedByUser,
+    sortType = 'desc',
+    sortField = 'createdAt',
+  } = locationBody;
   const filter = { userId };
   if (cityId) filter.cityId = cityId;
   if (locationCategoryId) filter.locationCategoryId = locationCategoryId;
   if (name) filter.name = name;
-  const location = await Location.find(filter);
+  if (isAutomaticAdded !== null) filter.isAutomaticAdded = isAutomaticAdded;
+  if (updatedByUser !== null) filter.updatedByUser = updatedByUser;
+  const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
+  const location = await Location.find(filter).sort(sortOption);
   return location;
 };
 
