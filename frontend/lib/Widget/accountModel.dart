@@ -1,12 +1,11 @@
-import 'dart:ffi';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Model/City.dart';
+import 'package:mapsnap_fe/Model/Location.dart';
 import '../Model/Picture.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
-import '../main.dart';
-import 'UpdateUser.dart';
+
 
 // Class để quản lý các biến dùng chung
 class AccountModel extends ChangeNotifier {
@@ -117,4 +116,80 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
+  //=================================================================================
+  Map<String,List<Map<String,String>>> _locationManager = {
+    'Hà Nội': [
+      {
+        'Tên': 'Lăng  Bác',
+        'Số lần đến': '5',
+        'Lần đến gần nhất': '10-10-2024'
+      },
+      {
+        'Tên': 'Công viên thống nhất',
+        'Số lần đến': '20',
+        'Lần đến gần nhất': '15-11-2024'
+      },
+      {
+        'Tên': 'Bến xe Nước Ngầm',
+        'Số lần đến': '2',
+        'Lần đến gần nhất': '1-11-2024'
+      },
+      {
+        'Tên': 'Times City',
+        'Số lần đến': '1',
+        'Lần đến gần nhất': '1-9-2024'
+      },
+    ],
+    'Nghệ An': [
+      {
+        'Tên': 'Công viên nước',
+        'Số lần đến': '2',
+        'Lần đến gần nhất': '10-6-2024'
+      },
+      {
+        'Tên': 'Quảng trường HCM',
+        'Số lần đến': '1',
+        'Lần đến gần nhất': '30-04-2024'
+      },
+      {
+        'Tên': 'Biển Cửa Lò',
+        'Số lần đến': '2',
+        'Lần đến gần nhất': '1-11-2024'
+      },
+      {
+        'Tên': 'Hòn Câu',
+        'Số lần đến': '99999',
+        'Lần đến gần nhất': '23-11-2024'
+      },
+    ]
+  };
+  Map<String,List<Map<String,String>>> get locationManager => _locationManager;
+
+  void addLocation(String city, Map<String,String> location) {
+    // Kiểm tra nếu hành trình đã tồn tại
+    if (_locationManager.containsKey(city)) {
+      _locationManager[city]?.insert(0, location);
+    } else {
+      // Nếu địa điểm chưa có, tạo mới danh sách ảnh
+      _locationManager[city] = [location] ;
+
+    }
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  List<City> _cityManager = [];
+  List<City> get cityManager => _cityManager;
+
+  void addCity(City newCity) {
+    _cityManager.insert(0, newCity);
+    notifyListeners();
+  }
+
+  List<Location> _LocationManager = [];
+  List<Location> get LocationManager => _LocationManager;
+
+  void addLocation2(Location newLocation) {
+    _LocationManager.insert(0, newLocation);
+    notifyListeners();
+  }
 }

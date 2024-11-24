@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Model/Picture.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
-import '../PictureManager/CURD_picture.dart';
+import '../Manager/CURD_picture.dart';
 import 'ImageScreen.dart';
 
 class daySaveScreen extends StatefulWidget {

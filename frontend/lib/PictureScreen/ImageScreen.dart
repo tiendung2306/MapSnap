@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Model/Picture.dart';
 
-import '../PictureManager/CURD_picture.dart';
+import '../Manager/CURD_picture.dart';
 
 class ImageScreen extends StatefulWidget {
   final Picture picture;
