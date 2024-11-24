@@ -12,6 +12,12 @@ router.post(
   locationController.createLocation
 );
 
+router.get(
+  '/:userId/get-location',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  locationController.getLocation
+);
+
 router
   .route('/:locationId')
   .get(locationController.getLocationByLocationId)
@@ -43,7 +49,9 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - locationName
+ *               - name
+ *               - cityId
+ *               - categoryId
  *               - title
  *               - role
  *               - visitedTime
@@ -54,9 +62,15 @@ module.exports = router;
  *               - updatedByUser
  *               - isAutomaticAdded
  *             properties:
- *               locationName:
+ *               name:
  *                 type: string
  *                 description: Location Name
+ *               cityId:
+ *                 type: string
+ *                 description: Belong to which city
+ *               categoryId:
+ *                 type: string
+ *                 description: Belong to which category
  *               title:
  *                 type: string
  *                 description: Title
@@ -82,7 +96,9 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this location add by user or BE
  *             example:
- *               locationName: "Emcuoiroia"
+ *               name: "Emcuoiroia"
+ *               cityId: 6742a4e6f7e0193cf08162ef
+ *               categoryId: 6742a5cced0e2c4a0430085d
  *               role: "Home"
  *               title: "Ngayhomnayemcuoiroii"
  *               visitedTime: 2
@@ -106,6 +122,61 @@ module.exports = router;
  *                 message:
  *                   type: string
  *                   example: tạo điểm cố định thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Location'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateLocation'
+ */
+
+/**
+ * @swagger
+ * /location/{userId}/get-location:
+ *   post:
+ *     summary: Get locations
+ *     tags: [Locations]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Location Name
+ *               cityId:
+ *                 type: string
+ *                 description: Belong to which city
+ *               categoryId:
+ *                 type: string
+ *                 description: Belong to which category
+ *             example:
+ *               name: "Emcuoiroia"
+ *               cityId: 6742a4e6f7e0193cf08162ef
+ *               categoryId: 6742a5cced0e2c4a0430085d
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: lấy điểm cố định thành công
  *                 result:
  *                   $ref: '#/components/schemas/Location'
  *       "400":
@@ -165,7 +236,7 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               locationName:
+ *               name:
  *                 type: string
  *                 description: Location Name
  *               title:
@@ -193,7 +264,9 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this location add by user or BE
  *             example:
- *               locationName: "Emcuoiroiaaa"
+ *               name: "Emcuoiroiaaa"
+ *               cityId: 6742a4e6f7e0193cf08162ef
+ *               categoryId: 6742a5cced0e2c4a0430085d
  *               role: "Company"
  *               title: "Ngayhomnayemcuoiroii"
  *               visitedTime: 213
@@ -203,6 +276,7 @@ module.exports = router;
  *               status: "disabled"
  *               updatedByUser: true
  *               isAutomaticAdded: false
+
  *     responses:
  *       "200":
  *         description: OK
