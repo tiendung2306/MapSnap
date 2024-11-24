@@ -53,7 +53,6 @@ module.exports = router;
  *               - cityId
  *               - categoryId
  *               - title
- *               - role
  *               - visitedTime
  *               - longitude
  *               - latitude
@@ -77,9 +76,6 @@ module.exports = router;
  *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               role:
- *                 type: String
- *                 description: What type is this location?
  *               longitude:
  *                 type: number
  *                 description: Longitude of location
@@ -99,7 +95,6 @@ module.exports = router;
  *               name: "Emcuoiroia"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
- *               role: "Home"
  *               title: "Ngayhomnayemcuoiroii"
  *               visitedTime: 2
  *               longitude: 3
@@ -164,8 +159,8 @@ module.exports = router;
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
  *     responses:
- *       "201":
- *         description: Created
+ *       "200":
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
@@ -173,14 +168,12 @@ module.exports = router;
  *               properties:
  *                 code:
  *                   type: integer
- *                   example: 201
+ *                   example: 200
  *                 message:
  *                   type: string
  *                   example: lấy điểm cố định thành công
  *                 result:
  *                   $ref: '#/components/schemas/Location'
- *       "400":
- *         $ref: '#/components/responses/DuplicateLocation'
  */
 
 /**
@@ -245,9 +238,6 @@ module.exports = router;
  *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               role:
- *                 type: String
- *                 description: What type is this location?
  *               longitude:
  *                 type: number
  *                 description: Longitude of location
@@ -267,7 +257,6 @@ module.exports = router;
  *               name: "Emcuoiroiaaa"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
- *               role: "Company"
  *               title: "Ngayhomnayemcuoiroii"
  *               visitedTime: 213
  *               longitude: 123

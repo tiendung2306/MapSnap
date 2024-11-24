@@ -15,10 +15,26 @@ const createJourney = async (journeyBody) => {
   return journeyModel;
 };
 
-const getJourneysByUserId = async (userId) => {
-  const filter = { userId: mongoose.Types.ObjectId(userId), status: 'enabled' };
-  const journeys = await Journey.find(filter);
-  return journeys;
+const getJourney = async (journeyBody) => {
+  const {
+    userId,
+    isAutomaticAdded,
+    updatedByUser,
+    sortType = 'desc',
+    sortField = 'startedAt',
+    status = 'enabled',
+    searchText,
+  } = journeyBody;
+  const filter = { userId };
+  if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
+  if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
+  filter.status = status;
+  if (searchText) {
+    filter.title = { $regex: searchText, $options: 'i' };
+  }
+  const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
+  const journey = await Journey.find(filter).sort(sortOption);
+  return journey;
 };
 
 const getJourneyByJourneyId = async (journeyId) => {
@@ -56,7 +72,7 @@ const getJourneysToday = async (userId) => {
 
 module.exports = {
   createJourney,
-  getJourneysByUserId,
+  getJourney,
   getJourneyByJourneyId,
   updateJourney,
   deleteJourney,

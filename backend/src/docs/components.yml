@@ -154,7 +154,6 @@ components:
         - cityId
         - categoryId
         - name
-        - role
         - visitedTime
         - longitude
         - latitude
@@ -168,8 +167,6 @@ components:
         cityId:
           type: string
         categoryId:
-          type: string
-        role:
           type: string
         visitedTime:
           type: number
