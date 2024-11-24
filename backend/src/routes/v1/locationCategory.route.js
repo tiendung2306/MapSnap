@@ -1,32 +1,32 @@
 const express = require('express');
-const visitController = require('../../controllers/visit.controller');
+const locationCategoryController = require('../../controllers/locationCategory.controller');
 // const auth = require('../../middlewares/auth');
 // const permissionType = require('../../utils/constant');
 
 const router = express.Router();
 
-// create visit
+// create locationCategory
 router.post(
-  '/:userId/create-visit',
+  '/:userId/create-category',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
-  visitController.createVisit
+  locationCategoryController.createLocationCategory
 );
 
 router
-  .route('/:visitId')
-  .get(visitController.getVisitByVisitId)
-  .patch(visitController.updateVisit)
-  .delete(visitController.deleteVisit);
+  .route('/:locationCategoryId')
+  .get(locationCategoryController.getLocationCategoryById)
+  .patch(locationCategoryController.updateLocationCategory)
+  .delete(locationCategoryController.deleteLocationCategory);
 
 module.exports = router;
 
 /**
  * @swagger
- * /visit/{userId}/create-visit:
+ * /locationCategory/{userId}/create-category:
  *   post:
- *     summary: Create a visit
- *     description: Only admins can create other vitits.
- *     tags: [Visits]
+ *     summary: Create a locationCategory
+ *     description: Only admins can create other location categories.
+ *     tags: [LocationCategory]
  *     parameters:
  *       - in: path
  *         name: id
@@ -43,44 +43,27 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - journeyId
- *               - startedAt
- *               - endedAt
+ *               - name
+ *               - createdAt
  *               - status
- *               - updatedByUser
- *               - isAutomaticAdded
  *             properties:
- *               journeyId:
+ *               name:
  *                 type: string
- *                 description: Journey Id
- *               title:
- *                 type: string
- *                 description: title
- *               startedAt:
+ *                 description: Location Category Name
+ *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               endedAt:
- *                 type: number
- *                 description: Epoch time ended at
+ *               title:
+ *                 type: boolean
+ *                 description: Title of locationCategory
  *               status:
  *                 type: boolean
- *                 description: status of visit (enabled/ disabled)
- *               updatedByUser:
- *                 type: boolean
- *                 description: define if user have updated or not
- *               isAutomaticAdded:
- *                 type: boolean
- *                 description: define if this visit add by user or BE
+ *                 description: status of locationCategory (enabled/ disabled)
  *             example:
- *               journeyId: 6731d86e2745d6189c244932
- *               locationId: 6731d0bbdf4673b3683eb7a5
- *               title: Ngayhomnayemcuoiroi
- *               startedAt: 1731072409000
- *               endedAt: 1731072409000
- *               updatedAt: 1731072409000
- *               status: enabled
- *               updatedByUser: true
- *               isAutomaticAdded: true
+ *               name: "Home"
+ *               title: "Son Hyung Min"
+ *               createdAt: 1731319800
+ *               status: "enabled"
  *     responses:
  *       "201":
  *         description: Created
@@ -94,19 +77,19 @@ module.exports = router;
  *                   example: 201
  *                 message:
  *                   type: string
- *                   example: tạo điểm thăm thành công
+ *                   example: tạo danh mục địa điểm thành công
  *                 result:
- *                   $ref: '#/components/schemas/Visit'
+ *                   $ref: '#/components/schemas/LocationCategory'
  *       "400":
- *         $ref: '#/components/responses/DuplicateVisit'
+ *         $ref: '#/components/responses/DuplicateLocationCategory'
  */
 
 /**
  * @swagger
- * /visit/{id}:
+ * /locationCategory/{id}:
  *   get:
- *     summary: Get a visit
- *     tags: [Visits]
+ *     summary: Get a locationCategory
+ *     tags: [LocationCategory]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -115,7 +98,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Visit ID
+ *         description: Location Category ID
  *     responses:
  *       "200":
  *         description: OK
@@ -131,13 +114,13 @@ module.exports = router;
  *                   type: string
  *                   example: ok
  *                 results:
- *                   $ref: '#/components/schemas/Visit'
+ *                   $ref: '#/components/schemas/LocationCategory'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a visit
- *     tags: [Visits]
+ *     summary: Update a locationCategory
+ *     tags: [LocationCategory]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -146,7 +129,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Visit ID
+ *         description: Location Category ID
  *     requestBody:
  *       required: true
  *       content:
@@ -154,34 +137,20 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               startedAt:
+ *                 description: Location Category Name
+ *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               endedAt:
- *                 type: number
- *                 description: Epoch time ended at
- *               updatedAt:
- *                 type: number
- *                 description: Epoch time updated at
  *               status:
  *                 type: boolean
- *                 description: status
- *               updatedByUser:
- *                 type: boolean
- *                 description: status
- *               isAutomaticAdded:
- *                 type: boolean
- *                 description: status
+ *                 description: status of locationCategory (enabled/ disabled)
  *             example:
- *               title: emcuoiroia
- *               startedAt: 1731072409000
- *               endedAt: 1731072409000
- *               updatedAt: 1731072409000
- *               status: disabled
- *               updatedByUser: false
- *               isAutomaticAdded: true
+ *               name: "Home"
+ *               title: "Son Hyung Min"
+ *               createdAt: 17313198000
+ *               status: "disabled"
  *     responses:
  *       "200":
  *         description: OK
@@ -197,13 +166,13 @@ module.exports = router;
  *                   type: string
  *                   example: ok
  *                 results:
- *                   $ref: '#/components/schemas/Visit'
+ *                   $ref: '#/components/schemas/LocationCategory'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a visit
- *     tags: [Visits]
+ *     summary: Delete a locationCategory
+ *     tags: [LocationCategory]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -212,10 +181,10 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Visit ID
+ *         description: Location Category ID
  *     responses:
  *       "200":
- *         description: Delete visit successful
+ *         description: Delete locationCategory successful
  *         content:
  *           application/json:
  *             schema:
@@ -226,7 +195,7 @@ module.exports = router;
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: xóa điểm thăm thành công
+ *                   example: xóa danh mục địa điểm thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */

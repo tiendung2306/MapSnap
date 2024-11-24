@@ -17,7 +17,21 @@ const pictureSchema = new Schema({
 
 // Define the Location schema
 const locationSchema = new Schema({
-  locationName: {
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+    required: true,
+  },
+  cityId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'City',
+    required: true,
+  },
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'LocationCategory',
+  },
+  name: {
     type: String,
     required: true,
   },

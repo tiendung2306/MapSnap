@@ -87,7 +87,7 @@ const updateUserAvatarByID = async (req, res) => {
 
       // Delete old avatar in cloudinary
       try {
-        var result = null;
+        let result = null;
         if (user.avatar_public_id !== 'default_avatar/default_avatar')
           result = await cloudinary.uploader.destroy(user.avatar_public_id); // Xóa bằng public_id
         if (!!result && result.result !== 'ok') {

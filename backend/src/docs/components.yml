@@ -39,9 +39,9 @@ components:
         email: fake@example.com
         password: password1
         role: user
-        avatar: "https://example.com/picture/1"
-        avatar_public_id: "uploads/avatar-cc8c49a8-8dbd-486c-bd63-25e42189db0d"
-        phoneNumber: "01234567899"
+        avatar: 'https://example.com/picture/1'
+        avatar_public_id: 'uploads/avatar-cc8c49a8-8dbd-486c-bd63-25e42189db0d'
+        phoneNumber: '01234567899'
         address: 123 Fake Street
         dateOfBirth: 1990-01-01
         country: USA
@@ -85,8 +85,6 @@ components:
         - updatedByUser
         - isAutomaticAdded
       properties:
-        userId:
-          type: string
         visitIds:
           type: array
           items:
@@ -105,6 +103,10 @@ components:
           type: boolean
         isAutomaticAdded:
           type: boolean
+        userId:
+          type: string
+        id:
+          type: string
     Visit:
       type: object
       required:
@@ -119,14 +121,10 @@ components:
         - updatedByUser
         - isAutomaticAdded
       properties:
-        userId:
-          type: string
         journeyId:
           type: string
         locationId:
           type: string
-        visitedTime:
-          type: number
         title:
           type: string
         startedAt:
@@ -145,10 +143,17 @@ components:
           type: array
           items:
             type: object
+        userId:
+          type: string
+        id:
+          type: string
     Location:
       type: object
       required:
-        - locationName
+        - userId
+        - cityId
+        - categoryId
+        - name
         - role
         - visitedTime
         - longitude
@@ -158,7 +163,11 @@ components:
         - updatedByUser
         - isAutomaticAdded
       properties:
-        locationName:
+        name:
+          type: string
+        cityId:
+          type: string
+        categoryId:
           type: string
         role:
           type: string
@@ -182,6 +191,10 @@ components:
           type: array
           items:
             type: object
+        userId:
+          type: string
+        id:
+          type: string
     Position:
       type: object
       required:
@@ -190,8 +203,6 @@ components:
         - latitude
         - createdAt
       properties:
-        userId:
-          type: string
         longitude:
           type: number
         latitude:
@@ -199,6 +210,60 @@ components:
         createdAt:
           type: number
         locationid:
+          type: string
+        userId:
+          type: string
+        positionName:
+          type: string
+        id:
+          type: string
+    City:
+      type: object
+      required:
+        - userId
+        - name
+        - visitedTime
+        - createdAt
+        - status
+        - updatedByUser
+        - isAutomaticAdded
+      properties:
+        name:
+          type: string
+        visitedTime:
+          type: number
+        createdAt:
+          type: number
+        status:
+          type: string
+        updatedByUser:
+          type: boolean
+        isAutomaticAdded:
+          type: boolean
+        userId:
+          type: string
+        id:
+          type: string
+    LocationCategory:
+      type: object
+      required:
+        - userId
+        - name
+        - createdAt
+        - title
+        - status
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        createdAt:
+          type: number
+        status:
+          type: string
+        userId:
+          type: string
+        id:
           type: string
   responses:
     DuplicateEmail:
@@ -210,6 +275,33 @@ components:
           example:
             code: 400
             message: Email already taken
+    DuplicateJourney:
+      description: Journey already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: hành trình đã tồn tại
+    DuplicateVisit:
+      description: Visit already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: điểm thăm đã tồn tại
+    DuplicateLocation:
+      description: Location already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: điểm cố định đã tồn tại
     Unauthorized:
       description: Unauthorized
       content:

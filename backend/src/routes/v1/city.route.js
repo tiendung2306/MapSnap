@@ -1,32 +1,32 @@
 const express = require('express');
-const visitController = require('../../controllers/visit.controller');
+const cityController = require('../../controllers/city.controller');
 // const auth = require('../../middlewares/auth');
 // const permissionType = require('../../utils/constant');
 
 const router = express.Router();
 
-// create visit
+// create city
 router.post(
-  '/:userId/create-visit',
+  '/:userId/create-city',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
-  visitController.createVisit
+  cityController.createCity
 );
 
 router
-  .route('/:visitId')
-  .get(visitController.getVisitByVisitId)
-  .patch(visitController.updateVisit)
-  .delete(visitController.deleteVisit);
+  .route('/:cityId')
+  .get(cityController.getCityByCityId)
+  .patch(cityController.updateCity)
+  .delete(cityController.deleteCity);
 
 module.exports = router;
 
 /**
  * @swagger
- * /visit/{userId}/create-visit:
+ * /city/{userId}/create-city:
  *   post:
- *     summary: Create a visit
- *     description: Only admins can create other vitits.
- *     tags: [Visits]
+ *     summary: Create a city
+ *     description: Only admins can create other cities.
+ *     tags: [Cities]
  *     parameters:
  *       - in: path
  *         name: id
@@ -43,42 +43,33 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - journeyId
- *               - startedAt
- *               - endedAt
+ *               - name
+ *               - visitedTime
+ *               - createdAt
  *               - status
  *               - updatedByUser
  *               - isAutomaticAdded
  *             properties:
- *               journeyId:
+ *               name:
  *                 type: string
- *                 description: Journey Id
- *               title:
- *                 type: string
- *                 description: title
- *               startedAt:
+ *                 description: City Name
+ *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               endedAt:
- *                 type: number
- *                 description: Epoch time ended at
  *               status:
  *                 type: boolean
- *                 description: status of visit (enabled/ disabled)
+ *                 description: status of city (enabled/ disabled)
  *               updatedByUser:
  *                 type: boolean
  *                 description: define if user have updated or not
  *               isAutomaticAdded:
  *                 type: boolean
- *                 description: define if this visit add by user or BE
+ *                 description: define if this city add by user or BE
  *             example:
- *               journeyId: 6731d86e2745d6189c244932
- *               locationId: 6731d0bbdf4673b3683eb7a5
- *               title: Ngayhomnayemcuoiroi
- *               startedAt: 1731072409000
- *               endedAt: 1731072409000
- *               updatedAt: 1731072409000
- *               status: enabled
+ *               name: "Vinh"
+ *               visitedTime: 2
+ *               createdAt: 1731319800
+ *               status: "enabled"
  *               updatedByUser: true
  *               isAutomaticAdded: true
  *     responses:
@@ -94,19 +85,19 @@ module.exports = router;
  *                   example: 201
  *                 message:
  *                   type: string
- *                   example: tạo điểm thăm thành công
+ *                   example: tạo thành phố thành công
  *                 result:
- *                   $ref: '#/components/schemas/Visit'
+ *                   $ref: '#/components/schemas/City'
  *       "400":
- *         $ref: '#/components/responses/DuplicateVisit'
+ *         $ref: '#/components/responses/DuplicateCity'
  */
 
 /**
  * @swagger
- * /visit/{id}:
+ * /city/{id}:
  *   get:
- *     summary: Get a visit
- *     tags: [Visits]
+ *     summary: Get a city
+ *     tags: [Cities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -115,7 +106,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Visit ID
+ *         description: City ID
  *     responses:
  *       "200":
  *         description: OK
@@ -131,13 +122,13 @@ module.exports = router;
  *                   type: string
  *                   example: ok
  *                 results:
- *                   $ref: '#/components/schemas/Visit'
+ *                   $ref: '#/components/schemas/City'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a visit
- *     tags: [Visits]
+ *     summary: Update a city
+ *     tags: [Cities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -146,7 +137,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Visit ID
+ *         description: City ID
  *     requestBody:
  *       required: true
  *       content:
@@ -154,34 +145,28 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               name:
  *                 type: string
- *               startedAt:
+ *                 description: City Name
+ *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               endedAt:
- *                 type: number
- *                 description: Epoch time ended at
- *               updatedAt:
- *                 type: number
- *                 description: Epoch time updated at
  *               status:
  *                 type: boolean
- *                 description: status
+ *                 description: status of city (enabled/ disabled)
  *               updatedByUser:
  *                 type: boolean
- *                 description: status
+ *                 description: define if user have updated or not
  *               isAutomaticAdded:
  *                 type: boolean
- *                 description: status
+ *                 description: define if this city add by user or BE
  *             example:
- *               title: emcuoiroia
- *               startedAt: 1731072409000
- *               endedAt: 1731072409000
- *               updatedAt: 1731072409000
- *               status: disabled
- *               updatedByUser: false
- *               isAutomaticAdded: true
+ *               name: "Vinh"
+ *               visitedTime: 213
+ *               createdAt: 17313198000
+ *               status: "disabled"
+ *               updatedByUser: true
+ *               isAutomaticAdded: false
  *     responses:
  *       "200":
  *         description: OK
@@ -197,13 +182,13 @@ module.exports = router;
  *                   type: string
  *                   example: ok
  *                 results:
- *                   $ref: '#/components/schemas/Visit'
+ *                   $ref: '#/components/schemas/City'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a visit
- *     tags: [Visits]
+ *     summary: Delete a city
+ *     tags: [Cities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -212,10 +197,10 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Visit ID
+ *         description: City ID
  *     responses:
  *       "200":
- *         description: Delete visit successful
+ *         description: Delete city successful
  *         content:
  *           application/json:
  *             schema:
@@ -226,7 +211,7 @@ module.exports = router;
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: xóa điểm thăm thành công
+ *                   example: xóa thành phố thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */

@@ -14,6 +14,13 @@ const createLocation = catchAsync(async (req, res) => {
   });
 });
 
+const getLocation = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const location = await locationService.getLocation(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: location });
+});
+
 const getLocationByLocationId = catchAsync(async (req, res) => {
   const location = await locationService.getLocationByLocationId(req.params.locationId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: location });
@@ -25,7 +32,7 @@ const updateLocation = catchAsync(async (req, res) => {
   await locationService.updateLocation({ locationId, requestBody });
   res.send({
     code: httpStatus.OK,
-    message: Message.locationMsg.update,
+    message: Message.locationMsg.updated,
   });
 });
 
@@ -39,6 +46,7 @@ const deleteLocation = catchAsync(async (req, res) => {
 
 module.exports = {
   createLocation,
+  getLocation,
   getLocationByLocationId,
   updateLocation,
   deleteLocation,

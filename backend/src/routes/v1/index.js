@@ -7,6 +7,8 @@ const pictureRoute = require('./picture.route');
 const locationRoute = require('./location.route');
 const positionRoute = require('./position.route');
 const visitRoute = require('./visit.route');
+const cityRoute = require('./city.route');
+const locationCategoryRoute = require('./locationCategory.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -39,6 +41,14 @@ const defaultRoutes = [
   {
     path: '/position',
     route: positionRoute,
+  },
+  {
+    path: '/city',
+    route: cityRoute,
+  },
+  {
+    path: '/locationCategory',
+    route: locationCategoryRoute,
   },
 ];
 
