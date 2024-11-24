@@ -26,22 +26,17 @@ class _daySaveScreenState extends State<daySaveScreen> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
 
     // Kiểm tra xem đã tải ảnh chưa
-    if (!accountModel.isFetchedImage) {
-      List<Picture> images = await getInfoImages(accountModel.idUser, 'user_id');
-      if (images.isNotEmpty) {
-        for (var image in images) {
-          DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(image.capturedAt);
-          String dayString = '${dateTime.day}-${dateTime.month}-${dateTime.year}';
-
-          // Phân nhóm ảnh theo ngày
-          accountModel.addImageDay(image, dayString);
-        }
-      } else {
-        print('Không có ảnh nào được tìm thấy.');
+    accountModel.resetGroupedImages();
+    List<Picture> images = await getInfoImages(accountModel.idUser, 'user_id');
+    if (images.isNotEmpty) {
+      for (var image in images) {
+        DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(image.capturedAt);
+        String dayString = '${dateTime.day}-${dateTime.month}-${dateTime.year}';
+        // Phân nhóm ảnh theo ngày
+        accountModel.addImageDay(image, dayString);
       }
-
-      // Đánh dấu là đã tải ảnh
-      accountModel.setFetchedImage(true);
+    } else {
+      print('Không có ảnh nào được tìm thấy.');
     }
   }
 
@@ -63,6 +58,8 @@ class _daySaveScreenState extends State<daySaveScreen> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     String dateTime;
@@ -70,7 +67,15 @@ class _daySaveScreenState extends State<daySaveScreen> {
     String formatDate(String dayString) {
       DateTime now = DateTime.now();
       DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Múi giờ Việt Nam
-      DateTime date = DateTime.parse(dayString);
+
+      // Tách các phần ngày, tháng, năm từ chuỗi
+      List<String> parts = dayString.split('-');
+      int day = int.parse(parts[0]);
+      int month = int.parse(parts[1]);
+      int year = int.parse(parts[2]);
+
+      // Tạo đối tượng DateTime
+      DateTime date = DateTime(year, month, day);
 
       // Kiểm tra nếu ngày nằm trong năm hiện tại
       if (date.year == vietnamTime.year) {
@@ -103,6 +108,14 @@ class _daySaveScreenState extends State<daySaveScreen> {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 6,
+                            offset: Offset(5, 5)
+                        )
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
