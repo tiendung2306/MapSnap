@@ -1,7 +1,7 @@
 class City {
   String name;
   int visitedTime;
-  int createdAt;
+  // int createdAt;
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
@@ -11,7 +11,7 @@ class City {
   City({
     required this.name,
     required this.visitedTime,
-    required this.createdAt,
+    // required this.createdAt,
     required this.status,
     required this.updatedByUser,
     required this.isAutomaticAdded,
@@ -23,7 +23,7 @@ class City {
     return City(
         name: json['name'],
         visitedTime: json['visitedTime'],
-        createdAt: json['createdAt'],
+        // createdAt: json['createdAt'],
         status: json['status'],
         updatedByUser: json['updatedByUser'],
         isAutomaticAdded: json['isAutomaticAdded'],

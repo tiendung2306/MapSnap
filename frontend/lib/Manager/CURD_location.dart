@@ -52,23 +52,24 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
 
 
 // Hàm gọi API lấy hết thông tin location
-Future<List<Location>?> getInfoLocation(String userId) async {
+Future<List<Location>> getInfoLocation(String userId) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/get-location');
-  final response = await http.get(
+  final response = await http.post(
     url,
     headers: {
       'Content-Type': 'application/json',
     },
   );
-  if (response.statusCode == 201) {
-    List<dynamic> data = jsonDecode(response.body);
+  if (response.statusCode == 200) {
+    final json = jsonDecode(response.body);
+    List<dynamic> data = json['result'];
     print(data);
     List<Location> locations = data.map((json) => Location.fromJson(json)).toList();
     return locations;
   } else {
     print('Lỗi: ${response.statusCode}');
   }
-  return null;
+  return [];
 }
 
 

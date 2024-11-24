@@ -7,7 +7,7 @@ class Location {
   int visitedTime;
   int longitude;
   int latitude;
-  int createdAt;
+  // int createdAt;
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
@@ -24,7 +24,7 @@ class Location {
     required this.visitedTime,
     required this.longitude,
     required this.latitude,
-    required this.createdAt,
+    // required this.createdAt,
     required this.status,
     required this.updatedByUser,
     required this.isAutomaticAdded,
@@ -43,7 +43,7 @@ class Location {
       visitedTime: json['visitedTime'],
       longitude: json['longitude'],
       latitude: json['latitude'],
-      createdAt: json['createdAt'],
+      // createdAt: json['createdAt'],
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],

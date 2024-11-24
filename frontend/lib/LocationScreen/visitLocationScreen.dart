@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mapsnap_fe/Manager/CURD_location.dart';
+import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +24,25 @@ class visitLocationScreen extends StatefulWidget {
 class _visitLocationScreenState  extends State<visitLocationScreen>{
 
   int k = 1;
+
+  void initState() {
+    fetchLocationByUserId();
+    super.initState();
+  }
+
+  Future<void> fetchLocationByUserId() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    // Kiểm tra xem đã tải ảnh chưa
+    accountModel.resetLocation();
+    List<Location> locations = await getInfoLocation(accountModel.idUser);
+    if (locations.isNotEmpty) {
+      for (var location in locations) {
+        accountModel.addLocation2(location);
+      }
+    } else {
+      print('Không có thành phố nào được tìm thấy.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +89,7 @@ class _visitLocationScreenState  extends State<visitLocationScreen>{
                           ),
                         ),
                         // Hiển thị các container cho từng ngày
-                        for (int i = 0; i < accountModel.locationManager[widget.city]!.length; i++) ...[
+                        for (int i = 0; i < accountModel.LocationManager.length; i++) ...[
                           GestureDetector(
                             onTap: () {
                               print(i);
@@ -84,19 +106,24 @@ class _visitLocationScreenState  extends State<visitLocationScreen>{
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(accountModel.locationManager[widget.city]![i]['Tên']!, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                                    Text(accountModel.LocationManager[i].name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                                     Row(
                                       children: [
                                         Text('Số lần đến: ', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                                        Text(accountModel.locationManager[widget.city]![i]['Số lần đến']!, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                                        Text(accountModel.LocationManager[i].visitedTime as String, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        Text('Lần đến gần nhất: ', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                                        Text(accountModel.locationManager[widget.city]![i]['Lần đến gần nhất']!, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                                      ],
-                                    )
+                                    // Row(
+                                    //   children: [
+                                    //     Text('Lần đến gần nhất: ', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                                    //     Text(
+                                    //       DateFormat('yyyy-MM-dd HH:mm:ss').format(
+                                    //         DateTime.fromMillisecondsSinceEpoch(accountModel.LocationManager[i].createdAt),
+                                    //       ),
+                                    //       style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                                    //     ),
+                                    //   ],
+                                    // )
 
                                   ],
                                 ),

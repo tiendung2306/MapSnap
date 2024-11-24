@@ -44,8 +44,29 @@ Future<City?> upLoadCity(CreateCity createCity, String userId) async {
 
 
 // Hàm gọi API lấy thông tin thành phố
-Future<List<City>?> getInfoCity(String userId) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$userId');
+Future<List<City>> getInfoCity(String userId) async {
+  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$userId/get-cities');
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  );
+  if (response.statusCode == 200) {
+    final json = jsonDecode(response.body);
+    List<dynamic> data = json['result'];
+    print(data);
+    List<City> cities = data.map((json) => City.fromJson(json)).toList();
+    return cities;
+  } else {
+    print('Lỗi: ${response.statusCode}');
+  }
+  return [];
+}
+
+// Hàm gọi API lấy thông tin thành phố theo id
+Future<City?> getCityId(String Id) async {
+  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$Id');
   final response = await http.get(
     url,
     headers: {
@@ -53,10 +74,9 @@ Future<List<City>?> getInfoCity(String userId) async {
     },
   );
   if (response.statusCode == 201) {
-    List<dynamic> data = jsonDecode(response.body);
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
     print(data);
-    List<City> citys = data.map((json) => City.fromJson(json)).toList();
-    return citys;
+    return City.fromJson(data);
   } else {
     print('Lỗi: ${response.statusCode}');
   }

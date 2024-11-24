@@ -177,6 +177,8 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
+
+
   List<City> _cityManager = [];
   List<City> get cityManager => _cityManager;
 
@@ -185,11 +187,24 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetCity() {
+    _cityManager = [];
+    notifyListeners();
+  }
+
+
+
+
   List<Location> _LocationManager = [];
   List<Location> get LocationManager => _LocationManager;
 
   void addLocation2(Location newLocation) {
     _LocationManager.insert(0, newLocation);
+    notifyListeners();
+  }
+
+  void resetLocation() {
+    _LocationManager = [];
     notifyListeners();
   }
 }
