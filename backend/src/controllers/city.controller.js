@@ -14,6 +14,13 @@ const createCity = catchAsync(async (req, res) => {
   });
 });
 
+const getCities = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const city = await cityService.getCities(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: city });
+});
+
 const getCityByCityId = catchAsync(async (req, res) => {
   const city = await cityService.getCityByCityId(req.params.cityId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: city });
@@ -39,6 +46,7 @@ const deleteCity = catchAsync(async (req, res) => {
 
 module.exports = {
   createCity,
+  getCities,
   getCityByCityId,
   updateCity,
   deleteCity,

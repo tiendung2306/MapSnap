@@ -12,6 +12,12 @@ router.post(
   cityController.createCity
 );
 
+router.post(
+  '/:userId/get-cities',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  cityController.getCities
+);
+
 router
   .route('/:cityId')
   .get(cityController.getCityByCityId)
@@ -86,6 +92,53 @@ module.exports = router;
  *                 message:
  *                   type: string
  *                   example: tạo thành phố thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/City'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateCity'
+ */
+
+/**
+ * @swagger
+ * /city/{userId}/get-cities:
+ *   post:
+ *     summary: Get cities
+ *     tags: [Cities]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Location Name
+ *             example:
+ *               name: "Ha Noi"
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: lấy thành phố thành công
  *                 result:
  *                   $ref: '#/components/schemas/City'
  *       "400":

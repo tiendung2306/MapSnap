@@ -15,6 +15,14 @@ const createCity = async (cityBody) => {
   return city;
 };
 
+const getCities = async (cityBody) => {
+  const { userId, name } = cityBody;
+  const filter = { userId };
+  if (name) filter.name = name;
+  const city = await City.find(filter);
+  return city;
+};
+
 const getCityByCityId = async (cityId) => {
   const city = await City.findById(cityId);
   if (!city) {
@@ -34,6 +42,7 @@ const deleteCity = async (cityId) => {
 
 module.exports = {
   createCity,
+  getCities,
   getCityByCityId,
   updateCity,
   deleteCity,
