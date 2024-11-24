@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/Model/Journey.dart';
 import 'package:mapsnap_fe/Model/Visit.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
+import 'dart:math';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     loadData();
   }
 
@@ -45,7 +46,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   }
 
   void loadData() async{
-    final response = await _apiService.GetJourney('673a36e9c516704fa4524ee5');
+    final response = await _apiService.GetJourney('67424c5cd90b1044dcf97d40');
     final data = response["data"]["result"];
     journey = Journey.fromJson(data);
 
@@ -61,15 +62,16 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       Location location = Location.fromJson(location_response["data"]["result"]);
       locations.add(location);
 
-      _addMarker(LatLng(location.latitude, location.longitude), location.locationName);
-
       points.add(LatLng(location.latitude, location.longitude));
     }
+
+    addMarkersWithRotation(locations);
+
 
     _polylines.add(Polyline(
       polylineId: PolylineId('route'),
       points: points,
-      color: Colors.blue,
+      color: Colors.greenAccent,
       width: 5,
     ),);
 
@@ -83,10 +85,13 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     setState(() {
       if(currVisit == index){
         currVisit = -1;
+        _deleteMarker('current_marker');
         _fitBounds();
       }
       else{
         currVisit = index;
+        _addMarker(LatLng(locations[currVisit].latitude,
+            locations[currVisit].longitude), 'current_marker', Offset(0.5, 1.5));
         CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(LatLng(locations[currVisit].latitude,
             locations[currVisit].longitude), 15);
         _controller.animateCamera(cameraUpdate);
@@ -137,14 +142,61 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       isMapLoad = true;
     });
   }
+
+  double calculateBearing(LatLng start, LatLng end) {
+    final double startLat = start.latitude * (pi / 180); // Chuyển đổi sang radian
+    final double startLng = start.longitude * (pi / 180);
+    final double endLat = end.latitude * (pi / 180);
+    final double endLng = end.longitude * (pi / 180);
+
+    final double dLng = endLng - startLng;
+
+    final double y = sin(dLng) * cos(endLat);
+    final double x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(dLng);
+
+    double bearing = atan2(y, x) * (180 / pi); // Chuyển từ radian sang độ
+    bearing = (bearing + 360) % 360; // Chuyển góc về khoảng [0, 360]
+    return bearing;
+  }
+
+  void addMarkersWithRotation(List<Location> points) async {
+    final BitmapDescriptor icon = await BitmapDescriptor.asset(
+      const ImageConfiguration(size: Size(20, 20)),
+      'assets/Common/Stop.png', // Đường dẫn tới icon của bạn
+    );
+
+    for (int i = 0; i < points.length - 1; i++) {
+      final LatLng start = LatLng(points[i].latitude, points[i].longitude);
+      final LatLng next = LatLng(points[i + 1].latitude, points[i + 1].longitude);
+      final double rotation = calculateBearing(start, next); // Tính góc giữa 2 điểm
+
+      final marker = Marker(
+        markerId: MarkerId(points[i].locationName),
+        position: start,
+        icon: icon,
+        anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
+        rotation: rotation, // Góc xoay
+        infoWindow: InfoWindow(title: points[i].locationName),
+      );
+
+      _markers.add(marker);
+    }
+  }
   // Có thể dùng BitmapDescriptor để custom marker
-  void _addMarker(LatLng position, String id) {
+  void _addMarker(LatLng position, String id, Offset offset) {
     setState(() {
       _markers.add(Marker(
         markerId: MarkerId(id),
         position: position,
+        anchor: offset,
         // infoWindow: InfoWindow(title: 'New Marker'),
       ));
+    });
+  }
+
+  void _deleteMarker(String id) {
+    setState(() {
+      _markers.removeWhere((marker) => marker.markerId.value == id);
     });
   }
 
@@ -190,7 +242,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     return GoogleMap(
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
-        target: LatLng(locations[7].latitude, locations[7].longitude),
+        target: LatLng(locations[0].latitude, locations[0].longitude),
         zoom: _zoomLevel,
       ),
       myLocationEnabled: true,
@@ -281,10 +333,9 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   unselectedLabelColor: Colors.black,
                   indicatorColor: Colors.green,
                   tabs: [
-                    Tab(text: "Feature 1"),
-                    Tab(text: "Feature 2"),
-                    Tab(text: "Feature 3"),
-                    Tab(text: "Feature 4"),
+                    Tab(text: "Stop"),
+                    Tab(text: "Path"),
+                    Tab(text: "Period"),
                   ],
                 ),
               ],
@@ -330,26 +381,24 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                     },
                   ),
                 ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity, height: 500,
-                        color: Colors.red,
-                      ),
-                      Container(
-                        width: double.infinity, height: 500,
-                        color: Colors.blue,
-                      ),
-                      Container(
-                        width: double.infinity, height: 500,
-                        color: Colors.grey,
-                      )
-                    ],
+                Container(
+                  color: Colors.white,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: locations.length,
+                    itemBuilder: (context, index){
+                      return ExpandableListTile(
+                        index: index,
+                        isFocus: currVisit == index,
+                        title: locations[index].locationName,
+                        subtitle: "Subtitle",
+                        content: "Content",
+                        onTapFunc: onVisitTap,
+                      );
+                    },
                   ),
                 ),
                 Center(child: Text("Content for Feature 3")),
-                Center(child: Text("Content for Feature 4")),
               ],
             ),
           )

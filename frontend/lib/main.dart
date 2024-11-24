@@ -28,7 +28,7 @@ import 'Services/BackgroundService.dart';
 Future<void> main() async {
   // Token token = await Login('linhson7a127@gmail.com', 'a1234567');
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeService();
+  // await initializeService();
   setupLocator();
   runApp(
     // Cấp quyền truy cập cao nhất cho AccountModel
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           body: Container(
             // child: ResizableWidget(),
-            child: AddressConverter(),
+            child: MapScreen(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),
