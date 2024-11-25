@@ -154,10 +154,26 @@ module.exports = router;
  *               categoryId:
  *                 type: string
  *                 description: Belong to which category
+ *               status:
+ *                 type: boolean
+ *                 description: status of location (enabled/ disabled)
+ *               sortType:
+ *                 type: string
+ *                 description: Which type? (asc or desc)
+ *               sortField:
+ *                 type: string
+ *                 description: Which field wanna sort?
+ *               searchText:
+ *                 type: string
+ *                 description: Using Search
  *             example:
  *               name: "Emcuoiroia"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
+ *               status: "enabled"
+ *               sortType: asc
+ *               sortField: visitedTime
+ *               searchText: Emcuoiroi
  *     responses:
  *       "200":
  *         description: Success
