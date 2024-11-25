@@ -14,6 +14,13 @@ const createLocationCategory = catchAsync(async (req, res) => {
   });
 });
 
+const getLocationCategory = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const category = await locationCategoryService.getLocationCategory(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: category });
+});
+
 const getLocationCategoryById = catchAsync(async (req, res) => {
   const locationCategory = await locationCategoryService.getLocationCategoryById(req.params.locationCategoryId);
   res.send({ code: httpStatus.OK, message: Message.ok, result: locationCategory });
@@ -39,6 +46,7 @@ const deleteLocationCategory = catchAsync(async (req, res) => {
 
 module.exports = {
   createLocationCategory,
+  getLocationCategory,
   getLocationCategoryById,
   updateLocationCategory,
   deleteLocationCategory,

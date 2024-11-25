@@ -120,13 +120,13 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               searchText:
  *                 type: string
- *                 description: Location Name
+ *                 description: Search Location Name
  *             example:
- *               name: "Ha Noi"
+ *               searchText: "Ha Noi"
  *     responses:
- *       "201":
+ *       "200":
  *         description: Created
  *         content:
  *           application/json:
@@ -135,14 +135,12 @@ module.exports = router;
  *               properties:
  *                 code:
  *                   type: integer
- *                   example: 201
+ *                   example: 200
  *                 message:
  *                   type: string
  *                   example: lấy thành phố thành công
  *                 result:
  *                   $ref: '#/components/schemas/City'
- *       "400":
- *         $ref: '#/components/responses/DuplicateCity'
  */
 
 /**
