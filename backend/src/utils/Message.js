@@ -46,6 +46,24 @@ const positionMsg = {
   updated: 'Cập nhật position thành công',
 };
 
+const cityMsg = {
+  created: 'tạo thành phố thành công',
+  name: 'không được để trống tên',
+  nameExisted: 'thành phố này đã tồn tại',
+  notFound: 'thành phố này không tồn tại',
+  deleted: 'Xóa thành phố thành công',
+  updated: 'Cập nhật thành phố thành công',
+};
+
+const locationCategoryMsg = {
+  created: 'tạo danh mục thành công',
+  name: 'không được để trống tên',
+  nameExisted: 'danh mục này đã tồn tại',
+  notFound: 'danh mục này không tồn tại',
+  deleted: 'Xóa danh mục thành công',
+  updated: 'Cập nhật danh mục thành công',
+};
+
 const pictureMsg = {
   created: 'tạo ảnh thành công ',
   nameExisted: 'ảnh đã tồn tại',
@@ -101,4 +119,6 @@ module.exports = {
   uploadMsg,
   locationMsg,
   positionMsg,
+  cityMsg,
+  locationCategoryMsg,
 };

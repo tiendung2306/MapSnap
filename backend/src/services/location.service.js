@@ -23,6 +23,32 @@ const getLocationByLocationId = async (locationId) => {
   return location;
 };
 
+const getLocation = async (locationBody) => {
+  const {
+    userId,
+    cityId,
+    locationCategoryId,
+    name,
+    isAutomaticAdded,
+    updatedByUser,
+    sortType = 'desc',
+    sortField = 'createdAt',
+    searchText,
+  } = locationBody;
+  const filter = { userId };
+  if (cityId) filter.cityId = cityId;
+  if (locationCategoryId) filter.locationCategoryId = locationCategoryId;
+  if (name) filter.name = name;
+  if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
+  if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
+  if (searchText) {
+    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }, { name: { $regex: searchText, $options: 'i' } }];
+  }
+  const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
+  const location = await Location.find(filter).sort(sortOption);
+  return location;
+};
+
 const updateLocation = async ({ locationId, requestBody }) => {
   const location = await Location.findByIdAndUpdate(locationId, requestBody, { new: true });
   return location;
@@ -37,4 +63,5 @@ module.exports = {
   getLocationByLocationId,
   updateLocation,
   deleteLocation,
+  getLocation,
 };

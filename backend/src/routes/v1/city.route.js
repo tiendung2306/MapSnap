@@ -1,38 +1,38 @@
 const express = require('express');
-const locationController = require('../../controllers/location.controller');
+const cityController = require('../../controllers/city.controller');
 // const auth = require('../../middlewares/auth');
 // const permissionType = require('../../utils/constant');
 
 const router = express.Router();
 
-// create location
+// create city
 router.post(
-  '/:userId/create-location',
+  '/:userId/create-city',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
-  locationController.createLocation
+  cityController.createCity
 );
 
 router.post(
-  '/:userId/get-location',
+  '/:userId/get-cities',
   // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
-  locationController.getLocation
+  cityController.getCities
 );
 
 router
-  .route('/:locationId')
-  .get(locationController.getLocationByLocationId)
-  .patch(locationController.updateLocation)
-  .delete(locationController.deleteLocation);
+  .route('/:cityId')
+  .get(cityController.getCityByCityId)
+  .patch(cityController.updateCity)
+  .delete(cityController.deleteCity);
 
 module.exports = router;
 
 /**
  * @swagger
- * /location/{userId}/create-location:
+ * /city/{userId}/create-city:
  *   post:
- *     summary: Create a location
- *     description: Only admins can create other locations.
- *     tags: [Locations]
+ *     summary: Create a city
+ *     description: Only admins can create other cities.
+ *     tags: [Cities]
  *     parameters:
  *       - in: path
  *         name: id
@@ -50,12 +50,7 @@ module.exports = router;
  *             type: object
  *             required:
  *               - name
- *               - cityId
- *               - categoryId
- *               - title
  *               - visitedTime
- *               - longitude
- *               - latitude
  *               - createdAt
  *               - status
  *               - updatedByUser
@@ -63,42 +58,22 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *                 description: Location Name
- *               cityId:
- *                 type: string
- *                 description: Belong to which city
- *               categoryId:
- *                 type: string
- *                 description: Belong to which category
- *               title:
- *                 type: string
- *                 description: Title
+ *                 description: City Name
  *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               longitude:
- *                 type: number
- *                 description: Longitude of location
- *               latitude:
- *                 type: number
- *                 description: Latitude of location
  *               status:
  *                 type: boolean
- *                 description: status of location (enabled/ disabled)
+ *                 description: status of city (enabled/ disabled)
  *               updatedByUser:
  *                 type: boolean
  *                 description: define if user have updated or not
  *               isAutomaticAdded:
  *                 type: boolean
- *                 description: define if this location add by user or BE
+ *                 description: define if this city add by user or BE
  *             example:
- *               name: "Emcuoiroia"
- *               cityId: 6742a4e6f7e0193cf08162ef
- *               categoryId: 6742a5cced0e2c4a0430085d
- *               title: "Ngayhomnayemcuoiroii"
+ *               name: "Vinh"
  *               visitedTime: 2
- *               longitude: 3
- *               latitude: 4
  *               createdAt: 1731319800
  *               status: "enabled"
  *               updatedByUser: true
@@ -116,19 +91,19 @@ module.exports = router;
  *                   example: 201
  *                 message:
  *                   type: string
- *                   example: tạo điểm cố định thành công
+ *                   example: tạo thành phố thành công
  *                 result:
- *                   $ref: '#/components/schemas/Location'
+ *                   $ref: '#/components/schemas/City'
  *       "400":
- *         $ref: '#/components/responses/DuplicateLocation'
+ *         $ref: '#/components/responses/DuplicateCity'
  */
 
 /**
  * @swagger
- * /location/{userId}/get-location:
+ * /city/{userId}/get-cities:
  *   post:
- *     summary: Get locations
- *     tags: [Locations]
+ *     summary: Get cities
+ *     tags: [Cities]
  *     parameters:
  *       - in: path
  *         name: id
@@ -145,38 +120,14 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: Location Name
- *               cityId:
- *                 type: string
- *                 description: Belong to which city
- *               categoryId:
- *                 type: string
- *                 description: Belong to which category
- *               status:
- *                 type: boolean
- *                 description: status of location (enabled/ disabled)
- *               sortType:
- *                 type: string
- *                 description: Which type? (asc or desc)
- *               sortField:
- *                 type: string
- *                 description: Which field wanna sort?
  *               searchText:
  *                 type: string
- *                 description: Using Search
+ *                 description: Search Location Name
  *             example:
- *               name: "Emcuoiroia"
- *               cityId: 6742a4e6f7e0193cf08162ef
- *               categoryId: 6742a5cced0e2c4a0430085d
- *               status: "enabled"
- *               sortType: asc
- *               sortField: visitedTime
- *               searchText: Emcuoiroi
+ *               searchText: "Ha Noi"
  *     responses:
  *       "200":
- *         description: Success
+ *         description: Created
  *         content:
  *           application/json:
  *             schema:
@@ -187,17 +138,17 @@ module.exports = router;
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: lấy điểm cố định thành công
+ *                   example: lấy thành phố thành công
  *                 result:
- *                   $ref: '#/components/schemas/Location'
+ *                   $ref: '#/components/schemas/City'
  */
 
 /**
  * @swagger
- * /location/{id}:
+ * /city/{id}:
  *   get:
- *     summary: Get a location
- *     tags: [Locations]
+ *     summary: Get a city
+ *     tags: [Cities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -206,7 +157,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Location ID
+ *         description: City ID
  *     responses:
  *       "200":
  *         description: OK
@@ -222,13 +173,13 @@ module.exports = router;
  *                   type: string
  *                   example: ok
  *                 results:
- *                   $ref: '#/components/schemas/Location'
+ *                   $ref: '#/components/schemas/City'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a location
- *     tags: [Locations]
+ *     summary: Update a city
+ *     tags: [Cities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -237,7 +188,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Location ID
+ *         description: City ID
  *     requestBody:
  *       required: true
  *       content:
@@ -247,41 +198,26 @@ module.exports = router;
  *             properties:
  *               name:
  *                 type: string
- *                 description: Location Name
- *               title:
- *                 type: string
- *                 description: Title
+ *                 description: City Name
  *               createdAt:
  *                 type: number
  *                 description: Epoch time started at
- *               longitude:
- *                 type: number
- *                 description: Longitude of location
- *               latitude:
- *                 type: number
- *                 description: Latitude of location
  *               status:
  *                 type: boolean
- *                 description: status of location (enabled/ disabled)
+ *                 description: status of city (enabled/ disabled)
  *               updatedByUser:
  *                 type: boolean
  *                 description: define if user have updated or not
  *               isAutomaticAdded:
  *                 type: boolean
- *                 description: define if this location add by user or BE
+ *                 description: define if this city add by user or BE
  *             example:
- *               name: "Emcuoiroiaaa"
- *               cityId: 6742a4e6f7e0193cf08162ef
- *               categoryId: 6742a5cced0e2c4a0430085d
- *               title: "Ngayhomnayemcuoiroii"
+ *               name: "Vinh"
  *               visitedTime: 213
- *               longitude: 123
- *               latitude: 123
  *               createdAt: 17313198000
  *               status: "disabled"
  *               updatedByUser: true
  *               isAutomaticAdded: false
-
  *     responses:
  *       "200":
  *         description: OK
@@ -297,13 +233,13 @@ module.exports = router;
  *                   type: string
  *                   example: ok
  *                 results:
- *                   $ref: '#/components/schemas/Location'
+ *                   $ref: '#/components/schemas/City'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a location
- *     tags: [Locations]
+ *     summary: Delete a city
+ *     tags: [Cities]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -312,10 +248,10 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Location ID
+ *         description: City ID
  *     responses:
  *       "200":
- *         description: Delete location successful
+ *         description: Delete city successful
  *         content:
  *           application/json:
  *             schema:
@@ -326,7 +262,7 @@ module.exports = router;
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: xóa điểm cố định thành công
+ *                   example: xóa thành phố thành công
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
