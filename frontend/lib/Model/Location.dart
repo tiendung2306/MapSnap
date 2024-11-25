@@ -2,7 +2,6 @@ class Location {
   String name;
   String cityId;
   String categoryId;
-  String role;
   String title;
   int visitedTime;
   int longitude;
@@ -11,7 +10,7 @@ class Location {
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
-  List<Map<String, dynamic>> pictures;
+  List<dynamic> pictures;
   String userId;
   String id;
 
@@ -19,7 +18,6 @@ class Location {
     required this.name,
     required this.cityId,
     required this.categoryId,
-    required this.role,
     required this.title ,
     required this.visitedTime,
     required this.longitude,
@@ -38,7 +36,6 @@ class Location {
       name: json['name'],
       cityId: json['cityId'],
       categoryId: json['categoryId'],
-      role: json['role'],
       title: json['title'],
       visitedTime: json['visitedTime'],
       longitude: json['longitude'],
@@ -59,7 +56,6 @@ class CreateLocation {
   String name;
   String cityId;
   String categoryId;
-  String role;
   String title;
   int visitedTime;
   int longitude;
@@ -73,7 +69,6 @@ class CreateLocation {
     required this.name,
     required this.cityId,
     required this.categoryId,
-    required this.role,
     required this.title ,
     required this.visitedTime,
     required this.longitude,
@@ -90,7 +85,6 @@ class CreateLocation {
       name: json['name'],
       cityId: json['cityId'],
       categoryId: json['categoryId'],
-      role: json['role'],
       title: json['title'],
       visitedTime: json['visitedTime'],
       longitude: json['longitude'],

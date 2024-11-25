@@ -2,7 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mapsnap_fe/LocationScreen/addLocationScreen.dart';
 import 'package:mapsnap_fe/LocationScreen/cityScreen.dart';
+import 'package:mapsnap_fe/LocationScreen/filterLocationScreen.dart';
 import 'package:mapsnap_fe/LocationScreen/myLocationScreen.dart';
 import 'package:mapsnap_fe/LocationScreen/thirdScreen.dart';
 
@@ -41,6 +43,59 @@ class _locationScreenState extends State<locationScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      endDrawer: Container(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: Drawer(
+          backgroundColor: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                color: Colors.blueAccent,
+                width: MediaQuery.of(context).size.width * 0.7,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16), // Giảm padding
+                child: Text(
+                  "Tùy chọn",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.add),
+                title: Text("Thêm địa điểm"),
+                onTap: () {
+                  Navigator.pop(context); // Đóng drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => addLocationScreen(),
+                    ),
+                  );
+                },
+              ),
+              Divider(color: Colors.grey, thickness: 1),
+              ListTile(
+                leading: Icon(Icons.search),
+                title: Text("Tìm kiếm nâng cao"),
+                onTap: () {
+                  Navigator.pop(context); // Đóng drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => filterLocationScreen(),
+                    ),
+                  );
+                },
+              ),
+              Divider(color: Colors.grey, thickness: 1),
+
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Stack(
             children: [
@@ -74,11 +129,21 @@ class _locationScreenState extends State<locationScreen> {
                                     child: Icon(Icons.chevron_left, size: 50,),
                                   ),
                                 ),
-                                Text('Địa điểm đã đi', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                )
+                                Text('Địa điểm', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),),
+                                Builder(
+                                  builder: (BuildContext context) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Scaffold.of(context).openEndDrawer();
+                                      },
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        child: Icon(Icons.dehaze, size: 50,),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                           ),

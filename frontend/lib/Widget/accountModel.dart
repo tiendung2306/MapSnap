@@ -117,94 +117,60 @@ class AccountModel extends ChangeNotifier {
   }
 
   //=================================================================================
-  Map<String,List<Map<String,String>>> _locationManager = {
-    'Hà Nội': [
-      {
-        'Tên': 'Lăng  Bác',
-        'Số lần đến': '5',
-        'Lần đến gần nhất': '10-10-2024'
-      },
-      {
-        'Tên': 'Công viên thống nhất',
-        'Số lần đến': '20',
-        'Lần đến gần nhất': '15-11-2024'
-      },
-      {
-        'Tên': 'Bến xe Nước Ngầm',
-        'Số lần đến': '2',
-        'Lần đến gần nhất': '1-11-2024'
-      },
-      {
-        'Tên': 'Times City',
-        'Số lần đến': '1',
-        'Lần đến gần nhất': '1-9-2024'
-      },
-    ],
-    'Nghệ An': [
-      {
-        'Tên': 'Công viên nước',
-        'Số lần đến': '2',
-        'Lần đến gần nhất': '10-6-2024'
-      },
-      {
-        'Tên': 'Quảng trường HCM',
-        'Số lần đến': '1',
-        'Lần đến gần nhất': '30-04-2024'
-      },
-      {
-        'Tên': 'Biển Cửa Lò',
-        'Số lần đến': '2',
-        'Lần đến gần nhất': '1-11-2024'
-      },
-      {
-        'Tên': 'Hòn Câu',
-        'Số lần đến': '99999',
-        'Lần đến gần nhất': '23-11-2024'
-      },
-    ]
-  };
-  Map<String,List<Map<String,String>>> get locationManager => _locationManager;
+  Map<City,List<Location>> _locationManager = {};
+  Map<City,List<Location>> get locationManager => _locationManager;
 
-  void addLocation(String city, Map<String,String> location) {
+  void addLocation(City city, Location? location) {
     // Kiểm tra nếu hành trình đã tồn tại
     if (_locationManager.containsKey(city)) {
-      _locationManager[city]?.insert(0, location);
-    } else {
+      _locationManager[city]?.insert(0, location!);
+    } else if(location != null) {
       // Nếu địa điểm chưa có, tạo mới danh sách ảnh
       _locationManager[city] = [location] ;
-
+    } else {
+      _locationManager[city] = [] ;
     }
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
-
-
-  List<City> _cityManager = [];
-  List<City> get cityManager => _cityManager;
-
-  void addCity(City newCity) {
-    _cityManager.insert(0, newCity);
-    notifyListeners();
-  }
-
   void resetCity() {
-    _cityManager = [];
+    _locationManager = {};
+    notifyListeners();
+  }
+
+  void resetLocation(City city) {
+    _locationManager[city] = [];
     notifyListeners();
   }
 
 
-
-
-  List<Location> _LocationManager = [];
-  List<Location> get LocationManager => _LocationManager;
-
-  void addLocation2(Location newLocation) {
-    _LocationManager.insert(0, newLocation);
-    notifyListeners();
-  }
-
-  void resetLocation() {
-    _LocationManager = [];
-    notifyListeners();
-  }
+  //
+  // List<City> _cityManager = [];
+  // List<City> get cityManager => _cityManager;
+  //
+  // void addCity(City newCity) {
+  //   _cityManager.insert(0, newCity);
+  //   notifyListeners();
+  // }
+  //
+  // void resetCity() {
+  //   _cityManager = [];
+  //   notifyListeners();
+  // }
+  //
+  //
+  //
+  //
+  // List<Location> _LocationManager = [];
+  // List<Location> get LocationManager => _LocationManager;
+  //
+  // void addLocation2(Location newLocation) {
+  //   _LocationManager.insert(0, newLocation);
+  //   notifyListeners();
+  // }
+  //
+  // void resetLocation() {
+  //   _LocationManager = [];
+  //   notifyListeners();
+  // }
 }

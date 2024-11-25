@@ -13,7 +13,6 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
     'name': createLocation.name,
     'cityId': createLocation.cityId,
     'categoryId': createLocation.categoryId,
-    'role': createLocation.role,
     'title': createLocation.title,
     'visitedTime': createLocation.visitedTime,
     'longitude': createLocation.longitude,
@@ -51,14 +50,31 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
 }
 
 
-// Hàm gọi API lấy hết thông tin location
-Future<List<Location>> getInfoLocation(String userId) async {
+// Hàm gọi API lấy hết thông tin location theo .....
+Future<List<Location>> getInfoLocation(String userId, String body, String check) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/get-location');
+  late Map<String, dynamic> updatedData;
+  if(check == 'city') {
+    updatedData = {
+      'cityId': body,
+    };
+  }
+
+  if(check == 'category') {
+    updatedData = {
+      'categoryId': body,
+    };
+  }
+  if(check == '') {
+    updatedData = {};
+  }
+
   final response = await http.post(
     url,
     headers: {
       'Content-Type': 'application/json',
     },
+    body: jsonEncode(updatedData),
   );
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
@@ -85,7 +101,7 @@ Future<Location?> getLocationId(String Id) async {
   if (response.statusCode == 201) {
     final data = jsonDecode(response.body)  as Map<String, dynamic>;
     print(data);
-    return Location.fromJson(data);
+    return Location.fromJson(data['result']);
   } else {
     print('Lỗi: ${response.statusCode}');
   }
@@ -94,7 +110,7 @@ Future<Location?> getLocationId(String Id) async {
 
 
 
-// Gọi API để update thông tin của City
+// Gọi API để update thông tin
 Future<void> updateLocation(CreateLocation createLocation,String id) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/city/$id');
   // Dữ liệu cần cập nhật
@@ -102,7 +118,6 @@ Future<void> updateLocation(CreateLocation createLocation,String id) async {
     'name': createLocation.name,
     'cityId': createLocation.cityId,
     'categoryId': createLocation.categoryId,
-    'role': createLocation.role,
     'title': createLocation.title,
     'visitedTime': createLocation.visitedTime,
     'longitude': createLocation.longitude,

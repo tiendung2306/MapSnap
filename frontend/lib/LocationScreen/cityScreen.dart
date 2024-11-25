@@ -127,7 +127,8 @@ class _cityScreenState extends State<cityScreen> {
     List<City> cities = await getInfoCity(accountModel.idUser);
     if (cities.isNotEmpty) {
       for (var city in cities) {
-        accountModel.addCity(city);
+        // accountModel.addCity(city);
+        accountModel.addLocation(city,null);
       }
     } else {
       print('Không có thành phố nào được tìm thấy.');
@@ -137,20 +138,22 @@ class _cityScreenState extends State<cityScreen> {
   @override
   Widget build(BuildContext context) {
     var accountModel = Provider.of<AccountModel>(context, listen: true);
+    final city = accountModel.locationManager;
+    final List<City> cities = city.keys.toList();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(15),
           child: Column(
               children: [
-                for(int i = 0 ;i < accountModel.cityManager.length; i++) ...[
+                for(int i = 0 ;i < cities.length; i++) ...[
                   GestureDetector(
                     onTap: () {
                       print("Siuuuuuuuuuuuuuu");
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => visitLocationScreen(city: accountModel.cityManager[i].name),
+                            builder: (context) => visitLocationScreen(city: cities[i]),
                           )
                       );
                     },
@@ -173,7 +176,7 @@ class _cityScreenState extends State<cityScreen> {
                         ),
                       ),
 
-                      child: Center(child: Text(accountModel.cityManager[i].name, style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Color(
+                      child: Center(child: Text(cities[i].name, style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Color(
                           0xFFFFFFFF)),)),
 
                     ),
@@ -183,20 +186,6 @@ class _cityScreenState extends State<cityScreen> {
                 ],
                 SizedBox(height: 10,),
 
-                ElevatedButton(
-                  onPressed: () {
-                    k++;
-                    accountModel.addLocation(
-                      "TP HCM${k}",
-                      {
-                        'Tên': 'THPT xx${k}',
-                        'Số lần đến': '${k}',
-                        'Lần đến gần nhất': '23-11-2024'
-                      },
-                    );
-                  },
-                  child: const Text("Thêm ảnh vào địa điểm hiện tại"),
-                ),
 
               ]
           )

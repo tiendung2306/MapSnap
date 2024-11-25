@@ -29,7 +29,7 @@ Future<City?> upLoadCity(CreateCity createCity, String userId) async {
       // Xử lý thành công
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       print(data);
-      return City.fromJson(data);
+      return City.fromJson(data['result']);
     } else {
       // Xử lý lỗi từ API
       print(response.statusCode);
