@@ -29,13 +29,23 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
   late GoogleMapController _controller;
   late Set<Marker> _markers;
+  late Set<Marker> _markers2;
+
   double _zoomLevel = 14.0;
   Set<Polyline> _polylines = {};
+  Set<Polyline> _polylines2 = {};
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Lắng nghe sự kiện thay đổi tab
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {
+        });;
+      }
+    });
     loadData();
   }
 
@@ -51,6 +61,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     journey = Journey.fromJson(data);
 
     _markers = {};
+    _markers2 = {};
+
     List<LatLng> points = [];
 
     for (var visitId in journey.visitIds) {
@@ -72,6 +84,13 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       polylineId: PolylineId('route'),
       points: points,
       color: Colors.greenAccent,
+      width: 5,
+    ),);
+
+    _polylines2.add(Polyline(
+      polylineId: PolylineId('route'),
+      points: points,
+      color: Colors.lightBlue,
       width: 5,
     ),);
 
@@ -180,6 +199,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       );
 
       _markers.add(marker);
+      _markers2.add(marker);
+
     }
   }
   // Có thể dùng BitmapDescriptor để custom marker
@@ -248,8 +269,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false, // Tắt nút phóng to/thu nhỏ mặc định
-      markers: _markers.toSet(),
-      polylines: _polylines,
+      markers: _tabController.index == 0 ? _markers.toSet() : _markers2.toSet(),
+      polylines: _tabController.index == 0 ?_polylines : _polylines2,
 
 
     );
