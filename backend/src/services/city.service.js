@@ -16,9 +16,11 @@ const createCity = async (cityBody) => {
 };
 
 const getCities = async (cityBody) => {
-  const { userId, name } = cityBody;
+  const { userId, searchText } = cityBody;
   const filter = { userId };
-  if (name) filter.name = name;
+  if (searchText) {
+    filter.name = { $regex: searchText, $options: 'i' };
+  }
   const city = await City.find(filter);
   return city;
 };

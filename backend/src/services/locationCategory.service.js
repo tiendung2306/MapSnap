@@ -15,6 +15,16 @@ const createLocationCategory = async (locationCategoryBody) => {
   return locationCategory;
 };
 
+const getLocationCategory = async (categoryBody) => {
+  const { userId, searchText } = categoryBody;
+  const filter = { userId };
+  if (searchText) {
+    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }, { name: { $regex: searchText, $options: 'i' } }];
+  }
+  const category = await LocationCategory.find(filter);
+  return category;
+};
+
 const getLocationCategoryById = async (locationCategoryId) => {
   const locationCategory = await LocationCategory.findById(locationCategoryId);
   if (!locationCategory) {
@@ -34,6 +44,7 @@ const deleteLocationCategory = async (locationCategoryId) => {
 
 module.exports = {
   createLocationCategory,
+  getLocationCategory,
   getLocationCategoryById,
   updateLocationCategory,
   deleteLocationCategory,

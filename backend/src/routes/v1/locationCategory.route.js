@@ -12,6 +12,12 @@ router.post(
   locationCategoryController.createLocationCategory
 );
 
+router.post(
+  '/:userId/get-category',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  locationCategoryController.getLocationCategory
+);
+
 router
   .route('/:locationCategoryId')
   .get(locationCategoryController.getLocationCategoryById)
@@ -26,7 +32,7 @@ module.exports = router;
  *   post:
  *     summary: Create a locationCategory
  *     description: Only admins can create other location categories.
- *     tags: [LocationCategory]
+ *     tags: [Location Category]
  *     parameters:
  *       - in: path
  *         name: id
@@ -86,10 +92,55 @@ module.exports = router;
 
 /**
  * @swagger
+ * /category/{userId}/get-category:
+ *   post:
+ *     summary: Get categories
+ *     tags: [Location Category]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               searchText:
+ *                 type: string
+ *                 description: Search categories
+ *             example:
+ *               searchText: "Hom"
+ *     responses:
+ *       "200":
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: lấy danh muc thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/LocationCategory'
+ */
+
+/**
+ * @swagger
  * /locationCategory/{id}:
  *   get:
- *     summary: Get a locationCategory
- *     tags: [LocationCategory]
+ *     summary: Get a Category
+ *     tags: [Location Category]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -119,8 +170,8 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a locationCategory
- *     tags: [LocationCategory]
+ *     summary: Update a Category
+ *     tags: [Location Category]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -171,8 +222,8 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a locationCategory
- *     tags: [LocationCategory]
+ *     summary: Delete a Category
+ *     tags: [Location Category]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -184,7 +235,7 @@ module.exports = router;
  *         description: Location Category ID
  *     responses:
  *       "200":
- *         description: Delete locationCategory successful
+ *         description: Delete Location Category successful
  *         content:
  *           application/json:
  *             schema:
