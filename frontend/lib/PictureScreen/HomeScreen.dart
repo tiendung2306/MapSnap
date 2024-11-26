@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/LocationScreen/locationScreen.dart';
 import 'package:mapsnap_fe/PictureScreen/pictureManager.dart';
 import '../Widget/bottomNavigationBar.dart';
 
@@ -23,20 +24,39 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Home Screen')),
       body: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => pictureManager()),
-            );
-          },
-          child: Container(
-            width: 200,
-            height: 100,
-            color: Colors.blue,
-            child: Center(child: Text("Picture", style: TextStyle(fontSize: 40),)),
-          ),
-        ),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => pictureManager()),
+                );
+              },
+              child: Container(
+                width: 200,
+                height: 100,
+                color: Colors.blue,
+                child: Center(child: Text("Picture", style: TextStyle(fontSize: 40),)),
+              ),
+            ),
+            SizedBox(height: 10,),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => locationScreen()),
+                );
+              },
+              child: Container(
+                width: 200,
+                height: 100,
+                color: Colors.blue,
+                child: Center(child: Text("Location", style: TextStyle(fontSize: 40),)),
+              ),
+            ),
+          ],
+        )
       ),
       bottomNavigationBar: CustomBottomNav(
         onTabTapped: onTabTapped,

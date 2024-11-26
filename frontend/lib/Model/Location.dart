@@ -1,62 +1,98 @@
 class Location {
-  final String locationName;
-  final String role;
-  final int visitedTime;
-  final double longitude;
-  final double latitude;
-  final String title;
-  final int createdAt;
-  final String status;
-  final bool updatedByUser;
-  final bool isAutomaticAdded;
-  final List<String> pictures;
+  String name;
+  String cityId;
+  String categoryId;
+  String title;
+  int visitedTime;
+  int longitude;
+  int latitude;
+  // int createdAt;
+  String status;
+  bool updatedByUser;
+  bool isAutomaticAdded;
+  List<dynamic> pictures;
+  String userId;
+  String id;
 
-  // Constructor
   Location({
-    required this.locationName,
-    required this.role,
+    required this.name,
+    required this.cityId,
+    required this.categoryId,
+    required this.title ,
     required this.visitedTime,
     required this.longitude,
     required this.latitude,
-    required this.title,
+    // required this.createdAt,
+    required this.status,
+    required this.updatedByUser,
+    required this.isAutomaticAdded,
+    required this.pictures,
+    required this.userId,
+    required this.id,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      name: json['name'],
+      cityId: json['cityId'],
+      categoryId: json['categoryId'],
+      title: json['title'],
+      visitedTime: json['visitedTime'],
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+      // createdAt: json['createdAt'],
+      status: json['status'],
+      updatedByUser: json['updatedByUser'],
+      isAutomaticAdded: json['isAutomaticAdded'],
+      pictures: json['pictures'],
+      userId: json['userId'],
+      id: json['id'],
+    );
+  }
+}
+
+
+class CreateLocation {
+  String name;
+  String cityId;
+  String categoryId;
+  String title;
+  int visitedTime;
+  int longitude;
+  int latitude;
+  int createdAt;
+  String status;
+  bool updatedByUser;
+  bool isAutomaticAdded;
+
+  CreateLocation({
+    required this.name,
+    required this.cityId,
+    required this.categoryId,
+    required this.title ,
+    required this.visitedTime,
+    required this.longitude,
+    required this.latitude,
     required this.createdAt,
     required this.status,
     required this.updatedByUser,
     required this.isAutomaticAdded,
-    this.pictures = const [],
+
   });
 
-  // Factory method for creating a Location object from JSON
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      locationName: json['locationName'],
-      role: json['role'],
-      visitedTime: json['visitedTime'] ,
+  factory CreateLocation.fromJson(Map<String, dynamic> json) {
+    return CreateLocation(
+      name: json['name'],
+      cityId: json['cityId'],
+      categoryId: json['categoryId'],
+      title: json['title'],
+      visitedTime: json['visitedTime'],
       longitude: json['longitude'],
       latitude: json['latitude'],
-      title: json['title'],
-      createdAt: 1731319800,
+      createdAt: json['createdAt'],
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],
-      pictures: List<String>.from(json['pictures'] ?? []),
     );
-  }
-
-  // Method for converting a Location object to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'locationName': locationName,
-      'role': role,
-      'visitedTime': visitedTime,
-      'longitude': longitude,
-      'latitude': latitude,
-      'title': title,
-      'createdAt': createdAt,
-      'status': status,
-      'updatedByUser': updatedByUser,
-      'isAutomaticAdded': isAutomaticAdded,
-      'pictures': pictures,
-    };
   }
 }
