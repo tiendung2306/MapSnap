@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
-class Journeys extends StatefulWidget {
+class Journeys extends StatefulWidget  {
   @override
   State<Journeys> createState() => _JourneysState();
 }
@@ -147,7 +147,7 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
                       itemCount: journeys.length,
                       itemBuilder: (context, index) {
                         final journey = journeys[index];
-                        return _buildJourneyItem(journey);
+                        return _JourneyItem(journey);
                       },
                     ),
                     SingleChildScrollView(
@@ -179,6 +179,8 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
       ),
     );
   }
+
+
 
 
   Widget _buildJourneyItem(Map<String, dynamic> journey) {
@@ -260,4 +262,111 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
       ),
     );
   }
+
+
+}
+
+class _JourneyItem extends StatefulWidget {
+  final Map<String, dynamic> journey;
+
+  _JourneyItem(this.journey);
+
+  @override
+  __JourneyItemState createState() => __JourneyItemState();
+}
+
+class __JourneyItemState extends State<_JourneyItem> with AutomaticKeepAliveClientMixin {
+  late Map<String, dynamic> journey;
+
+  @override
+  void initState() {
+    journey = widget.journey;
+    super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context); // Required to enable state preservation
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            journey['date'],
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Stack(
+            children: [
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey.shade300,
+                ),
+
+                child: GoogleMap(
+                  // onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(21.0285, 105.8542),
+                    zoom: 15,
+                  ),
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false, // Tắt nút phóng to/thu nhỏ mặc định
+                  // markers: _markers.toSet(),
+                  // polylines: _polylines,
+                ),
+              ),
+              Positioned(
+                top: 70, bottom: 0, left: 0, right: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,  // Bắt đầu gradient từ trên
+                      end: Alignment.bottomCenter, // Kết thúc gradient ở dưới
+                      colors: [
+                        Colors.black.withOpacity(0.0), // Màu ở trên cùng, với độ mờ
+                        Colors.black.withOpacity(0.6), // Màu ở dưới cùng, nhạt hơn
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 10, left: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Title',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      'Description',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
