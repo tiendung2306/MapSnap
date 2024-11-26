@@ -1,7 +1,9 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
+import 'package:mapsnap_fe/Model/LocationCategory.dart';
 import '../Model/Picture.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
@@ -144,33 +146,29 @@ class AccountModel extends ChangeNotifier {
   }
 
 
-  //
-  // List<City> _cityManager = [];
-  // List<City> get cityManager => _cityManager;
-  //
-  // void addCity(City newCity) {
-  //   _cityManager.insert(0, newCity);
-  //   notifyListeners();
-  // }
-  //
-  // void resetCity() {
-  //   _cityManager = [];
-  //   notifyListeners();
-  // }
-  //
-  //
-  //
-  //
-  // List<Location> _LocationManager = [];
-  // List<Location> get LocationManager => _LocationManager;
-  //
-  // void addLocation2(Location newLocation) {
-  //   _LocationManager.insert(0, newLocation);
-  //   notifyListeners();
-  // }
-  //
-  // void resetLocation() {
-  //   _LocationManager = [];
-  //   notifyListeners();
-  // }
+  Map<LocationCategory,List<Location>> _locationCategoryManager = {};
+  Map<LocationCategory,List<Location>> get locationCategoryManager => _locationCategoryManager;
+
+  void addLocationCategory(LocationCategory category, Location? location) {
+    // Kiểm tra nếu hành trình đã tồn tại
+    if (_locationCategoryManager.containsKey(category)) {
+      _locationCategoryManager[category]?.insert(0, location!);
+    } else if(location != null) {
+      // Nếu địa điểm chưa có, tạo mới danh sách ảnh
+      _locationCategoryManager[category] = [location] ;
+    } else {
+      _locationCategoryManager[category] = [] ;
+    }
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void resetLocationCategory() {
+    _locationCategoryManager = {};
+    notifyListeners();
+  }
+
+  void resetLocation2(LocationCategory category) {
+    _locationCategoryManager[category] = [];
+    notifyListeners();
+  }
 }

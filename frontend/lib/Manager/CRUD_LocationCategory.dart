@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -41,9 +42,30 @@ Future<LocationCategory?> upLoadLocationCategory(CreateLocationCategory createLo
 }
 
 
+// Hàm gọi API lấy thông tin LocationCategory
+Future<List<LocationCategory>> getInfoLocationCategory(String userId) async {
+  final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$userId/get-category');
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  );
+  if (response.statusCode == 200) {
+    final json = jsonDecode(response.body);
+    List<dynamic> data = json['result'];
+    print(data);
+    List<LocationCategory> locationCategory = data.map((json) => LocationCategory.fromJson(json)).toList();
+    return locationCategory;
+  } else {
+    print('Lỗi: ${response.statusCode}');
+  }
+  return [];
+}
+
 
 // Hàm gọi API lấy thông tin LocationCategory theo id
-Future<Location?> getLocationCategoryId(String Id) async {
+Future<LocationCategory?> getLocationCategoryId(String Id) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$Id');
   final response = await http.get(
     url,
@@ -54,7 +76,7 @@ Future<Location?> getLocationCategoryId(String Id) async {
   if (response.statusCode == 201) {
     final data = jsonDecode(response.body)  as Map<String, dynamic>;
     print(data);
-    return Location.fromJson(data);
+    return LocationCategory.fromJson(data);
   } else {
     print('Lỗi: ${response.statusCode}');
   }
