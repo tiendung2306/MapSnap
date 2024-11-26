@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class ExpandableListTile extends StatefulWidget {
   const ExpandableListTile({
     super.key,
+    required this.type,
     required this.index,
     required this.isFocus,
     required this.title,
@@ -12,6 +13,7 @@ class ExpandableListTile extends StatefulWidget {
     required this.onTapFunc,
     // required this.icon,
   });
+  final String type;
   final int index;
   final bool isFocus;
   final String title;
@@ -25,6 +27,30 @@ class ExpandableListTile extends StatefulWidget {
 }
 
 class _ExpandableListTileState extends State<ExpandableListTile> {
+  late Color color;
+
+  @override
+  void initState() {
+    switch (widget.type) {
+      case 'Tab1Visit':
+        color = Colors.green;
+        break;
+      case 'Tab2Visit':
+        color = Colors.blue;
+        break;
+      case 'Tab2Position':
+        color = Colors.blue;
+        break;
+      case 'Tab3Visit':
+        color = Colors.orange;
+        break;
+      case 'Tab3Position':
+        color = Colors.orange;
+        break;
+      default:
+    }
+    super.initState();
+  }
 
   void onTap(){
     widget.onTapFunc(widget.index);
@@ -37,13 +63,14 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
       child: Column(
         children: [
           SizedBox(height: 5,),
-          Container(
+          if(widget.type == 'Tab1Visit' || widget.type == 'Tab2Visit' || widget.type == 'Tab3Visit')
+            Container(
             width: 20,
             height: 20,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                  color: Colors.green,
+                  color: color,
                   width: 3
               ),
             ),
@@ -54,14 +81,14 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
                 height: 10,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.green, // Màu nền xanh lá đậm
+                  color: color, // Màu nền xanh lá đậm
                 ),
               ),
             ),
           ),
           Expanded(
             child: Container(
-              width: 3, color: Colors.green,
+              width: 3, color: color,
             ),
           )
         ],

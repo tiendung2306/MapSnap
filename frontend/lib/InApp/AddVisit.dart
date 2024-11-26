@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:mapsnap_fe/Widget/ExpandableListTile.dart';
+import 'package:mapsnap_fe/InApp/Map.dart';
+import 'package:mapsnap_fe/Widget/NonExpandListTile.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapsnap_fe/Model/Journey.dart';
 import 'package:mapsnap_fe/Model/Visit.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
 import 'dart:math';
-import 'AddVisit.dart';
 import 'Positions.dart';
 
-class MapScreen extends StatefulWidget {
+class AddVisitScreen extends StatefulWidget {
   @override
-  State<MapScreen> createState() => _MapScreenState();
+  State<AddVisitScreen> createState() => _AddVisitScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMixin{
+class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProviderStateMixin{
   final  _apiService = ApiService();
 
   bool isDataLoad = false;
   bool isMapLoad = false;
 
-  late TabController _tabController;
   late double SlideTabTop = 700;
+  final ScrollController _scrollController = ScrollController();
   int currIndex = 0;
-  Color tabColor = Colors.green;
 
   late Journey journey;
   final List<Position> visits = [];
@@ -31,54 +30,22 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
   late GoogleMapController _controller;
   Set<Marker> _markers = {};
-  Set<Marker> _visitMarkers = {};
-  Set<Marker> _pathMarkers = {};
-  Set<Marker> _periodMarkers = {};
+
 
   double _zoomLevel = 14.0;
   Set<Polyline> _polylines = {};
-  Set<Polyline> _visitPolylines = {};
-  Set<Polyline> _pathPolylines = {};
-  Set<Polyline> _periodPolylines = {};
+
 
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    // Lắng nghe sự kiện thay đổi tab
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        setState(() {
-          currIndex = 0;
-
-          switch (_tabController.index) {
-            case 0:
-              _markers = _visitMarkers;
-              _polylines = _visitPolylines;
-              tabColor = Colors.green;
-              break;
-            case 1:
-              _markers = _pathMarkers;
-              _polylines = _pathPolylines;
-              tabColor = Colors.blue;
-              break;
-            case 2:
-              _markers = _periodMarkers;
-              _polylines = _periodPolylines;
-              tabColor = Colors.orange;
-              break;
-            default:
-          }
-        });;
-      }
-    });
     loadData();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -103,18 +70,52 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
     //khi nào có api thì mở
 
-    sortVisit(positions);
-
     addMarkersWithRotation(positions);
 
     addPolyline(positions);
 
     setState(() {
-      _markers = _visitMarkers;
-      _polylines = _visitPolylines;
       isDataLoad = true;
     });
 
+  }
+
+  void addOrDelete(int index) async {
+    if(positions[index].type == 'visit'){
+      final BitmapDescriptor positionTab3 = await BitmapDescriptor.asset(
+        const ImageConfiguration(size: Size(15, 15)),
+        'assets/Common/positionTab3.png', // Đường dẫn tới icon của bạn
+      );
+      setState(() {
+        positions[index].type = 'position';
+        _markers = _markers.map((marker) {
+          if (marker.markerId.value == positions[index].name) {
+            return marker.copyWith(
+                iconParam: positionTab3
+            );
+          }
+          return marker;
+        }).toSet();
+      });
+    }
+
+    else{
+      final BitmapDescriptor visitTab3 = await BitmapDescriptor.asset(
+        const ImageConfiguration(size: Size(30, 30)),
+        'assets/Common/visitTab3.png', // Đường dẫn tới icon của bạn
+      );
+      setState(() {
+        positions[index].type = 'visit';
+        _markers = _markers.map((marker) {
+          if (marker.markerId.value == positions[index].name) {
+            return marker.copyWith(
+                iconParam: visitTab3
+            );
+          }
+          return marker;
+        }).toSet();
+      });
+    }
   }
 
   void onTap(int index) {
@@ -125,24 +126,10 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       }
       else{
         currIndex = index;
-        _deleteMarker('current_marker');
-        late Position currPos;
-        switch (_tabController.index) {
-          case 0:
-            currPos = visits[currIndex];
-            break;
-          case 1:
-            currPos = positions[currIndex];
-            break;
-          case 2:
-            currPos = positions[currIndex];
-            break;
-          default:
-        }
+        _controller.showMarkerInfoWindow(MarkerId(positions[index].name));
 
-        _controller.showMarkerInfoWindow(MarkerId(currPos.name));
-        CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(LatLng(currPos.latitude,
-            currPos.longitude), 17);
+        CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(LatLng(positions[index].latitude,
+            positions[index].longitude), 17);
         _controller.animateCamera(cameraUpdate);
       }
     });
@@ -192,13 +179,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     });
   }
 
-  void sortVisit(List<Position> points){
-    for (int i = 0; i < points.length; i++) {
-      if(points[i].type == 'visit')
-        visits.add(points[i]);
-    }
-  }
-
   double calculateBearing(LatLng start, LatLng end) {
     final double startLat = start.latitude * (pi / 180); // Chuyển đổi sang radian
     final double startLng = start.longitude * (pi / 180);
@@ -215,27 +195,20 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     return bearing;
   }
 
+  void _scrollToIndex(int index) {
+    final double position = index * 50.0; // Chiều cao phần tử (ListTile là 72px theo mặc định)
+    _scrollController.animateTo(
+      position,
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void onMarkerTap(int index){
+    _scrollToIndex(index);
+  }
+
   void addMarkersWithRotation(List<Position> points) async {
-    final BitmapDescriptor visitTab1 = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(20, 20)),
-      'assets/Common/visitTab1.png', // Đường dẫn tới icon của bạn
-    );
-
-    final BitmapDescriptor positionTab1 = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(15, 15)),
-      'assets/Common/positionTab1.png', // Đường dẫn tới icon của bạn
-    );
-
-    final BitmapDescriptor visitTab2 = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(15, 15)),
-      'assets/Common/visitTab2.png', // Đường dẫn tới icon của bạn
-    );
-
-    final BitmapDescriptor positionTab2 = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(20, 20)),
-      'assets/Common/positionTab2.png', // Đường dẫn tới icon của bạn
-    );
-
     final BitmapDescriptor visitTab3 = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(30, 30)),
       'assets/Common/visitTab3.png', // Đường dẫn tới icon của bạn
@@ -251,23 +224,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       final LatLng next = LatLng(points[i + 1].latitude, points[i + 1].longitude);
       final double rotation = calculateBearing(start, next); // Tính góc giữa 2 điểm
 
-      final markerTab1 = Marker(
-        markerId: MarkerId(points[i].name),
-        position: start,
-        icon: points[i].type == 'visit' ? visitTab1 : positionTab1,
-        anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
-        rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].name),
-      );
-
-      final markerTab2 = Marker(
-        markerId: MarkerId(points[i].name),
-        position: start,
-        icon: points[i].type == 'visit' ? visitTab2 : positionTab2,
-        anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
-        rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].name),
-      );
 
       final markerTab3 = Marker(
         markerId: MarkerId(points[i].name),
@@ -276,11 +232,12 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
         rotation: rotation, // Góc xoay
         infoWindow: InfoWindow(title: points[i].name),
+        onTap: (){
+          _scrollToIndex(i);
+        }
       );
 
-      _visitMarkers.add(markerTab1);
-      _pathMarkers.add(markerTab2);
-      _periodMarkers.add(markerTab3);
+      _markers.add(markerTab3);
     }
   }
   // Có thể dùng BitmapDescriptor để custom marker
@@ -294,7 +251,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       ));
     });
   }
-
   void _deleteMarker(String id) {
     setState(() {
       _markers.removeWhere((marker) => marker.markerId.value == id);
@@ -306,21 +262,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     for (int i = 0; i < points.length; i++) {
       _points.add(LatLng(points[i].latitude, points[i].longitude));
     }
-    _visitPolylines.add(Polyline(
-      polylineId: PolylineId('route'),
-      points: _points,
-      color: Colors.greenAccent,
-      width: 2,
-    ),);
 
-    _pathPolylines.add(Polyline(
-      polylineId: PolylineId('route'),
-      points: _points,
-      color: Colors.lightBlue,
-      width: 7,
-    ),);
-
-    _periodPolylines.add(Polyline(
+    _polylines.add(Polyline(
       polylineId: PolylineId('route'),
       points: _points,
       color: Colors.yellow,
@@ -388,68 +331,61 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       top: 50,
       left: 10,
       right: 10,
-      child: Container(
-        // width: 100,
-        height: 45,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
-        ),
-        child: Stack(
-          children: [
-            IconButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
+            ),
+            child: IconButton(
               onPressed: (){
                 Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back),
             ),
-            Align(
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
+            ),
+            child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                    'Today route',
+                    'Add new visit',
                     style: TextStyle(fontSize: 18)
                 )
             ),
-            
-          ],
-        ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: Icon(Icons.check),
+            label: Text(
+              "Save",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              backgroundColor: Colors.greenAccent,
+              shadowColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
-  
-  Positioned AddVisit(){
-    return Positioned(
-        top: SlideTabTop - 50,
-        left: 10,
-        child: ElevatedButton.icon(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddVisitScreen()),
-            );
-          },
-          icon: Icon(Icons.add),
-          label: Text(
-            "Add visit",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-              ),
-            ),
-          style: ElevatedButton.styleFrom(
-            // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            backgroundColor: Colors.white,
-            shadowColor: Colors.black,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-        )
-      );
-    }
 
   Positioned BottomSlider(){
     return Positioned(
@@ -461,11 +397,12 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         children: [
           //Thanh cuộn
           Container(
-            height: 15,
+            padding: EdgeInsets.only(top: 10),
+            height: 60,
             width: double.infinity,
             color: Colors.white,
             child: Align(
-              alignment: Alignment.center,
+              alignment: Alignment.topCenter,
               child: GestureDetector(
                 onPanUpdate: (details){
                   setState(() {
@@ -482,26 +419,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   ),
                 ),
               ),
-            ),
-          ),
-          //Các feature
-          Container(
-            width: double.infinity,
-            color: Colors.white,
-            child: Column(
-              children: [
-                TabBar(
-                  controller: _tabController,
-                  labelColor: tabColor,
-                  unselectedLabelColor: Colors.black,
-                  indicatorColor: tabColor,
-                  tabs: [
-                    Tab(text: "Stop"),
-                    Tab(text: "Path"),
-                    Tab(text: "Period"),
-                  ],
-                ),
-              ],
             ),
           ),
           //Hiệu ứng đổ bóng
@@ -523,65 +440,24 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
           ),
           //Journey
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Nội dung cho từng tab
-                Container(
-                  color: Colors.white,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: visits.length,
-                    itemBuilder: (context, index){
-                      return ExpandableListTile(
-                        type: 'Tab1Visit',
-                        index: index,
-                        isFocus: currIndex == index,
-                        title: visits[index].name,
-                        subtitle: "Subtitle",
-                        content: "Content",
-                        onTapFunc: onTap,
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: positions.length,
-                    itemBuilder: (context, index){
-                      return ExpandableListTile(
-                        type: positions[index].type == 'visit' ? 'Tab2Visit' : 'Tab2Position',
-                        index: index,
-                        isFocus: currIndex == index,
-                        title: positions[index].name,
-                        subtitle: "Subtitle",
-                        content: "Content",
-                        onTapFunc: onTap,
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: positions.length,
-                    itemBuilder: (context, index){
-                      return ExpandableListTile(
-                        type: positions[index].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
-                        index: index,
-                        isFocus: currIndex == index,
-                        title: positions[index].name,
-                        subtitle: "Subtitle",
-                        content: "Content",
-                        onTapFunc: onTap,
-                      );
-                    },
-                  ),
-                ),
-              ],
+            child: Container(
+              color: Colors.white,
+              child: ListView.builder(
+                shrinkWrap: true,
+                controller: _scrollController,
+                itemCount: positions.length,
+                itemBuilder: (context, index){
+                  return NonExpandListTile(
+                    type: positions[index].type,
+                    index: index,
+                    title: positions[index].name,
+                    subtitle: "Subtitle",
+                    content: "Content",
+                    onTapFunc: onTap,
+                    addDelFunc: addOrDelete,
+                  );
+                },
+              ),
             ),
           )
         ],
@@ -624,8 +500,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
           Header(),
           // Phần thanh cuộn bên dưới
           BottomSlider(),
-
-          AddVisit(),
 
           ZoomInOut(),
 

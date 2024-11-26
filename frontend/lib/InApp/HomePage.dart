@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/InApp/Journeys.dart';
+import 'package:mapsnap_fe/InApp/Map.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -138,7 +140,12 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.map, size: 30,),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapScreen()),
+                          );
+                        },
                       ),
                       Text('Map'),
                     ],
@@ -170,7 +177,12 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Image.asset("assets/Common/journey.png"),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Journeys()),
+                          );
+                        },
                       ),
                       Text('Journey'),
                     ],

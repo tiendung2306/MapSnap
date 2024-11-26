@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/Authentication/SignUp.dart';
 import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
+import 'package:mapsnap_fe/InApp/Start.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
@@ -20,15 +21,12 @@ import 'FavouriteScreen.dart';
 import 'PictureScreen/HomeScreen.dart';
 import 'Widget/AutoRefreshToken.dart';
 import 'Widget/UpdateUser.dart';
-import 'Services/BackgroundService.dart';
-
-
 
 
 Future<void> main() async {
   // Token token = await Login('linhson7a127@gmail.com', 'a1234567');
   WidgetsFlutterBinding.ensureInitialized();
-  // await initializeService();
+
   setupLocator();
   runApp(
     // Cấp quyền truy cập cao nhất cho AccountModel
@@ -58,7 +56,7 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           body: Container(
             // child: ResizableWidget(),
-            child: MapScreen(),
+            child: StartScreen(),
             // child: generalSettings(),
             // child: helpScreen(),
             // child: MainScreenCamera(),
