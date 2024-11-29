@@ -30,7 +30,7 @@ module.exports = router;
  * @swagger
  * /locationCategory/{userId}/create-category:
  *   post:
- *     summary: Create a locationCategory
+ *     summary: Create a category
  *     description: Only admins can create other location categories.
  *     tags: [Location Category]
  *     parameters:
@@ -139,7 +139,7 @@ module.exports = router;
  * @swagger
  * /locationCategory/{id}:
  *   get:
- *     summary: Get a Category
+ *     summary: Get a category
  *     tags: [Location Category]
  *     security:
  *       - bearerAuth: []
@@ -170,7 +170,7 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a Category
+ *     summary: Update a category
  *     tags: [Location Category]
  *     security:
  *       - bearerAuth: []
@@ -222,7 +222,7 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a Category
+ *     summary: Delete a category
  *     tags: [Location Category]
  *     security:
  *       - bearerAuth: []

@@ -154,6 +154,7 @@ components:
         - cityId
         - categoryId
         - name
+        - address
         - visitedTime
         - longitude
         - latitude
@@ -163,6 +164,16 @@ components:
         - isAutomaticAdded
       properties:
         name:
+          type: string
+        address:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        homeNumber:
           type: string
         cityId:
           type: string
@@ -210,7 +221,15 @@ components:
           type: string
         userId:
           type: string
-        positionName:
+        address:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        homeNumber:
           type: string
         id:
           type: string
