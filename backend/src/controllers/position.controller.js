@@ -14,6 +14,20 @@ const createPosition = catchAsync(async (req, res) => {
   });
 });
 
+const getPosition = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const position = await positionService.getPosition(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: position });
+});
+
+const getNearestPosition = catchAsync(async (req, res) => {
+  const request = req.body;
+  request.userId = req.params.userId;
+  const position = await positionService.getNearestPosition(request);
+  res.send({ code: httpStatus.OK, message: Message.ok, result: position });
+});
+
 const deletePosition = catchAsync(async (req, res) => {
   await positionService.deletePosition(req.params.positionId);
   res.send({
@@ -24,5 +38,7 @@ const deletePosition = catchAsync(async (req, res) => {
 
 module.exports = {
   createPosition,
+  getPosition,
+  getNearestPosition,
   deletePosition,
 };

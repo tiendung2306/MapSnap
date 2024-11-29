@@ -27,7 +27,7 @@ const getLocation = async (locationBody) => {
   const {
     userId,
     cityId,
-    locationCategoryId,
+    categoryId,
     name,
     isAutomaticAdded,
     updatedByUser,
@@ -37,7 +37,7 @@ const getLocation = async (locationBody) => {
   } = locationBody;
   const filter = { userId };
   if (cityId) filter.cityId = cityId;
-  if (locationCategoryId) filter.locationCategoryId = locationCategoryId;
+  if (categoryId) filter.categoryId = categoryId;
   if (name) filter.name = name;
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
   if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;

@@ -35,6 +35,21 @@ const locationSchema = new Schema({
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
+  district: {
+    type: String,
+  },
+  homeNumber: {
+    type: String,
+  },
+  classify: {
+    type: String,
+  },
   title: {
     type: String,
     required: true,
