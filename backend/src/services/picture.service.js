@@ -21,19 +21,21 @@ const createPicture = async (req, res) => {
     try {
       const { userId, locationId, visitId, journeyId, capturedAt } = req.body;
 
-      const pictures = await Promise.all(req.files.map(file => {
-        const filePath = file.path;
-        const picture = Picture.create({
-          userId,
-          locationId,
-          visitId,
-          journeyId,
-          link: filePath,
-          capturedAt,
-          public_id: file.filename,
+      const pictures = await Promise.all(
+        req.files.map((file) => {
+          const filePath = file.path;
+          const picture = Picture.create({
+            userId,
+            locationId,
+            visitId,
+            journeyId,
+            link: filePath,
+            capturedAt,
+            public_id: file.filename,
+          });
+          return picture;
         })
-        return picture;
-      }));
+      );
       return res.status(httpStatus.OK).send(pictures);
     } catch (error) {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: 'Server Error' });

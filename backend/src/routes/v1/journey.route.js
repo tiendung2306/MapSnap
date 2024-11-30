@@ -22,6 +22,8 @@ router.post(
 // get all journey of user today
 router.route('/:userId/get-journeys-today').get(journeyController.getJourneysToday);
 
+router.route('/:journeyId/delete-hard-journey').delete(journeyController.deleteHardJourney);
+
 router
   .route('/:journeyId')
   .get(journeyController.getJourneyByJourneyId)

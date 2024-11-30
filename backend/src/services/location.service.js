@@ -28,7 +28,6 @@ const getLocation = async (locationBody) => {
     userId,
     cityId,
     categoryId,
-    name,
     isAutomaticAdded,
     updatedByUser,
     sortType = 'desc',
@@ -38,11 +37,10 @@ const getLocation = async (locationBody) => {
   const filter = { userId };
   if (cityId) filter.cityId = cityId;
   if (categoryId) filter.categoryId = categoryId;
-  if (name) filter.name = name;
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
   if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
   if (searchText) {
-    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }, { name: { $regex: searchText, $options: 'i' } }];
+    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }];
   }
   const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
   const location = await Location.find(filter).sort(sortOption);
@@ -58,10 +56,15 @@ const deleteLocation = async (locationId) => {
   await updateLocation({ locationId, requestBody: { status: 'disabled' } });
 };
 
+const deleteHardLocation = async (locationId) => {
+  await Location.findByIdAndDelete(locationId);
+};
+
 module.exports = {
   createLocation,
   getLocationByLocationId,
   updateLocation,
   deleteLocation,
   getLocation,
+  deleteHardLocation,
 };

@@ -54,6 +54,10 @@ const deleteJourney = async (journeyId) => {
   await updateJourney({ journeyId, requestBody: { status: 'disabled' } });
 };
 
+const deleteHardJourney = async (journeyId) => {
+  await Journey.findByIdAndDelete(journeyId);
+};
+
 const getJourneysToday = async (userId) => {
   let startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
@@ -77,4 +81,5 @@ module.exports = {
   updateJourney,
   deleteJourney,
   getJourneysToday,
+  deleteHardJourney,
 };
