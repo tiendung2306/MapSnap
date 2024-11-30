@@ -208,6 +208,14 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        spreadRadius: 3,
+                                        blurRadius: 6,
+                                        offset: Offset(5, 5)
+                                    )
+                                  ]
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,6 +239,22 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded( // Để tự động xuống dòng nếu chữ dài
+                                        child: Text(
+                                          'Địa chỉ: ${location.address}' ,
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 2, // Giới hạn 2 dòng
+                                          overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
+                                        ),
                                       ),
                                     ],
                                   ),

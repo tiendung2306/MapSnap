@@ -21,6 +21,9 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
     'status': createLocation.status,
     'updatedByUser': createLocation.updatedByUser,
     'isAutomaticAdded': createLocation.isAutomaticAdded,
+    'address': createLocation.address,
+    'country': createLocation.country,
+    'district': createLocation.district,
   };
 
   try {

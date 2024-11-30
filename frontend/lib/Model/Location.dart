@@ -13,6 +13,9 @@ class Location {
   List<dynamic> pictures;
   String userId;
   String id;
+  String address;
+  String country;
+  String district;
 
   Location({
     required this.name,
@@ -29,6 +32,9 @@ class Location {
     required this.pictures,
     required this.userId,
     required this.id,
+    required this.address,
+    required this.country,
+    required this.district,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
@@ -47,6 +53,9 @@ class Location {
       pictures: json['pictures'],
       userId: json['userId'],
       id: json['id'],
+      address: json['address'],
+      country: json['country'],
+      district: json['district'],
     );
   }
 }
@@ -64,6 +73,10 @@ class CreateLocation {
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
+  String address;
+  String country;
+  String district;
+
 
   CreateLocation({
     required this.name,
@@ -77,6 +90,9 @@ class CreateLocation {
     required this.status,
     required this.updatedByUser,
     required this.isAutomaticAdded,
+    required this.address,
+    required this.country,
+    required this.district,
 
   });
 
@@ -93,6 +109,9 @@ class CreateLocation {
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],
+      address: json['address'],
+      country: json['country'],
+      district: json['district'],
     );
   }
 }

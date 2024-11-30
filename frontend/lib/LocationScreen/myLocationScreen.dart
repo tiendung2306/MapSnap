@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mapsnap_fe/LocationScreen/addMyLocationScreen.dart';
 import 'package:mapsnap_fe/LocationScreen/visitLocationScreen2.dart';
 import 'package:mapsnap_fe/Manager/CRUD_LocationCategory.dart';
 import 'package:mapsnap_fe/Model/LocationCategory.dart';
@@ -42,6 +43,19 @@ class _myLocationScreenState extends State<myLocationScreen> {
       print('Không có thành phố nào được tìm thấy.');
     }
   }
+  // Hàm điều hướng và cập nhật màn hình
+  _navigateToAddLocationScreen() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const addMyLocationScreen()),
+    );
+
+    if (result == true) {
+      // Gọi lại fetchCategory để làm mới danh sách
+      fetchCategory();
+    }
+  }
+
 
   IconData getCategoryIcon(String categoryType) {
     switch (categoryType) {
@@ -81,12 +95,14 @@ class _myLocationScreenState extends State<myLocationScreen> {
                   GestureDetector(
                     onTap: () {
                       print("Siuuuuuuuuuuuuuu");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => visitLocationScreen2(locationCategory: category[i]),
-                          )
-                      );
+                      setState(() {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => visitLocationScreen2(locationCategory: category[i]),
+                            )
+                        );
+                      });
                     },
                     child: Row(
                       children: [
@@ -124,7 +140,21 @@ class _myLocationScreenState extends State<myLocationScreen> {
                   ),
                   SizedBox(height: 15,),
                 ],
-                SizedBox(height: 10,),
+                SizedBox(height: 20,),
+                GestureDetector(
+                    onTap: _navigateToAddLocationScreen,
+                    child:Container(
+                          height: 70,
+                          width: screenWidth * 2 / 3 - 50 ,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+
+                          child: Center(child: Text("Thêm địa danh", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Color(
+                              0xFFFFFFFF)),)),
+                    )
+                ),
               ]
           )
 

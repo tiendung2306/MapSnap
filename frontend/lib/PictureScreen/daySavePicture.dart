@@ -30,7 +30,7 @@ class _daySaveScreenState extends State<daySaveScreen> {
     List<Picture> images = await getInfoImages(accountModel.idUser, 'user_id');
     if (images.isNotEmpty) {
       for (var image in images) {
-        DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(image.capturedAt);
+        DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(image.capturedAt, isUtc: true);
         String dayString = '${dateTime.day}-${dateTime.month}-${dateTime.year}';
         // Phân nhóm ảnh theo ngày
         accountModel.addImageDay(image, dayString);
@@ -86,6 +86,7 @@ class _daySaveScreenState extends State<daySaveScreen> {
         return '${date.day}-${date.month}-${date.year}';
       }
     }
+
     DateTime now = DateTime.now();
     DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Chuyển sang múi giờ UTC+7
     String nowDay = '${vietnamTime.day}-${vietnamTime.month}-${vietnamTime.year}';
@@ -94,8 +95,11 @@ class _daySaveScreenState extends State<daySaveScreen> {
       backgroundColor: Colors.white,
       body: Consumer<AccountModel>(  // Lắng nghe thay đổi trong ImageProvider
         builder: (context, imageProvider, child) {
+
           final groupedImages = imageProvider.groupedImages;
           final List<String> daysList = groupedImages.keys.toList();
+          // print(nowDay);
+          // print(daysList);
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(

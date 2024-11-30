@@ -231,7 +231,9 @@ class _accountScreenState extends State<accountScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 print("Thay ảnh đại diện");
-                                _onProfileTapped();
+                                setState(() {
+                                  _onProfileTapped();
+                                });
                               },
                               child: Container(
                                 width: screenWidth / 10,
