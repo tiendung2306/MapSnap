@@ -19,6 +19,12 @@ router.post(
   visitController.getVisit
 );
 
+router.delete(
+  '/:visitId/delete-hard-visit',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  visitController.deleteHardVisit
+);
+
 router
   .route('/:visitId')
   .get(visitController.getVisitByVisitId)

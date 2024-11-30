@@ -31,10 +31,6 @@ const locationSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'LocationCategory',
   },
-  name: {
-    type: String,
-    required: true,
-  },
   address: {
     type: String,
   },

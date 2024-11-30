@@ -28,7 +28,7 @@ const positionSchema = new Schema({
   country: {
     type: String,
   },
-  city: {
+  cityId: {
     type: String,
   },
   district: {

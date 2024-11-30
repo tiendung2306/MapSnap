@@ -42,10 +42,15 @@ const deleteLocationCategory = async (locationCategoryId) => {
   await updateLocationCategory({ locationCategoryId, requestBody: { status: 'disabled' } });
 };
 
+const deleteHardLocationCategory = async (locationCategoryId) => {
+  await LocationCategory.findByIdAndDelete(locationCategoryId);
+};
+
 module.exports = {
   createLocationCategory,
   getLocationCategory,
   getLocationCategoryById,
   updateLocationCategory,
   deleteLocationCategory,
+  deleteHardLocationCategory,
 };

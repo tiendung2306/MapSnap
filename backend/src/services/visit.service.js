@@ -89,10 +89,15 @@ const deleteVisit = async (visitId) => {
   await updateVisit({ visitId, requestBody: { status: 'disabled' } });
 };
 
+const deleteHardVisit = async (visitId) => {
+  await Visit.findByIdAndDelete(visitId);
+};
+
 module.exports = {
   createVisit,
   getVisit,
   getVisitByVisitId,
   updateVisit,
   deleteVisit,
+  deleteHardVisit,
 };
