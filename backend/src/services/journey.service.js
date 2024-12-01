@@ -25,10 +25,9 @@ const getJourney = async (journeyBody) => {
     status = 'enabled',
     searchText,
   } = journeyBody;
-  const filter = { userId };
+  const filter = { userId, status };
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
   if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
-  filter.status = status;
   if (searchText) {
     filter.title = { $regex: searchText, $options: 'i' };
   }

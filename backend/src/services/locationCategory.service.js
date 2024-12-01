@@ -16,8 +16,8 @@ const createLocationCategory = async (locationCategoryBody) => {
 };
 
 const getLocationCategory = async (categoryBody) => {
-  const { userId, searchText } = categoryBody;
-  const filter = { userId };
+  const { userId, searchText, status = 'enabled' } = categoryBody;
+  const filter = { userId, status };
   if (searchText) {
     filter.$or = [{ title: { $regex: searchText, $options: 'i' } }, { name: { $regex: searchText, $options: 'i' } }];
   }
