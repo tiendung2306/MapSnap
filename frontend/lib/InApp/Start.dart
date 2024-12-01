@@ -32,10 +32,8 @@ class _StartScreenState extends State<StartScreen> {
         final prefs = await SharedPreferences.getInstance();
         final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-        print(isLoggedIn);
-
         if(!isLoggedIn){
-          final isFirstOpen = prefs.getBool('isFirstOpen') ?? true;
+          final isFirstOpen = await prefs.getBool('isFirstOpen') ?? true;
           if(isFirstOpen)
             nextPage = Onboarding();
           else
@@ -47,7 +45,7 @@ class _StartScreenState extends State<StartScreen> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => nextPage), // Thay bằng màn hình chính
+          MaterialPageRoute(builder: (context) => SignIn()), // Thay bằng màn hình chính
         );
       }
     });

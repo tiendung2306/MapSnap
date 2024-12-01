@@ -28,8 +28,8 @@ class personalPageScreenState extends State<personalPageScreen> {
   @override
   void initState() {
     // 2 dòng này sẽ được để vào HomeScreen để liên tục làm mới token
-    var accountModel = Provider.of<AccountModel>(context, listen: false);
-    startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
+    // var accountModel = Provider.of<AccountModel>(context, listen: false);
+    // startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
     //===============================================================
     _loadImage();
     super.initState();

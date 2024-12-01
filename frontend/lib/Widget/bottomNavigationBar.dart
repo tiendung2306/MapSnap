@@ -54,7 +54,7 @@ class CustomBottomNav extends StatelessWidget {
             );
           } else {
             // Các màn hình khác thay thế màn hình hiện tại
-            Navigator.pushReplacementNamed(context, routeName);
+            Navigator.pushNamed(context, routeName);
           }
           onTabTapped(index);
         },

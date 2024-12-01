@@ -6,6 +6,7 @@ import 'package:mapsnap_fe/InApp/Map.dart';
 
 import '../LocationScreen/locationScreen.dart';
 import '../PictureScreen/pictureManager.dart';
+import 'package:mapsnap_fe/Widget/bottomNavigationBar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,11 +17,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    int currentTabIndex = 0;
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double Xpix = screenWidth * 0.01; // Chiều rộng bằng 10% chiều rộng màn hình
     double Ypix = screenHeight * 0.01; // Chiều rộng bằng 10% chiều rộng màn hình
 
+    void onTabTapped(int index) {
+      setState(() {
+        currentTabIndex = index;
+      });
+    }
 
     Widget Header(){
       return Padding(
@@ -342,11 +350,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Header(),
-
             ],
           ),
         ),
-        // bottomNavigationBar: BottomAppBar(
+
+        bottomNavigationBar: CustomBottomNav(
+          onTabTapped: onTabTapped,
+          currentIndex: currentTabIndex,
+        ),        // bottomNavigationBar: BottomAppBar(
         //   shape: CircularNotchedRectangle(),
         //   notchMargin: 6.0,
         //   child: Row(
