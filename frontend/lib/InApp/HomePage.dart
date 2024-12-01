@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
 
 import '../LocationScreen/locationScreen.dart';
+import '../NewFeed/newFeedScreen.dart';
 import '../PictureScreen/pictureManager.dart';
 import 'package:mapsnap_fe/Widget/bottomNavigationBar.dart';
 
@@ -207,7 +208,12 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.newspaper, size: 30,),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => newFeedScreen()),
+                          );
+                        },
                       ),
                       Text('Feed'),
                     ],
