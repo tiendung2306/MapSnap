@@ -284,15 +284,54 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                                   decoration: BoxDecoration(
                                     color: Colors.grey[200],
                                     borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          spreadRadius: 3,
+                                          blurRadius: 6,
+                                          offset: Offset(5, 5)
+                                      )
+                                    ]
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(location.name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                      Text(
+                                        location.name,
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                       Row(
                                         children: [
-                                          Text('Số lần đến: ', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                                          Text(location.visitedTime.toString(), style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                          Text(
+                                            'Số lần đến: ',
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            location.visitedTime.toString(),
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded( // Để tự động xuống dòng nếu chữ dài
+                                            child: Text(
+                                              'Địa chỉ: ${location.address}' ,
+                                              style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 2, // Giới hạn 2 dòng
+                                              overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ],

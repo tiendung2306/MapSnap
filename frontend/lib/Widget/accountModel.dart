@@ -118,7 +118,7 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
-  //=================================================================================
+  //=========================Quản lý location================================
   Map<City,List<Location>> _locationManager = {};
   Map<City,List<Location>> get locationManager => _locationManager;
 
@@ -135,6 +135,23 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
+
+  void removeLocation(City city, Location location) {
+    // Kiểm tra nếu hành trình đã tồn tại
+    if (_locationManager.containsKey(city)) {
+      _locationManager[city]?.remove(location);
+    }
+    if( _locationManager[city]!.isEmpty) {
+      _locationManager.remove(city);
+    }
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void removeCity(City city) {
+    _locationManager.remove(city);
+    notifyListeners();
+  }
+
   void resetCity() {
     _locationManager = {};
     notifyListeners();
@@ -145,6 +162,8 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+//===================
 
   Map<LocationCategory,List<Location>> _locationCategoryManager = {};
   Map<LocationCategory,List<Location>> get locationCategoryManager => _locationCategoryManager;
@@ -161,6 +180,23 @@ class AccountModel extends ChangeNotifier {
     }
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
+
+  void removeLocation2(LocationCategory category, Location location) {
+    // Kiểm tra nếu hành trình đã tồn tại
+    if (_locationCategoryManager.containsKey(category)) {
+      _locationCategoryManager[category]?.remove(location);
+    }
+    if( _locationCategoryManager[category]!.isEmpty) {
+      _locationCategoryManager.remove(category);
+    }
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void removeLocationCategory(LocationCategory locationCategory) {
+    _locationCategoryManager.remove(locationCategory);
+    notifyListeners();
+  }
+
 
   void resetLocationCategory() {
     _locationCategoryManager = {};

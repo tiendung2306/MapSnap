@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Manager/CRUD_LocationCategory.dart';
 import 'package:mapsnap_fe/Manager/CURD_location.dart';
 import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
@@ -201,6 +202,44 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                           return GestureDetector(
                             onTap: () {
                               print("Location: ${location.name}");
+                            },
+                            onLongPress: () {
+                              // Hiển thị hộp thoại xác nhận xóa
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    title: const Text("Xác nhận xóa"),
+                                    content: Text("Bạn có chắc chắn muốn xóa '${location.name}' không?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context); // Đóng hộp thoại
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
+                                        ),
+                                        child: const Text("Hủy", style: TextStyle(color: Colors.black)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          accountModel.removeLocation2(widget.locationCategory,location);
+                                          await RemoveLocation(accountModel.idUser);
+                                          Navigator.pop(context); // Đóng hộp thoại
+                                          // Làm mới giao diện
+                                          setState(() {});
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
+
+                                        ),
+                                        child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(vertical: 10),

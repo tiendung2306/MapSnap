@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
 
 
-
-
 class cityScreen extends StatefulWidget {
   const cityScreen({Key? key}) : super(key: key);
 
@@ -79,6 +77,44 @@ class _cityScreenState extends State<cityScreen> {
                           )
                       );
                     },
+                    onLongPress: () {
+                      // Hiển thị hộp thoại xác nhận xóa
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: const Text("Xác nhận xóa"),
+                            content: Text("Bạn có chắc chắn muốn xóa thành phố '${cities[i].name}' không?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // Đóng hộp thoại
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
+                                ),
+                                child: const Text("Hủy", style: TextStyle(color: Colors.black)),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  accountModel.removeCity(cities[i]);
+                                  await RemoveCity(accountModel.idUser);
+                                  Navigator.pop(context); // Đóng hộp thoại
+                                  // Làm mới giao diện
+                                  setState(() {});
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
+
+                                ),
+                                child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     child: Container(
                       height: 140,
                       decoration: BoxDecoration(
@@ -116,7 +152,7 @@ class _cityScreenState extends State<cityScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
 
-                      child: Center(child: Text("Thêm địa danh", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Color(
+                      child: Center(child: Text("Thêm thành phố", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Color(
                           0xFFFFFFFF)),)),
                     )
                 ),

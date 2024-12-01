@@ -104,6 +104,44 @@ class _myLocationScreenState extends State<myLocationScreen> {
                         );
                       });
                     },
+                    onLongPress: () {
+                        // Hiển thị hộp thoại xác nhận xóa
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: const Text("Xác nhận xóa"),
+                              content: Text("Bạn có chắc chắn muốn xóa '${category[i].name}' không?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Đóng hộp thoại
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
+                                  ),
+                                  child: const Text("Hủy", style: TextStyle(color: Colors.black)),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    accountModel.removeLocationCategory(category[i]);
+                                    await RemoveLocationCategory(accountModel.idUser);
+                                    Navigator.pop(context); // Đóng hộp thoại
+                                    // Làm mới giao diện
+                                    setState(() {});
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
+
+                                  ),
+                                  child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     child: Row(
                       children: [
                         Container(
