@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
 
+import '../LocationScreen/locationScreen.dart';
+import '../PictureScreen/pictureManager.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -154,7 +157,12 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.photo, size: 30,),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => pictureManager()),
+                          );
+                        },
                       ),
                       Text('Picture'),
                     ],
@@ -200,7 +208,12 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.location_pin, size: 30,),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => locationScreen()),
+                          );
+                        },
                       ),
                       Text('Location')
                     ],

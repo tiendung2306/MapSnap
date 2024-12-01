@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:mapsnap_fe/Authentication/Onboarding.dart';
+import 'package:mapsnap_fe/Authentication/SignIn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mapsnap_fe/InApp/HomePage.dart';
 import 'package:mapsnap_fe/Services/BackgroundService.dart';
-import 'package:geolocator/geolocator.dart';
 
 
 class StartScreen extends StatefulWidget {
@@ -14,20 +15,39 @@ class _StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome(); // Chuyển sang màn hình chính
+    _navigateTo(); // Chuyển sang màn hình chính
   }
 
 
-  void _navigateToHome() async {
+  void _navigateTo() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       bool permission = await locationRequest(context); // Gọi hàm kiểm tra quyền
+
 
       if(permission){
         await initializeService();
 
+        Widget nextPage;
+
+        final prefs = await SharedPreferences.getInstance();
+        final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+        print(isLoggedIn);
+
+        if(!isLoggedIn){
+          final isFirstOpen = prefs.getBool('isFirstOpen') ?? true;
+          if(isFirstOpen)
+            nextPage = Onboarding();
+          else
+            nextPage = SignIn();
+        }
+        else
+          nextPage = HomePage();
+
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()), // Thay bằng màn hình chính
+          MaterialPageRoute(builder: (context) => nextPage), // Thay bằng màn hình chính
         );
       }
     });

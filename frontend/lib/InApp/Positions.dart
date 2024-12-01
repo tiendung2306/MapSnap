@@ -3,6 +3,9 @@ class Position {
   String type;
   final double longitude;
   final double latitude;
+  Function() test = (){
+    print('vpaa');
+  };
 
   Position({required this.name, required this.type, required this.longitude,required this.latitude});
 }

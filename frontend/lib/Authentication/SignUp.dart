@@ -4,7 +4,6 @@ import 'SignIn.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
-import 'Finish.dart';
 import '../Services/AuthService.dart';
 import 'package:mapsnap_fe/Model/User.dart';
 import 'package:mapsnap_fe/Model/Token.dart';
@@ -51,14 +50,9 @@ class _SignUpState extends State<SignUp> {
     final user_response = await _authService.Register(_nameController.text, _emailController.text, _passwordController.text);
     final user_response_mess  = user_response['mess'];
 
-
-
-
     if(user_response_mess == 'Register success'){
-      // print(-2);
       final user_data = user_response['data'];
       final user = User.fromJson(user_data);
-      // print(-1);
       await _authService.saveUser(user);
 
       final sendcode_response = await _authService.SendEmailPinCode(user.accessToken.token);
@@ -232,7 +226,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                   child: Text('Register'),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
 
                 // Hoặc Login với
                 Row(
@@ -245,7 +239,7 @@ class _SignUpState extends State<SignUp> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
 
                 // Nút đăng ký với Google
                 outline_IconButton(label: "Google", color: Colors.red,),
@@ -253,7 +247,7 @@ class _SignUpState extends State<SignUp> {
 
                 // Nút đăng ký với Facebook
                 outline_IconButton(label: "Facebook", color: Colors.lightBlueAccent,),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
 
                 // Đăng nhập nếu đã có tài khoản
                 Row(

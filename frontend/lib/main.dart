@@ -44,14 +44,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // initialRoute: '/login',
-      // routes: {
-      //   '/login': (context) => Onboarding(),
-      //   '/home': (context) => const HomeScreen(),
-      //   '/camera': (context) => const MainScreenCamera(),
-      //   '/favorites': (context) => const FavoritesScreen(),
-      //   '/account': (context) => const personalPageScreen(),
-      // },
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => Onboarding(),
+        '/home': (context) => HomePage(),
+        '/camera': (context) => const MainScreenCamera(),
+        '/favorites': (context) => const FavoritesScreen(),
+        '/account': (context) => const personalPageScreen(),
+      },
       home: SafeArea(
         child: Scaffold(
           body: Container(

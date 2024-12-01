@@ -19,12 +19,6 @@ class _passwordFormState extends State<passwordForm> {
   bool passwordVisible = true;
 
   @override
-  void initState(){
-    super.initState();
-    passwordVisible = true;
-  }
-  
-  @override
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.controller,

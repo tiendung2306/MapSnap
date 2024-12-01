@@ -80,6 +80,10 @@ class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProvid
 
   }
 
+  void save(){
+
+  }
+
   void addOrDelete(int index) async {
     if(positions[index].type == 'visit'){
       final BitmapDescriptor positionTab3 = await BitmapDescriptor.asset(
@@ -132,6 +136,53 @@ class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProvid
             positions[index].longitude), 17);
         _controller.animateCamera(cameraUpdate);
       }
+    });
+  }
+
+  void showAlertDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng hộp thoại
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  void onInfoWindowTap(){
+    //api need
+    final bool newVisitCheck = false;
+    if(newVisitCheck)
+      showAlertDialog(context, "Thêm điểm thăm thành công", "");
+    else
+      showAlertDialog(context, "Thêm điểm thăm thất bại", "Điểm đến cách quá xa lộ trình",);
+  }
+
+  void onMapTap(LatLng pos){
+    setState(() {
+      _markers.add(Marker(
+        markerId: MarkerId('select'),
+        position: pos,
+        infoWindow: InfoWindow(
+          title: 'New Marker',
+          snippet: 'Tap add visit',
+          onTap: onInfoWindowTap
+        ),
+      ));
+      _controller.showMarkerInfoWindow(MarkerId('select'));
+      CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(pos, 17);
+      _controller.animateCamera(cameraUpdate);
     });
   }
 
@@ -196,7 +247,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProvid
   }
 
   void _scrollToIndex(int index) {
-    final double position = index * 50.0; // Chiều cao phần tử (ListTile là 72px theo mặc định)
+    final double position = index * 70.0;
     _scrollController.animateTo(
       position,
       duration: Duration(seconds: 1),
@@ -312,6 +363,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProvid
   GoogleMap Map(){
     return GoogleMap(
       onMapCreated: _onMapCreated,
+      onTap: onMapTap,
       initialCameraPosition: CameraPosition(
         target: LatLng(positions[0].latitude, positions[0].longitude),
         zoom: _zoomLevel,

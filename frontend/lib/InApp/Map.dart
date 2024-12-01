@@ -101,7 +101,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     //   points.add(LatLng(location.latitude, location.longitude));
     // }
 
-    //khi nào có api thì mở
+    //api need
 
     sortVisit(positions);
 

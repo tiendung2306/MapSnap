@@ -99,7 +99,9 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           IconButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                Navigator.pop(context);
+                              },
                               icon: Icon(Icons.arrow_back),
                           ),
                           Text(
