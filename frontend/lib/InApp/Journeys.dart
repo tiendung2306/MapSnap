@@ -11,21 +11,48 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
   late double SlideTabTop = 700;
   late TabController _tabController;
 
-  final List<Map<String, dynamic>> journeys = [
+  final List<Map<String, dynamic>> created_journeys = [
     {
       "date": "1th, Sep, 2024",
       "location": "Birmingham",
-      "imageCount": 7,
     },
     {
       "date": "2nd, Sep, 2024",
       "location": "Fountain Heights",
-      "imageCount": 1,
     },
     {
       "date": "3th, Sep, 2024",
       "location": "Birmingham",
-      "imageCount": 5,
+    },
+  ];
+
+  final List<Map<String, dynamic>> byday_journeys = [
+    {
+      "date": "1th, Sep, 2024",
+      "location": "Birmingham",
+    },
+    {
+      "date": "2nd, Sep, 2024",
+      "location": "Fountain Heights",
+    },
+    {
+      "date": "3th, Sep, 2024",
+      "location": "Birmingham",
+    },
+  ];
+
+  final List<Map<String, dynamic>> other_journeys = [
+    {
+      "date": "1th, Sep, 2024",
+      "location": "Birmingham",
+    },
+    {
+      "date": "2nd, Sep, 2024",
+      "location": "Fountain Heights",
+    },
+    {
+      "date": "3th, Sep, 2024",
+      "location": "Birmingham",
     },
   ];
 
@@ -124,49 +151,28 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: double.infinity, height: 500,
-                            color: Colors.red,
-                          ),
-                          Container(
-                            width: double.infinity, height: 500,
-                            color: Colors.blue,
-                          ),
-                          Container(
-                            width: double.infinity, height: 500,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
-                    ),
-
                     ListView.builder(
-                      itemCount: journeys.length,
+                      itemCount: created_journeys.length,
                       itemBuilder: (context, index) {
-                        final journey = journeys[index];
+                        final journey = created_journeys[index];
                         return _JourneyItem(journey);
                       },
                     ),
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: double.infinity, height: 500,
-                            color: Colors.red,
-                          ),
-                          Container(
-                            width: double.infinity, height: 500,
-                            color: Colors.blue,
-                          ),
-                          Container(
-                            width: double.infinity, height: 500,
-                            color: Colors.grey,
-                          )
-                        ],
-                      ),
+
+                    ListView.builder(
+                      itemCount: byday_journeys.length,
+                      itemBuilder: (context, index) {
+                        final journey = byday_journeys[index];
+                        return _JourneyItem(journey);
+                      },
+                    ),
+
+                    ListView.builder(
+                      itemCount: other_journeys.length,
+                      itemBuilder: (context, index) {
+                        final journey = other_journeys[index];
+                        return _JourneyItem(journey);
+                      },
                     ),
 
                   ],
