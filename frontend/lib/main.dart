@@ -4,6 +4,7 @@ import 'package:mapsnap_fe/Authentication/SignIn.dart';
 import 'package:mapsnap_fe/Authentication/SignUp.dart';
 import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
+import 'package:mapsnap_fe/NewFeed/newFeedScreen.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
@@ -47,7 +48,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/map': (context) => const MapScreen(),
         '/camera': (context) => const MainScreenCamera(),
-        '/favorites': (context) => const FavoritesScreen(),
+        // '/favorites': (context) => const FavoritesScreen(),
+        '/favorites': (context) => newFeedScreen(),
         '/account': (context) => const personalPageScreen(),
       },
       home: SafeArea(

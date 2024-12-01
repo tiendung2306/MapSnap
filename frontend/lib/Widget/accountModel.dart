@@ -207,4 +207,33 @@ class AccountModel extends ChangeNotifier {
     _locationCategoryManager[category] = [];
     notifyListeners();
   }
+  //=====================================================================
+  List<List<String>> _comments = [];
+  List<List<String>> get comments => _comments;
+
+
+  void resetListComment() {
+    _comments = [];
+    notifyListeners();
+  }
+
+
+  void addComment(int index, String newComment) {
+    if (index < _comments.length) {
+      _comments[index].insert(0, newComment);
+    } else {
+      // Thay vì truy cập trực tiếp, bạn nên kiểm tra và tạo danh sách nếu cần.
+      while (_comments.length <= index) {
+        _comments.add([]);
+      }
+      _comments[index].insert(0, newComment);
+    }
+    notifyListeners();
+  }
+
+
+  void addListComment() {
+    _comments.add([]);
+    notifyListeners();
+  }
 }
