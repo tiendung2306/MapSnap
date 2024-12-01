@@ -4,3 +4,4 @@ module.exports.tokenService = require('./token.service');
 module.exports.userService = require('./user.service');
 module.exports.pictureService = require('./picture.service');
 module.exports.verificationPinService = require('./verificationPin.service');
+module.exports.postService = require('./post.service');

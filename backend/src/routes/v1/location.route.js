@@ -18,6 +18,12 @@ router.post(
   locationController.getLocation
 );
 
+router.delete(
+  '/:locationId/delete-hard-location',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  locationController.deleteHardLocation
+);
+
 router
   .route('/:locationId')
   .get(locationController.getLocationByLocationId)
@@ -49,7 +55,7 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - address
  *               - cityId
  *               - categoryId
  *               - title
@@ -61,15 +67,27 @@ module.exports = router;
  *               - updatedByUser
  *               - isAutomaticAdded
  *             properties:
- *               name:
+ *               address:
  *                 type: string
- *                 description: Location Name
+ *                 description: Address of Location
+ *               country:
+ *                 type: string
+ *                 description: Belong to which country
+ *               district:
+ *                 type: string
+ *                 description: Belong to which district
+ *               homeNumber:
+ *                 type: number
+ *                 description: Belong to which homeNumber
  *               cityId:
  *                 type: string
  *                 description: Belong to which city
  *               categoryId:
  *                 type: string
  *                 description: Belong to which category
+ *               classify:
+ *                 type: string
+ *                 description: Which one is this location?
  *               title:
  *                 type: string
  *                 description: Title
@@ -92,9 +110,13 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this location add by user or BE
  *             example:
- *               name: "Emcuoiroia"
+ *               address: "24 Hoa Lu Phuong Le Dai Hanh"
+ *               country: "Viet Nam"
+ *               district: "Hoa Lu"
+ *               homeNumber: 24
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
+ *               classify: "Restaurant"
  *               title: "Ngayhomnayemcuoiroii"
  *               visitedTime: 2
  *               longitude: 3
@@ -145,9 +167,6 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: Location Name
  *               cityId:
  *                 type: string
  *                 description: Belong to which city
@@ -167,7 +186,6 @@ module.exports = router;
  *                 type: string
  *                 description: Using Search
  *             example:
- *               name: "Emcuoiroia"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
  *               status: "enabled"
@@ -245,9 +263,6 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: Location Name
  *               title:
  *                 type: string
  *                 description: Title
@@ -270,7 +285,6 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this location add by user or BE
  *             example:
- *               name: "Emcuoiroiaaa"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
  *               title: "Ngayhomnayemcuoiroii"

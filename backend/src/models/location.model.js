@@ -31,9 +31,20 @@ const locationSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'LocationCategory',
   },
-  name: {
+  address: {
     type: String,
-    required: true,
+  },
+  country: {
+    type: String,
+  },
+  district: {
+    type: String,
+  },
+  homeNumber: {
+    type: String,
+  },
+  classify: {
+    type: String,
   },
   title: {
     type: String,

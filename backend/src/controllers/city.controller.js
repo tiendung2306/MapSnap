@@ -44,10 +44,19 @@ const deleteCity = catchAsync(async (req, res) => {
   });
 });
 
+const deleteHardCity = catchAsync(async (req, res) => {
+  await cityService.deleteHardCity(req.params.cityId);
+  res.send({
+    code: httpStatus.OK,
+    message: Message.cityMsg.deleted,
+  });
+});
+
 module.exports = {
   createCity,
   getCities,
   getCityByCityId,
   updateCity,
   deleteCity,
+  deleteHardCity,
 };

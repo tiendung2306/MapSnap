@@ -42,10 +42,15 @@ const deleteCity = async (cityId) => {
   await updateCity({ cityId, requestBody: { status: 'disabled' } });
 };
 
+const deleteHardCity = async (cityId) => {
+  await City.findByIdAndDelete(cityId);
+};
+
 module.exports = {
   createCity,
   getCities,
   getCityByCityId,
   updateCity,
   deleteCity,
+  deleteHardCity,
 };

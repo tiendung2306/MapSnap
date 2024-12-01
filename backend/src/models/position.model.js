@@ -22,7 +22,22 @@ const positionSchema = new Schema({
     type: Number,
     required: true,
   },
-  positionName: {
+  address: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
+  cityId: {
+    type: String,
+  },
+  district: {
+    type: String,
+  },
+  homeNumber: {
+    type: Number,
+  },
+  classify: {
     type: String,
   },
   locationId: {

@@ -31,7 +31,7 @@ const createVisit = async (requestBody) => {
   return visit;
 };
 
-const getVisit = async (locationBody) => {
+const getVisit = async (visitBody) => {
   const {
     userId,
     isAutomaticAdded,
@@ -43,7 +43,7 @@ const getVisit = async (locationBody) => {
     from,
     to,
     searchText,
-  } = locationBody;
+  } = visitBody;
   const filter = { userId };
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
   if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
@@ -89,10 +89,15 @@ const deleteVisit = async (visitId) => {
   await updateVisit({ visitId, requestBody: { status: 'disabled' } });
 };
 
+const deleteHardVisit = async (visitId) => {
+  await Visit.findByIdAndDelete(visitId);
+};
+
 module.exports = {
   createVisit,
   getVisit,
   getVisitByVisitId,
   updateVisit,
   deleteVisit,
+  deleteHardVisit,
 };

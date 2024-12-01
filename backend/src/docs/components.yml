@@ -153,7 +153,7 @@ components:
         - userId
         - cityId
         - categoryId
-        - name
+        - address
         - visitedTime
         - longitude
         - latitude
@@ -162,7 +162,15 @@ components:
         - updatedByUser
         - isAutomaticAdded
       properties:
-        name:
+        address:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        homeNumber:
           type: string
         cityId:
           type: string
@@ -210,7 +218,15 @@ components:
           type: string
         userId:
           type: string
-        positionName:
+        address:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        district:
+          type: string
+        homeNumber:
           type: string
         id:
           type: string
@@ -262,6 +278,19 @@ components:
           type: string
         id:
           type: string
+    UserStatus:
+      type: object
+      required:
+        - userId
+        - timeStandStill
+        - instantSpeed
+      properties:
+        userId:
+          type: string
+        timeStandStill:
+          type: number
+        instantSpeed:
+          type: number
   responses:
     DuplicateEmail:
       description: Email already taken

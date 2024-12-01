@@ -4,7 +4,7 @@ const { toJSON } = require('./plugins');
 const { Schema } = mongoose;
 
 // Define the Picture schema
-const pictureSchema = new Schema({
+const userStatusSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -14,35 +14,36 @@ const pictureSchema = new Schema({
   locationId: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
-    required: true,
   },
   visitId: {
     type: Schema.Types.ObjectId,
     ref: 'Visit',
-    required: true,
   },
   journeyId: {
     type: Schema.Types.ObjectId,
     ref: 'Journey',
-    required: true,
   },
-  link: {
-    type: String,
-    required: true,
-  },
-  capturedAt: {
+  timeStandStill: {
     type: Number,
     required: true,
   },
-  public_id: {
-    type: String,
+  instantSpeed: {
+    type: Number,
+    required: true,
+  },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+  latitude: {
+    type: Number.EPSILON,
     required: true,
   },
 });
 
-pictureSchema.plugin(toJSON);
+userStatusSchema.plugin(toJSON);
 
-// Create the Picture model
-const Picture = mongoose.model('Picture', pictureSchema);
+// Create the User Status model
+const UserStatus = mongoose.model('UserStatus', userStatusSchema);
 
-module.exports = Picture;
+module.exports = UserStatus;
