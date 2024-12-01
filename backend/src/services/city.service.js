@@ -16,8 +16,8 @@ const createCity = async (cityBody) => {
 };
 
 const getCities = async (cityBody) => {
-  const { userId, searchText } = cityBody;
-  const filter = { userId };
+  const { userId, searchText, status = 'enabled' } = cityBody;
+  const filter = { userId, status };
   if (searchText) {
     filter.name = { $regex: searchText, $options: 'i' };
   }

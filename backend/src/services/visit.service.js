@@ -38,13 +38,14 @@ const getVisit = async (visitBody) => {
     updatedByUser,
     sortType = 'desc',
     sortField = 'createdAt',
+    status = 'enabled',
     journeyId,
     locationId,
     from,
     to,
     searchText,
   } = visitBody;
-  const filter = { userId };
+  const filter = { userId, status };
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
   if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
   if (journeyId) filter.journeyId = journeyId;
