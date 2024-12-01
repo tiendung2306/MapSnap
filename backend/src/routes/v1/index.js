@@ -9,6 +9,9 @@ const positionRoute = require('./position.route');
 const visitRoute = require('./visit.route');
 const cityRoute = require('./city.route');
 const locationCategoryRoute = require('./locationCategory.route');
+const postRoute = require('./post.route');
+const likesRoute = require('./likes.route');
+const commentsRoute = require('./comments.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -50,6 +53,18 @@ const defaultRoutes = [
     path: '/locationCategory',
     route: locationCategoryRoute,
   },
+  {
+    path: '/posts',
+    route: postRoute,
+  },
+  {
+    path: '/posts/likes',
+    route: likesRoute,
+  },
+  {
+    path: '/posts/comments',
+    route: commentsRoute,
+  }
 ];
 
 const devRoutes = [
