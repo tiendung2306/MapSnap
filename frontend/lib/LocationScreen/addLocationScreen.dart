@@ -23,7 +23,6 @@ class addLocationScreen extends StatefulWidget {
 
 class _addLocationScreenState extends State<addLocationScreen> {
 
-  late TextEditingController nameController = TextEditingController();
   late TextEditingController titleController = TextEditingController();
   late TextEditingController addressController = TextEditingController();
 
@@ -135,9 +134,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                buildTextField("Tên", nameController, "Nhập tên địa điểm", TextInputType.text),
-                                const SizedBox(height: 15),
-                                buildTextField("Tiêu đề", titleController, "Thêm tiêu đề", TextInputType.text),
+                                buildTextField("Tên", titleController, "Thêm tiêu đề", TextInputType.text),
                                 const SizedBox(height: 15),
                                 buildTextField("Địa chỉ", addressController, "Nhập địa chỉ", TextInputType.text),
                                 const SizedBox(height: 15),
@@ -229,8 +226,8 @@ class _addLocationScreenState extends State<addLocationScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
                               onTap:  () async {
-                                if (nameController.text.isEmpty || titleController.text.isEmpty ||
-                                    addressController.text.isEmpty || city == null || Category == null) {
+                                if (titleController.text.isEmpty || addressController.text.isEmpty ||
+                                    city == null || Category == null) {
                                   Notification = "Vui lòng nhập thông tin";
                                   colorNotification = Colors.red;
                                 } else {
@@ -241,7 +238,6 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                   DateTime now = DateTime.now();
                                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
                                   CreateLocation createLocation = CreateLocation(
-                                      name: nameController.text,
                                       cityId: city!.id,
                                       categoryId: Category!.id,
                                       title: titleController.text,

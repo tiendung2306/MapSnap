@@ -138,50 +138,6 @@ class _addCityScreenState extends State<addCityScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 buildTextField("Tên", nameController, "Nhập tên địa điểm", TextInputType.text),
-                                const SizedBox(height: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Trạng thái", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 5),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      width: screenWidth,
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton2 (
-                                          isExpanded: true,
-                                          dropdownStyleData:const DropdownStyleData(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                            ),
-                                            maxHeight: 200,
-                                          ),
-                                          value: statusController == 'enabled' ? null : statusController,
-                                          hint: Text(statusController),
-                                          iconStyleData: const IconStyleData(
-                                            icon: Icon(Icons.arrow_drop_down), // Biểu tượng mũi tên
-                                            iconSize: 30,
-                                          ),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              statusController = newValue!;
-                                            });
-                                          },
-                                          items: status.map<DropdownMenuItem<String>>((String status) {
-                                            return DropdownMenuItem<String>(
-                                              value: status,
-                                              child: Text(status),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ],
                             ),
                           ),
@@ -207,7 +163,7 @@ class _addCityScreenState extends State<addCityScreen> {
                                     name: nameController.text,
                                     visitedTime: 1,
                                     createdAt: vietnamTime.millisecondsSinceEpoch,
-                                    status: statusController,
+                                    status: "enabled",
                                     updatedByUser: true,
                                     isAutomaticAdded: false,
                                   );

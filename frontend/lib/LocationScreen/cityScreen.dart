@@ -99,7 +99,7 @@ class _cityScreenState extends State<cityScreen> {
                               TextButton(
                                 onPressed: () async {
                                   accountModel.removeCity(cities[i]);
-                                  await RemoveCity(accountModel.idUser);
+                                  await RemoveCity(cities[i].id);
                                   Navigator.pop(context); // Đóng hộp thoại
                                   // Làm mới giao diện
                                   setState(() {});

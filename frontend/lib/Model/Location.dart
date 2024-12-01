@@ -1,5 +1,4 @@
 class Location {
-  String name;
   String cityId;
   String categoryId;
   String title;
@@ -18,7 +17,6 @@ class Location {
   String district;
 
   Location({
-    required this.name,
     required this.cityId,
     required this.categoryId,
     required this.title ,
@@ -39,7 +37,6 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      name: json['name'],
       cityId: json['cityId'],
       categoryId: json['categoryId'],
       title: json['title'],
@@ -62,7 +59,6 @@ class Location {
 
 
 class CreateLocation {
-  String name;
   String cityId;
   String categoryId;
   String title;
@@ -79,7 +75,6 @@ class CreateLocation {
 
 
   CreateLocation({
-    required this.name,
     required this.cityId,
     required this.categoryId,
     required this.title ,
@@ -98,7 +93,6 @@ class CreateLocation {
 
   factory CreateLocation.fromJson(Map<String, dynamic> json) {
     return CreateLocation(
-      name: json['name'],
       cityId: json['cityId'],
       categoryId: json['categoryId'],
       title: json['title'],

@@ -10,7 +10,6 @@ import 'package:mapsnap_fe/Model/Location.dart';
 Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/create-location');
   final Map<String, dynamic> loadData = {
-    'name': createLocation.name,
     'cityId': createLocation.cityId,
     'categoryId': createLocation.categoryId,
     'title': createLocation.title,
@@ -118,7 +117,6 @@ Future<void> updateLocation(CreateLocation createLocation,String id) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/city/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
-    'name': createLocation.name,
     'cityId': createLocation.cityId,
     'categoryId': createLocation.categoryId,
     'title': createLocation.title,

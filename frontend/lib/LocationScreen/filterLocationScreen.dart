@@ -276,7 +276,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                             ...locations.map((location) {
                               return GestureDetector(
                                 onTap: () {
-                                  print("Location: ${location.name}");
+                                  print("Location: ${location.title}");
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(vertical: 10),
@@ -297,7 +297,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        location.name,
+                                        location.title,
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),

@@ -126,7 +126,7 @@ class _myLocationScreenState extends State<myLocationScreen> {
                                 TextButton(
                                   onPressed: () async {
                                     accountModel.removeLocationCategory(category[i]);
-                                    await RemoveLocationCategory(accountModel.idUser);
+                                    await RemoveLocationCategory(category[i].id);
                                     Navigator.pop(context); // Đóng hộp thoại
                                     // Làm mới giao diện
                                     setState(() {});

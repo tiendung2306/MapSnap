@@ -201,7 +201,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                         ...filteredLocations.map((location) {
                           return GestureDetector(
                             onTap: () {
-                              print("Location: ${location.name}");
+                              print("Location: ${location.title}");
                             },
                             onLongPress: () {
                               // Hiển thị hộp thoại xác nhận xóa
@@ -211,7 +211,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                   return AlertDialog(
                                     backgroundColor: Colors.white,
                                     title: const Text("Xác nhận xóa"),
-                                    content: Text("Bạn có chắc chắn muốn xóa '${location.name}' không?"),
+                                    content: Text("Bạn có chắc chắn muốn xóa '${location.title}' không?"),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
@@ -225,7 +225,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                       TextButton(
                                         onPressed: () async {
                                           accountModel.removeLocation2(widget.locationCategory,location);
-                                          await RemoveLocation(accountModel.idUser);
+                                          await RemoveLocation(location.id);
                                           Navigator.pop(context); // Đóng hộp thoại
                                           // Làm mới giao diện
                                           setState(() {});
@@ -260,7 +260,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    location.name,
+                                    location.title,
                                     style: TextStyle(
                                         fontSize: 25,
                                         fontWeight: FontWeight.bold),
