@@ -24,6 +24,12 @@ router.post(
   positionController.getNearestPosition
 );
 
+router.post(
+  '/:userId/get-location-from-position',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  positionController.getLocationFromPosition
+);
+
 router.route('/:positionId').delete(positionController.deletePosition);
 
 module.exports = router;
@@ -205,6 +211,75 @@ module.exports = router;
  *               latitude: 4
  *               from: 1731072000
  *               to: 1731073000
+ *     responses:
+ *       "200":
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: lấy chuỗi tọa độ thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/Position'
+ */
+
+/**
+ * @swagger
+ * /position/{userId}/get-location-from-position:
+ *   post:
+ *     summary: Get location information from given position
+ *     tags: [Positions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               longitude:
+ *                 type: number
+ *                 description: Which coordinate to query
+ *               latitude:
+ *                 type: number
+ *                 description: Which coordinate to query
+ *               country:
+ *                 type: string
+ *                 description: Belong to which category
+ *               cityId:
+ *                 type: string
+ *                 description: Belong to which city
+ *               district:
+ *                 type: string
+ *                 description: Belong to which district
+ *               address:
+ *                 type: string
+ *                 description: Address of position
+ *               homeNumber:
+ *                 type: number
+ *                 description: Home number
+ *             example:
+ *               longitude: 3
+ *               latitude: 4
+ *               country: "Viet Nam"
+ *               cỉtyId: 6742a4e6f7e0193cf08162ef
+ *               district: Hoa Lu
+ *               address: 24 Hoa Lu
+ *               homeNumber: 24
  *     responses:
  *       "200":
  *         description: Success

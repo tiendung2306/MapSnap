@@ -18,6 +18,12 @@ router.post(
   locationController.getLocation
 );
 
+router.delete(
+  '/:locationId/delete-hard-location',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  locationController.deleteHardLocation
+);
+
 router
   .route('/:locationId')
   .get(locationController.getLocationByLocationId)
@@ -49,7 +55,6 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
  *               - address
  *               - cityId
  *               - categoryId
@@ -62,9 +67,6 @@ module.exports = router;
  *               - updatedByUser
  *               - isAutomaticAdded
  *             properties:
- *               name:
- *                 type: string
- *                 description: Location Name
  *               address:
  *                 type: string
  *                 description: Address of Location
@@ -108,7 +110,6 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this location add by user or BE
  *             example:
- *               name: "Emcuoiroia"
  *               address: "24 Hoa Lu Phuong Le Dai Hanh"
  *               country: "Viet Nam"
  *               district: "Hoa Lu"
@@ -166,9 +167,6 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: Location Name
  *               cityId:
  *                 type: string
  *                 description: Belong to which city
@@ -188,7 +186,6 @@ module.exports = router;
  *                 type: string
  *                 description: Using Search
  *             example:
- *               name: "Emcuoiroia"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
  *               status: "enabled"
@@ -266,9 +263,6 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               name:
- *                 type: string
- *                 description: Location Name
  *               title:
  *                 type: string
  *                 description: Title
@@ -291,7 +285,6 @@ module.exports = router;
  *                 type: boolean
  *                 description: define if this location add by user or BE
  *             example:
- *               name: "Emcuoiroiaaa"
  *               cityId: 6742a4e6f7e0193cf08162ef
  *               categoryId: 6742a5cced0e2c4a0430085d
  *               title: "Ngayhomnayemcuoiroii"

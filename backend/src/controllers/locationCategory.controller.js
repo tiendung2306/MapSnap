@@ -44,10 +44,19 @@ const deleteLocationCategory = catchAsync(async (req, res) => {
   });
 });
 
+const deleteHardLocationCategory = catchAsync(async (req, res) => {
+  await locationCategoryService.deleteHardLocationCategory(req.params.locationCategoryId);
+  res.send({
+    code: httpStatus.OK,
+    message: Message.locationCategoryMsg.deleted,
+  });
+});
+
 module.exports = {
   createLocationCategory,
   getLocationCategory,
   getLocationCategoryById,
   updateLocationCategory,
   deleteLocationCategory,
+  deleteHardLocationCategory,
 };

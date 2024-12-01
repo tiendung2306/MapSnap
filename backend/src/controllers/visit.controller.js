@@ -45,10 +45,19 @@ const deleteVisit = catchAsync(async (req, res) => {
   });
 });
 
+const deleteHardVisit = catchAsync(async (req, res) => {
+  await visitService.deleteHardVisit(req.params.visitId);
+  res.send({
+    code: httpStatus.OK,
+    message: Message.visitMsg.deleted,
+  });
+});
+
 module.exports = {
   createVisit,
   getVisit,
   getVisitByVisitId,
   updateVisit,
   deleteVisit,
+  deleteHardVisit,
 };

@@ -44,10 +44,19 @@ const deleteLocation = catchAsync(async (req, res) => {
   });
 });
 
+const deleteHardLocation = catchAsync(async (req, res) => {
+  await locationService.deleteHardLocation(req.params.locationId);
+  res.send({
+    code: httpStatus.OK,
+    message: Message.locationMsg.deleted,
+  });
+});
+
 module.exports = {
   createLocation,
   getLocation,
   getLocationByLocationId,
   updateLocation,
   deleteLocation,
+  deleteHardLocation,
 };

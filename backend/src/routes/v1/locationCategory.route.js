@@ -18,6 +18,12 @@ router.post(
   locationCategoryController.getLocationCategory
 );
 
+router.delete(
+  '/:categoryId/delete-hard-category',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  locationCategoryController.deleteHardLocationCategory
+);
+
 router
   .route('/:locationCategoryId')
   .get(locationCategoryController.getLocationCategoryById)

@@ -18,6 +18,12 @@ router.post(
   cityController.getCities
 );
 
+router.delete(
+  '/:cityId/delete-hard-city',
+  // auth(permissionType.USER_RIGHT, permissionType.USER_ADMIN),
+  cityController.deleteHardCity
+);
+
 router
   .route('/:cityId')
   .get(cityController.getCityByCityId)

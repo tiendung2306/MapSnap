@@ -45,6 +45,14 @@ const deleteJourney = catchAsync(async (req, res) => {
   });
 });
 
+const deleteHardJourney = catchAsync(async (req, res) => {
+  await journeyService.deleteHardJourney(req.params.journeyId);
+  res.send({
+    code: httpStatus.OK,
+    message: Message.journeyMsg.deleted,
+  });
+});
+
 const getJourneysToday = catchAsync(async (req, res) => {
   const journeys = await journeyService.getJourneysToday(req.params.userId);
   res.send({ code: httpStatus.OK, message: Message.ok, results: journeys });
@@ -57,4 +65,5 @@ module.exports = {
   updateJourney,
   deleteJourney,
   getJourneysToday,
+  deleteHardJourney,
 };

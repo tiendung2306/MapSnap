@@ -153,7 +153,6 @@ components:
         - userId
         - cityId
         - categoryId
-        - name
         - address
         - visitedTime
         - longitude
@@ -163,8 +162,6 @@ components:
         - updatedByUser
         - isAutomaticAdded
       properties:
-        name:
-          type: string
         address:
           type: string
         country:
@@ -281,6 +278,19 @@ components:
           type: string
         id:
           type: string
+    UserStatus:
+      type: object
+      required:
+        - userId
+        - timeStandStill
+        - instantSpeed
+      properties:
+        userId:
+          type: string
+        timeStandStill:
+          type: number
+        instantSpeed:
+          type: number
   responses:
     DuplicateEmail:
       description: Email already taken
