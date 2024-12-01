@@ -118,7 +118,7 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
-  //=================================================================================
+  //=========================Quản lý location================================
   Map<City,List<Location>> _locationManager = {};
   Map<City,List<Location>> get locationManager => _locationManager;
 
@@ -135,6 +135,23 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
+
+  void removeLocation(City city, Location location) {
+    // Kiểm tra nếu hành trình đã tồn tại
+    if (_locationManager.containsKey(city)) {
+      _locationManager[city]?.remove(location);
+    }
+    if( _locationManager[city]!.isEmpty) {
+      _locationManager.remove(city);
+    }
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void removeCity(City city) {
+    _locationManager.remove(city);
+    notifyListeners();
+  }
+
   void resetCity() {
     _locationManager = {};
     notifyListeners();
@@ -145,6 +162,8 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+//===================
 
   Map<LocationCategory,List<Location>> _locationCategoryManager = {};
   Map<LocationCategory,List<Location>> get locationCategoryManager => _locationCategoryManager;
@@ -162,6 +181,23 @@ class AccountModel extends ChangeNotifier {
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
+  void removeLocation2(LocationCategory category, Location location) {
+    // Kiểm tra nếu hành trình đã tồn tại
+    if (_locationCategoryManager.containsKey(category)) {
+      _locationCategoryManager[category]?.remove(location);
+    }
+    if( _locationCategoryManager[category]!.isEmpty) {
+      _locationCategoryManager.remove(category);
+    }
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void removeLocationCategory(LocationCategory locationCategory) {
+    _locationCategoryManager.remove(locationCategory);
+    notifyListeners();
+  }
+
+
   void resetLocationCategory() {
     _locationCategoryManager = {};
     notifyListeners();
@@ -169,6 +205,35 @@ class AccountModel extends ChangeNotifier {
 
   void resetLocation2(LocationCategory category) {
     _locationCategoryManager[category] = [];
+    notifyListeners();
+  }
+  //=====================================================================
+  List<List<String>> _comments = [];
+  List<List<String>> get comments => _comments;
+
+
+  void resetListComment() {
+    _comments = [];
+    notifyListeners();
+  }
+
+
+  void addComment(int index, String newComment) {
+    if (index < _comments.length) {
+      _comments[index].insert(0, newComment);
+    } else {
+      // Thay vì truy cập trực tiếp, bạn nên kiểm tra và tạo danh sách nếu cần.
+      while (_comments.length <= index) {
+        _comments.add([]);
+      }
+      _comments[index].insert(0, newComment);
+    }
+    notifyListeners();
+  }
+
+
+  void addListComment() {
+    _comments.add([]);
     notifyListeners();
   }
 }

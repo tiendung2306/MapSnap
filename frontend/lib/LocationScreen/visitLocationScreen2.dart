@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Manager/CRUD_LocationCategory.dart';
 import 'package:mapsnap_fe/Manager/CURD_location.dart';
 import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
@@ -200,7 +201,45 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                         ...filteredLocations.map((location) {
                           return GestureDetector(
                             onTap: () {
-                              print("Location: ${location.name}");
+                              print("Location: ${location.title}");
+                            },
+                            onLongPress: () {
+                              // Hiển thị hộp thoại xác nhận xóa
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    title: const Text("Xác nhận xóa"),
+                                    content: Text("Bạn có chắc chắn muốn xóa '${location.title}' không?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context); // Đóng hộp thoại
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
+                                        ),
+                                        child: const Text("Hủy", style: TextStyle(color: Colors.black)),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          accountModel.removeLocation2(widget.locationCategory,location);
+                                          await RemoveLocation(location.id);
+                                          Navigator.pop(context); // Đóng hộp thoại
+                                          // Làm mới giao diện
+                                          setState(() {});
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
+
+                                        ),
+                                        child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(vertical: 10),
@@ -208,12 +247,20 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        spreadRadius: 3,
+                                        blurRadius: 6,
+                                        offset: Offset(5, 5)
+                                    )
+                                  ]
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    location.name,
+                                    location.title,
                                     style: TextStyle(
                                         fontSize: 25,
                                         fontWeight: FontWeight.bold),
@@ -231,6 +278,22 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded( // Để tự động xuống dòng nếu chữ dài
+                                        child: Text(
+                                          'Địa chỉ: ${location.address}' ,
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 2, // Giới hạn 2 dòng
+                                          overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
+                                        ),
                                       ),
                                     ],
                                   ),

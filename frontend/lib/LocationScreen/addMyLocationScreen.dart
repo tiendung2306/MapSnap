@@ -1,54 +1,57 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mapsnap_fe/Authentication/Onboarding_content_model.dart';
+import 'package:mapsnap_fe/LocationScreen/myLocationScreen.dart';
 import 'package:mapsnap_fe/Manager/CRUD_LocationCategory.dart';
-import 'package:mapsnap_fe/Manager/CURD_city.dart';
-import 'package:mapsnap_fe/Manager/CURD_location.dart';
-import 'package:mapsnap_fe/Model/City.dart';
-import 'package:mapsnap_fe/Model/City.dart';
-import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/LocationCategory.dart';
+import 'package:mapsnap_fe/PictureScreen/HomeScreen.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Model/User_2.dart';
+import '../Widget/AutoRefreshToken.dart';
 import '../Widget/accountModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mapsnap_fe/Widget/UpdateUser.dart';
+import '../main.dart';
 
 
 
-
-class addLocationScreen extends StatefulWidget {
-  const addLocationScreen({Key? key}) : super(key: key);
+class addMyLocationScreen extends StatefulWidget {
+  const addMyLocationScreen({Key? key}) : super(key: key);
 
   @override
-  State<addLocationScreen> createState() => _addLocationScreenState();
+  State<addMyLocationScreen> createState() => _addMyLocationScreenState();
 }
 
-class _addLocationScreenState extends State<addLocationScreen> {
+class _addMyLocationScreenState extends State<addMyLocationScreen> {
+  XFile? _image; // Biến lưu trữ ảnh đã chọn
 
+  late TextEditingController nameController = TextEditingController();
   late TextEditingController titleController = TextEditingController();
-  late TextEditingController addressController = TextEditingController();
-
-  LocationCategory? Category;
-  List<LocationCategory> locationCategory = [];
-
-  City? city;
-  List<City> listCity = [];
 
   String Notification = "";
   late Color colorNotification;
 
-  @override
+
+
+
+  //List giới tính
+  final List<String> status = [
+    'enabled',
+    'unenabled',
+  ];
+
+
+  String statusController = 'enabled';
+
   void initState() {
-    fetchCategory();
     super.initState();
   }
 
-
-  Future<void> fetchCategory() async {
-    var accountModel = Provider.of<AccountModel>(context, listen: false);
-    // Kiểm tra xem đã tải ảnh chưa
-    locationCategory = await getInfoLocationCategory(accountModel.idUser);
-    listCity = await getInfoCity(accountModel.idUser);
-    setState(() {});
-  }
 
 
   @override
@@ -56,7 +59,6 @@ class _addLocationScreenState extends State<addLocationScreen> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -90,7 +92,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                 FocusScope.of(context).unfocus();
                                 // Khoảng trễ cho dòng code tiếp theo
                                 await Future.delayed(Duration(milliseconds: 500));
-                                Navigator.pop(context);
+                                Navigator.pop(context,true);
                               },
                               child: Container(
                                 width: screenWidth / 8,
@@ -132,89 +134,10 @@ class _addLocationScreenState extends State<addLocationScreen> {
                             EdgeInsets.symmetric(horizontal: screenWidth / 10),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                buildTextField("Tên", titleController, "Thêm tiêu đề", TextInputType.text),
+                                buildTextField("Tên", nameController, "Nhập tên địa điểm", TextInputType.text),
                                 const SizedBox(height: 15),
-                                buildTextField("Địa chỉ", addressController, "Nhập địa chỉ", TextInputType.text),
-                                const SizedBox(height: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Loại địa điểm", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 5),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,  // Màu nền bên trong Container
-                                        border: Border.all(
-                                          color: Colors.black,  // Màu viền đen
-                                          width: 1,  // Độ rộng viền
-                                        ),
-                                        borderRadius: BorderRadius.circular(5),  // Bo góc nếu bạn muốn viền bo tròn
-                                      ),
-                                      child: DropdownButton2<LocationCategory>(
-                                        dropdownStyleData: const DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                          ),
-                                          maxHeight: 200,
-                                        ),
-                                        value: Category, // Lưu đối tượng LocationCategory
-                                        hint: Text("Chọn địa điểm"),
-                                        items: locationCategory.map((category) {
-                                          return DropdownMenuItem<LocationCategory>(
-                                            value: category, // Đặt đối tượng LocationCategory vào value
-                                            child: Text(category.name), // Hiển thị tên của loại địa điểm
-                                          );
-                                        }).toList(),
-                                        onChanged: (LocationCategory? value) {
-                                          setState(() {
-                                            Category = value; // Lưu đối tượng được chọn vào Category
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Thành Phố", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 5),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,  // Màu nền bên trong Container
-                                        border: Border.all(
-                                          color: Colors.black,  // Màu viền đen
-                                          width: 1,  // Độ rộng viền
-                                        ),
-                                        borderRadius: BorderRadius.circular(5),  // Bo góc nếu bạn muốn viền bo tròn
-                                      ),
-                                      child: DropdownButton2<City>(
-                                        dropdownStyleData: const DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                          ),
-                                          maxHeight: 200,
-                                        ),
-                                        value: city,
-                                        hint: Text("Chọn tỉnh"),
-                                        items: listCity.map((cities) {
-                                          return DropdownMenuItem<City>(
-                                            value: cities,
-                                            child: Text(cities.name),
-                                          );
-                                        }).toList(),
-                                        onChanged: (City? value) {
-                                          setState(() {
-                                            city = value;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                buildTextField("Tiêu đề", titleController, "Thêm tiêu đề", TextInputType.text),
                               ],
                             ),
                           ),
@@ -226,8 +149,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
                               onTap:  () async {
-                                if (titleController.text.isEmpty || addressController.text.isEmpty ||
-                                    city == null || Category == null) {
+                                if (nameController.text.isEmpty || titleController.text.isEmpty ) {
                                   Notification = "Vui lòng nhập thông tin";
                                   colorNotification = Colors.red;
                                 } else {
@@ -236,23 +158,14 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                   Notification = "Lưu thông tin thành công";
                                   colorNotification = Colors.blue;
                                   DateTime now = DateTime.now();
-                                  DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
-                                  CreateLocation createLocation = CreateLocation(
-                                      cityId: city!.id,
-                                      categoryId: Category!.id,
+                                  DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Múi giờ Việt Nam
+                                  CreateLocationCategory createLocationCategory = CreateLocationCategory(
+                                      name: nameController.text,
                                       title: titleController.text,
-                                      visitedTime: 1,
-                                      longitude: 5,
-                                      latitude: 6,
                                       createdAt: vietnamTime.millisecondsSinceEpoch,
                                       status: "enabled",
-                                      updatedByUser: true,
-                                      isAutomaticAdded: false,
-                                      address: addressController.text,
-                                      country: "Việt Nam",
-                                      district: "Siuuuuuuuuuu"
                                   );
-                                  await upLoadLocation(createLocation, accountModel.idUser);
+                                  await upLoadLocationCategory(createLocationCategory, accountModel.idUser);
                                 }
 
                                 showDialog(

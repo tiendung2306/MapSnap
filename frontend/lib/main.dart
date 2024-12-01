@@ -6,6 +6,7 @@ import 'package:mapsnap_fe/Authentication/VerifyEmail.dart';
 import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
 import 'package:mapsnap_fe/InApp/Start.dart';
+import 'package:mapsnap_fe/NewFeed/newFeedScreen.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
@@ -50,7 +51,8 @@ class MyApp extends StatelessWidget {
         '/map': (context) => MapScreen(),
         '/home': (context) => HomePage(),
         '/camera': (context) => const MainScreenCamera(),
-        '/favorites': (context) => const FavoritesScreen(),
+        // '/favorites': (context) => const FavoritesScreen(),
+        '/favorites': (context) => newFeedScreen(),
         '/account': (context) => const personalPageScreen(),
       },
       debugShowCheckedModeBanner: false,

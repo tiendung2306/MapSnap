@@ -1,106 +1,11 @@
-//
-// import 'package:flutter/material.dart';
-// import 'package:mapsnap_fe/LocationScreen/visitLocationScreen.dart';
-// import 'package:provider/provider.dart';
-//
-// import '../Widget/accountModel.dart';
-//
-//
-//
-//
-// class cityScreen extends StatefulWidget {
-//   const cityScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   State<cityScreen> createState() => _cityScreenState();
-// }
-//
-// class _cityScreenState extends State<cityScreen> {
-//   int k = 1;
-//   int son = 1;
-//   @override
-//   Widget build(BuildContext context) {
-//     var accountModel = Provider.of<AccountModel>(context, listen: true);
-//     final locationManager = accountModel.locationManager;
-//     final List<String> cityList = locationManager.keys.toList();
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: SingleChildScrollView(
-//           padding: const EdgeInsets.all(15),
-//           child: Column(
-//               children: [
-//                 for(int i = 0 ;i < locationManager.length; i++) ...[
-//                   GestureDetector(
-//                     onTap: () {
-//                       print("Siuuuuuuuuuuuuuu");
-//                       Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) => visitLocationScreen(city: cityList[i]),
-//                           )
-//                       );
-//                     },
-//                     child: Container(
-//                       height: 140,
-//                       decoration: BoxDecoration(
-//                         color: Colors.grey,
-//                         borderRadius: BorderRadius.circular(20),
-//                         boxShadow: [
-//                           BoxShadow(
-//                               color: Colors.black.withOpacity(0.3),
-//                               spreadRadius: 3,
-//                               blurRadius: 6,
-//                               offset: Offset(5, 5)
-//                           )
-//                         ],
-//                         image: DecorationImage(
-//                           image: AssetImage('assets/Image/${(i % 5)+10}.jpg'),
-//                           fit: BoxFit.cover, // Hoặc BoxFit.none nếu bạn muốn giữ nguyên kích thước ảnh
-//                         ),
-//                       ),
-//
-//                       child: Center(child: Text(cityList[i], style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Color(
-//                           0xFFFFFFFF)),)),
-//
-//                     ),
-//                   ),
-//                   SizedBox(height: 15,),
-//
-//                 ],
-//                 SizedBox(height: 10,),
-//
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     k++;
-//                     accountModel.addLocation(
-//                       "TP HCM${k}",
-//                       {
-//                         'Tên': 'THPT xx${k}',
-//                         'Số lần đến': '${k}',
-//                         'Lần đến gần nhất': '23-11-2024'
-//                       },
-//                     );
-//                   },
-//                   child: const Text("Thêm ảnh vào địa điểm hiện tại"),
-//                 ),
-//
-//               ]
-//           )
-//
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/LocationScreen/addCityScreen.dart';
 import 'package:mapsnap_fe/LocationScreen/visitLocationScreen.dart';
 import 'package:mapsnap_fe/Manager/CURD_city.dart';
 import 'package:mapsnap_fe/Model/City.dart';
 import 'package:provider/provider.dart';
 
 import '../Widget/accountModel.dart';
-
-
 
 
 class cityScreen extends StatefulWidget {
@@ -135,11 +40,26 @@ class _cityScreenState extends State<cityScreen> {
     }
   }
 
+  _navigateToAddCityScreen() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const addCityScreen()),
+    );
+
+    if (result == true) {
+      // Gọi lại fetchCategory để làm mới danh sách
+      fetchCityByUserId();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
     var accountModel = Provider.of<AccountModel>(context, listen: true);
     final city = accountModel.locationManager;
     final List<City> cities = city.keys.toList();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -155,6 +75,44 @@ class _cityScreenState extends State<cityScreen> {
                           MaterialPageRoute(
                             builder: (context) => visitLocationScreen(city: cities[i]),
                           )
+                      );
+                    },
+                    onLongPress: () {
+                      // Hiển thị hộp thoại xác nhận xóa
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: const Text("Xác nhận xóa"),
+                            content: Text("Bạn có chắc chắn muốn xóa thành phố '${cities[i].name}' không?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // Đóng hộp thoại
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
+                                ),
+                                child: const Text("Hủy", style: TextStyle(color: Colors.black)),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  accountModel.removeCity(cities[i]);
+                                  await RemoveCity(cities[i].id);
+                                  Navigator.pop(context); // Đóng hộp thoại
+                                  // Làm mới giao diện
+                                  setState(() {});
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
+
+                                ),
+                                child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                     child: Container(
@@ -182,11 +140,22 @@ class _cityScreenState extends State<cityScreen> {
                     ),
                   ),
                   SizedBox(height: 15,),
-
                 ],
-                SizedBox(height: 10,),
+                SizedBox(height: 20,),
+                GestureDetector(
+                    onTap: _navigateToAddCityScreen,
+                    child:Container(
+                      height: 70,
+                      width: screenWidth * 2 / 3 - 50 ,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
 
-
+                      child: Center(child: Text("Thêm thành phố", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Color(
+                          0xFFFFFFFF)),)),
+                    )
+                ),
               ]
           )
 

@@ -33,8 +33,9 @@ const getLocation = async (locationBody) => {
     sortType = 'desc',
     sortField = 'createdAt',
     searchText,
+    status = 'enabled',
   } = locationBody;
-  const filter = { userId };
+  const filter = { userId, status };
   if (cityId) filter.cityId = cityId;
   if (categoryId) filter.categoryId = categoryId;
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;

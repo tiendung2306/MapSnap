@@ -1,5 +1,4 @@
 class Location {
-  String name;
   String cityId;
   String categoryId;
   String title;
@@ -13,9 +12,11 @@ class Location {
   List<dynamic> pictures;
   String userId;
   String id;
+  String address;
+  String country;
+  String district;
 
   Location({
-    required this.name,
     required this.cityId,
     required this.categoryId,
     required this.title ,
@@ -29,11 +30,13 @@ class Location {
     required this.pictures,
     required this.userId,
     required this.id,
+    required this.address,
+    required this.country,
+    required this.district,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      name: json['name'],
       cityId: json['cityId'],
       categoryId: json['categoryId'],
       title: json['title'],
@@ -47,13 +50,15 @@ class Location {
       pictures: json['pictures'],
       userId: json['userId'],
       id: json['id'],
+      address: json['address'],
+      country: json['country'],
+      district: json['district'],
     );
   }
 }
 
 
 class CreateLocation {
-  String name;
   String cityId;
   String categoryId;
   String title;
@@ -64,9 +69,12 @@ class CreateLocation {
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
+  String address;
+  String country;
+  String district;
+
 
   CreateLocation({
-    required this.name,
     required this.cityId,
     required this.categoryId,
     required this.title ,
@@ -77,12 +85,14 @@ class CreateLocation {
     required this.status,
     required this.updatedByUser,
     required this.isAutomaticAdded,
+    required this.address,
+    required this.country,
+    required this.district,
 
   });
 
   factory CreateLocation.fromJson(Map<String, dynamic> json) {
     return CreateLocation(
-      name: json['name'],
       cityId: json['cityId'],
       categoryId: json['categoryId'],
       title: json['title'],
@@ -93,6 +103,9 @@ class CreateLocation {
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],
+      address: json['address'],
+      country: json['country'],
+      district: json['district'],
     );
   }
 }
