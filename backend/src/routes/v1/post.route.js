@@ -169,7 +169,6 @@ module.exports = router;
  *         application/json:
  *           schema:
  *             example:
- *               _id: 5f8a5e7f575d7a2b9c0d47e5
  *               userId: 5f8a5e7f575d7a2b9c0d47e5
  *               content: "Thích cậu từ Xuân Hạ\nThích tới tận Thu Đông.\nCó một câu hỏi nhỏ\nCậu có thích tớ không?"
  *               media: [{"type": "image", "url": "https://scontent.fhan2-5.fna.fbcdn.net/v/t39.30808-6/468719634_3825302851117569_5554540526716892179_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeEKDL0hsk_frBsEg8ytor-66fZsNtesiKfp9mw216yIp8icPZb4Dfzh9a6OWjx85IO-eRSVGK6UBhSmfzRbCdFo&_nc_ohc=PBpyvPfDiBkQ7kNvgEGx4IH&_nc_zt=23&_nc_ht=scontent.fhan2-5.fna&_nc_gid=AQerMs57l17sW1EzaJ6X0uJ&oh=00_AYCb8OHhDz_hUabOQ8-E0LDQLxmz4DEH2-y1XOEDoCS3Lg&oe=6751077A"}]
@@ -352,7 +351,6 @@ module.exports = router;
  *         application/json:
  *           schema:
   *               example:
- *                 _id: 5f8a5e7f575d7a2b9c0d47e5
  *                 userId: 5f8a5e7f575d7a2b9c0d47e5
  *                 content: "Thích cậu từ Xuân Hạ\nThích tới tận Thu Đông.\nCó một câu hỏi nhỏ\nCậu có thích tớ không?"
  *                 media: [{"type": "image", "url": "https://scontent.fhan2-5.fna.fbcdn.net/v/t39.30808-6/468719634_3825302851117569_5554540526716892179_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_eui2=AeEKDL0hsk_frBsEg8ytor-66fZsNtesiKfp9mw216yIp8icPZb4Dfzh9a6OWjx85IO-eRSVGK6UBhSmfzRbCdFo&_nc_ohc=PBpyvPfDiBkQ7kNvgEGx4IH&_nc_zt=23&_nc_ht=scontent.fhan2-5.fna&_nc_gid=AQerMs57l17sW1EzaJ6X0uJ&oh=00_AYCb8OHhDz_hUabOQ8-E0LDQLxmz4DEH2-y1XOEDoCS3Lg&oe=6751077A"}]
