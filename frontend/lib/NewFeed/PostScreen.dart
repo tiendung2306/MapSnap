@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mapsnap_fe/Manager/CURD_posts.dart';
+import 'package:mapsnap_fe/Model/Posts.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
 
 
 class PostScreen extends StatefulWidget {
-  final bool result;
-  PostScreen(this.result, {Key? key}) : super(key: key);
+  PostScreen({Key? key}) : super(key: key);
 
   @override
   _PostScreenState createState() => _PostScreenState();
@@ -13,6 +15,10 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   final TextEditingController postContentController = TextEditingController();
+  final ImagePicker picker = ImagePicker();
+  List<XFile>? images = [];
+  List<Map<String, String>> listMedia = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +29,13 @@ class _PostScreenState extends State<PostScreen> {
         title: Text("Bài viến mới"),
         actions: [
           IconButton(
-            onPressed: () {
-              print("Thêm ảnh");
+            onPressed: () async {
+              final pickedFiles = await picker.pickMultiImage();
+              if (pickedFiles != null) {
+                setState(() {
+                  images = pickedFiles; // Lưu danh sách ảnh được chọn
+                });
+              }
             },
             icon: Icon(Icons.photo, size: 30,),
 
@@ -45,12 +56,28 @@ class _PostScreenState extends State<PostScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
                 String content = postContentController.text.trim();
                 if (content.isNotEmpty) {
                   // Thêm bài viết mới vào danh sách
                   var accountModel = Provider.of<AccountModel>(context, listen: false);
-                  Navigator.pop(context, true); // Quay lại màn hình chính
+                  for(int i = 0; i < images!.length ; i++) {
+                    listMedia.add({"type": "image",
+                      "url": images![i].path});
+                  }
+                  DateTime now = DateTime.now();
+                  DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
+                  CreatePost createPost = CreatePost(
+                      userId: accountModel.idUser,
+                      content: postContentController.text,
+                      media: listMedia,
+                      createdAt: vietnamTime.millisecondsSinceEpoch,
+                      updatedAt: vietnamTime.millisecondsSinceEpoch,
+                      commentsCount: 0,
+                      likesCount: 0,
+                  );
+                  Posts posts = (await upLoadPost(createPost))!;
+                  Navigator.pop(context, posts ); // Quay lại màn hình chính
                 } else {
                   // Hiển thị cảnh báo nếu nội dung trống
                   ScaffoldMessenger.of(context).showSnackBar(

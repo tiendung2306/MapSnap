@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/LocationCategory.dart';
 import '../Model/Picture.dart';
+import '../Model/Posts.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
 
@@ -211,12 +212,10 @@ class AccountModel extends ChangeNotifier {
   List<List<String>> _comments = [];
   List<List<String>> get comments => _comments;
 
-
   void resetListComment() {
     _comments = [];
     notifyListeners();
   }
-
 
   void addComment(int index, String newComment) {
     if (index < _comments.length) {
@@ -231,9 +230,9 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void addListComment() {
-    _comments.add([]);
+    _comments.insert(0,[]);
     notifyListeners();
   }
+
 }

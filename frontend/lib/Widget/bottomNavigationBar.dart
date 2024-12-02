@@ -22,7 +22,7 @@ class CustomBottomNav extends StatelessWidget {
           buildNavItem(context, Icons.home, 0, '/home'),
           buildNavItem(context, Icons.map_outlined, 1, '/map'),
           buildNavItem(context, Icons.photo_camera, 2, '/camera', size: 65),
-          buildNavItem(context, Icons.favorite_border, 3, '/favorites'),
+          buildNavItem(context, Icons.newspaper, 3, '/feed'),
           buildNavItem(context, Icons.account_circle, 4, '/account'),
         ],
       ),
@@ -44,9 +44,9 @@ class CustomBottomNav extends StatelessWidget {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          if (index == 4) {
+          if (index == 0) {
             // Điều hướng đến Home mà giữ lại trong stack
-            Navigator.pushNamedAndRemoveUntil(context, '/account', (route) => false);
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
           } else if(index == 2) {
             Navigator.push(
               context,
