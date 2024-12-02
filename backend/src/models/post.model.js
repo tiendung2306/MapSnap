@@ -25,6 +25,11 @@ const postSchema = new Schema({
         required: true,
     },
     media: [mediaSchema],
+    journeyId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Journey',
+        required: true,
+    },
     createdAt: {
         type: Number,
         required: true,
