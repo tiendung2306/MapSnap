@@ -257,6 +257,80 @@ components:
           type: string
         id:
           type: string
+    Post:
+      type: object
+      required:
+        - _id
+        - userId
+        - content
+        - media
+        - journeyId
+        - createdAt
+        - updatedAt
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        content:
+          type: string
+        media:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+        journeyId:
+          type: string
+        createdAt:
+          type: number
+        updatedAt:
+          type: number
+        commentsCount:
+          type: number
+        likesCount:
+          type: number
+    Likes:
+      type: object
+      required:
+        - postId
+        - userId
+        - createdAt
+        - _id
+      properties:
+        postId:
+          type: string
+        userId:
+          type: string
+        createdAt:
+          type: number
+        _id:
+          type: string
+    Comment:
+      type: object
+      required:
+        - _id
+        - userId
+        - postId
+        - content
+        - createdAt
+        - updatedAt
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        postId:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: number
+        updatedAt:
+          type: number
     LocationCategory:
       type: object
       required:
