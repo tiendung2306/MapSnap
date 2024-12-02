@@ -48,6 +48,11 @@ dependencies:
   geolocator: ^13.0.1
   provider: ^6.1.2
   flutter_secure_storage: ^9.2.2
+  flutter_map: ^7.0.2
+  google_maps_flutter: ^2.10.0
+  flutter_background_service: ^5.0.10
+  geocoding: ^3.0.0
+  flutter_google_maps_webservices: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +79,7 @@ flutter:
   assets:
     - assets/Login/
     - assets/Image/
-
+    - assets/Common/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

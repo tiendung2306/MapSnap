@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'Onboarding_content_model.dart';
 import 'SignUp.dart';
@@ -22,6 +23,12 @@ class _OnboardingState extends State<Onboarding> {
     _controller.dispose();
     super.dispose();
   }
+
+  void preNavigate() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFirstOpen', false);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +131,7 @@ class _OnboardingState extends State<Onboarding> {
                     ),
                     onPressed: () {
                       if (currentIndex == contents.length - 1) {
+                        preNavigate();
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

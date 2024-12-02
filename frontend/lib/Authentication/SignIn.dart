@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/InApp/HomePage.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import '../Model/Token_2.dart';
@@ -7,12 +8,11 @@ import '../Widget/UpdateUser.dart';
 import '../Widget/accountModel.dart';
 import 'ForgotPassword.dart';
 import 'SignUp.dart';
-import 'Finish.dart';
 import 'package:mapsnap_fe/Widget/passwordForm.dart';
 import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
-import 'Service.dart';
-import 'package:mapsnap_fe/main.dart';
+import '../Services/AuthService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart'; // Import file model
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -59,21 +59,22 @@ class _SignInState extends State<SignIn> {
 
     if(mess == 'Login success'){
       final data = response['data'];
-      // final user = User.fromJson(data);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
 
       var accountModel = Provider.of<AccountModel>(context, listen: false);
-      Token token = await Login(_emailController.text, _passwordController.text);
+      Token token = Token.fromJson(data);
       accountModel.setToken(token);
       User? user = await fetchData(token.idUser,token.token_access);
       accountModel.setUser(user!);
 
-      // await _authService.saveUser(user);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => personalPageScreen()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     }
-
+  
     else if(mess == 'Login failed'){
       final data = response['data'];
 
@@ -125,136 +126,139 @@ class _SignInState extends State<SignIn> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20.0),
-                child: Image(
-                  image: AssetImage("assets/Login/SignIn.png"),
-                  height: 300,
-                  fit: BoxFit.cover,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 70,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: Image(
+                    image: AssetImage("assets/Login/SignIn.png"),
+                    height: 300,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              if(isComplete != 'true')
-                Container(
-                  height: 40,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      errorMess,
-                      style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 20
+                if(isComplete != 'true')
+                  Container(
+                    height: 40,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        errorMess,
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20
+                        ),
                       ),
                     ),
-                  ),
-                )
-              else
-                SizedBox(height: 40),
+                  )
+                else
+                  SizedBox(height: 40),
 
-              // Các ô nhập liệu
-              normalForm(label:'Email', controller: _emailController,),
-              if(isEmailInvalid)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Please fill this infomation!',
-                    style: TextStyle(
-                        color: Colors.red
-                    ),
-                  ),
-                )
-              else
-                SizedBox(height: 12),
-              passwordForm(label:'Password', controller: _passwordController,),
-              if(isPasswordInvalid)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Please fill this infomation!',
-                    style: TextStyle(
-                        color: Colors.red
-                    ),
-                  ),
-                )
-              else
-                SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ForgotPassword()),
-                      );
-                    },
+                // Các ô nhập liệu
+                normalForm(label:'Email', controller: _emailController,),
+                if(isEmailInvalid)
+                  Align(
+                    alignment: Alignment.centerRight,
                     child: Text(
-                      "Forgot password?",
-                      style: TextStyle(color: Colors.blue),
+                      'Please fill this infomation!',
+                      style: TextStyle(
+                          color: Colors.red
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-
-              // Nút Register
-              ElevatedButton(
-                onPressed: () {
-                  login();
-                },
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),
-                    backgroundColor: Colors.lightBlueAccent
+                  )
+                else
+                  SizedBox(height: 12),
+                passwordForm(label:'Password', controller: _passwordController,),
+                if(isPasswordInvalid)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'Please fill this infomation!',
+                      style: TextStyle(
+                          color: Colors.red
+                      ),
+                    ),
+                  )
+                else
+                  SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ForgotPassword()),
+                        );
+                      },
+                      child: Text(
+                        "Forgot password?",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text('Sign In'),
-              ),
-              SizedBox(height: 20),
+                SizedBox(height: 20),
 
-              // Hoặc Login với
-              Row(
-                children: [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text('Or Login with'),
+                // Nút Register
+                ElevatedButton(
+                  onPressed: () {
+                    login();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 50),
+                      backgroundColor: Colors.lightBlueAccent
                   ),
-                  Expanded(child: Divider()),
-                ],
-              ),
-              SizedBox(height: 20),
+                  child: Text('Sign In'),
+                ),
+                SizedBox(height: 20),
 
-              // Nút đăng ký với Google
-              outline_IconButton(label: "Google", color: Colors.red,),
-              SizedBox(height: 12),
-
-              // Nút đăng ký với Facebook
-              outline_IconButton(label: "Facebook", color: Colors.lightBlueAccent,),
-              SizedBox(height: 20),
-
-              // Đăng nhập nếu đã có tài khoản
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Doesnt have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUp()),
-                      );
-                    },
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(color: Colors.blue),
+                // Hoặc Login với
+                Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text('Or Login with'),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                SizedBox(height: 20),
+
+                // Nút đăng ký với Google
+                outline_IconButton(label: "Google", color: Colors.red,),
+                SizedBox(height: 12),
+
+                // Nút đăng ký với Facebook
+                outline_IconButton(label: "Facebook", color: Colors.lightBlueAccent,),
+                SizedBox(height: 20),
+
+                // Đăng nhập nếu đã có tài khoản
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Doesnt have an account? "),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUp()),
+                        );
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -262,22 +266,4 @@ class _SignInState extends State<SignIn> {
   }
 }
 
-Future<Token> Login(String email,String password) async {
-  final response = await http.post(
-    Uri.parse('http://10.0.2.2:3000/v1/auth/login'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'email': email,
-      'password': password,
-    }),
-  );
-  if (response.statusCode == 200) {
-    print("Đăng nhập thành công");
-    var data = jsonDecode(response.body);
-    return Token.fromJson(data);
-  } else {
-    throw Exception(response.statusCode);
-  }
-}
+
