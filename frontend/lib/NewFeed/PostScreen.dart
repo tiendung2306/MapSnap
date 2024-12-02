@@ -75,6 +75,7 @@ class _PostScreenState extends State<PostScreen> {
                       updatedAt: vietnamTime.millisecondsSinceEpoch,
                       commentsCount: 0,
                       likesCount: 0,
+                      journeyId: "5f8a5e7f575d7a2b9c0d47e5",
                   );
                   Posts posts = (await upLoadPost(createPost))!;
                   Navigator.pop(context, posts ); // Quay lại màn hình chính
