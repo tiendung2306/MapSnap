@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Manager/CURD_posts.dart';
 import 'package:mapsnap_fe/Manager/Like.dart';
+import 'package:mapsnap_fe/Model/Comment.dart';
 import 'package:mapsnap_fe/Model/Like.dart';
 import 'package:mapsnap_fe/Model/Posts.dart';
 import 'package:mapsnap_fe/Model/User_2.dart';
@@ -25,8 +26,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
   late Future<List<Posts>> listPost;
   late List<User?> user; // Cho phép null
   late List<List<Like?>> like;
-  Posts? post;
-
+  late List<List<Comment?>> comments;
 
   final TextEditingController commentController = TextEditingController();
 
@@ -44,14 +44,14 @@ class _newFeedScreenState extends State<newFeedScreen> {
   void initState() {
     super.initState();
     listPost = resetData().then((posts) async {
-      user = List<User?>.generate(posts.length, (index) => null); // Danh sách có thể thay đổi
+      user = List<User?>.generate(posts.length, (index) => null);
       like = List<List<Like?>>.generate(posts.length, (index) => []);
+      comments = List<List<Comment?>>.generate(posts.length, (index) => []);
       var accountModel = Provider.of<AccountModel>(context, listen: false);
 
       accountModel.resetListComment();
       for (int i = 0; i < posts.length; i++) { // Tạo dữ liệu giả
         accountModel.addListComment();
-        isLike.insert(0, false);
       }
 
       // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
@@ -60,6 +60,10 @@ class _newFeedScreenState extends State<newFeedScreen> {
         Posts post = entry.value;
         user[index] = await getUser(post.userId, accountModel.token_access);
         like[index]= await getLikePost(post.id);
+
+        isLike.add(like[index].any((like) => like?.userId.toString() == accountModel.idUser.toString()));
+        print(isLike);
+
       }));
       return posts;
     });
@@ -80,9 +84,12 @@ class _newFeedScreenState extends State<newFeedScreen> {
   }
 
   IconData getCategoryIcon(int index) {
-    if(!isLike[index]) {
+    print("isLike[$index]: ${isLike[index]}"); // Debug giá trị
+    if (!isLike[index]) {
+      print("Returning thumb_up_alt_outlined");
       return Icons.thumb_up_alt_outlined;
     } else {
+      print("Returning thumb_up_alt_rounded");
       return Icons.thumb_up_alt_rounded;
     }
   }
@@ -102,6 +109,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -110,7 +118,11 @@ class _newFeedScreenState extends State<newFeedScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                  child: CircularProgressIndicator()
+                  child:AnimatedRotation(
+                    turns: 1, // xoay một vòng
+                    duration: Duration(seconds: 1),
+                    child: CircularProgressIndicator(),
+                ),
               );
             }
             if (snapshot.hasError) {
@@ -413,10 +425,27 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                         child: Row(
                                           children: [
                                             GestureDetector(
-                                              onTap: () {
+                                              onTap: () async {
+                                                Like? like;
+                                                if(!isLike[index]) {
+                                                  addLike ADDLIKE = addLike(
+                                                    postId: post.id,
+                                                    userId: accountModel.idUser,
+                                                    createdAt: 463542343,
+                                                  );
+                                                  like = await AddLike(ADDLIKE);
+                                                } else {
+                                                  await RemoveLike(postLike[0]!.id);
+                                                }
                                                 setState(() {
+                                                  if(!isLike[index]) {
+                                                    postLike.insert(0,like);
+                                                  } else {
+                                                    postLike.removeAt(0);
+                                                  }
                                                   isLike[index] = !isLike[index];
                                                 });
+
                                               },
                                               child: Container(
                                                 height: 30,

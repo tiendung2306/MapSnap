@@ -7,10 +7,10 @@ import 'package:mapsnap_fe/Model/Posts.dart';
 
 
 Future<Like?> AddLike(addLike addLike) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/likes');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/likes');
   final Map<String, dynamic> loadData = {
     'postId': addLike.postId,
-    'userId': addLike.postId,
+    'userId': addLike.userId,
     'createdAt': addLike.createdAt,
 
   };
@@ -42,7 +42,7 @@ Future<Like?> AddLike(addLike addLike) async {
 
 
 Future<List<Like>> getLikePost(String postId) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/likes/$postId');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/likes/$postId');
 
   try {
     final response = await http.get(
@@ -69,7 +69,7 @@ Future<List<Like>> getLikePost(String postId) async {
 
 
 Future<void> RemoveLike(String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/like/$id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/like/$id');
 
   final response = await http.delete(
     url,
