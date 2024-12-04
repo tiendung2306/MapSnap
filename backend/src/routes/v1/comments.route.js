@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /comments:
+ * /posts/comments:
  *   post:
  *     summary: Create a comment
  *     tags: [Comments]
@@ -60,7 +60,7 @@ router.
 
 /**
  * @swagger
- * /comments/{commentId}:
+ * /posts/comments/{commentId}:
  *   get:
  *     summary: Get a comment by ID
  *     tags: [Comments]
@@ -157,7 +157,7 @@ router.
 
 /**
  * @swagger
- * /comments/post/{postId}:
+ * /posts/comments/post/{postId}:
  *   get:
  *     summary: Get comments by post ID
  *     tags: [Comments]
