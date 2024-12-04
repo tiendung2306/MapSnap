@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Manager/CURD_posts.dart';
+import 'package:mapsnap_fe/Manager/Like.dart';
+import 'package:mapsnap_fe/Model/Like.dart';
 import 'package:mapsnap_fe/Model/Posts.dart';
 import 'package:mapsnap_fe/Model/User_2.dart';
 import 'package:mapsnap_fe/NewFeed/CommentScreen.dart';
@@ -18,10 +20,11 @@ class newFeedScreen extends StatefulWidget {
 }
 
 class _newFeedScreenState extends State<newFeedScreen> {
-  int like = 0;
+  List<bool> isLike = [];
   int count = 0;
   late Future<List<Posts>> listPost;
   late List<User?> user; // Cho phép null
+  late List<List<Like?>> like;
   Posts? post;
 
 
@@ -42,17 +45,21 @@ class _newFeedScreenState extends State<newFeedScreen> {
     super.initState();
     listPost = resetData().then((posts) async {
       user = List<User?>.generate(posts.length, (index) => null); // Danh sách có thể thay đổi
+      like = List<List<Like?>>.generate(posts.length, (index) => []);
       var accountModel = Provider.of<AccountModel>(context, listen: false);
 
       accountModel.resetListComment();
       for (int i = 0; i < posts.length; i++) { // Tạo dữ liệu giả
         accountModel.addListComment();
+        isLike.insert(0, false);
       }
+
       // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
       await Future.wait(posts.asMap().entries.map((entry) async {
         int index = entry.key;
         Posts post = entry.value;
         user[index] = await getUser(post.userId, accountModel.token_access);
+        like[index]= await getLikePost(post.id);
       }));
       return posts;
     });
@@ -69,6 +76,14 @@ class _newFeedScreenState extends State<newFeedScreen> {
     } catch (e) {
       print("Error fetching user: $e");
       return null;
+    }
+  }
+
+  IconData getCategoryIcon(int index) {
+    if(!isLike[index]) {
+      return Icons.thumb_up_alt_outlined;
+    } else {
+      return Icons.thumb_up_alt_rounded;
     }
   }
 
@@ -185,7 +200,9 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                         setState(() async {
                                           posts.insert(0,success);  // Thêm bài viết mới vào đầu danh sách
                                           user.insert(0,null);
+                                          isLike.insert(0, false);
                                           user[0] = await getUser(success.userId, accountModel.token_access);
+                                          like.insert(0, []);
                                           accountModel.addListComment();
                                         });
                                       });
@@ -212,6 +229,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                             itemBuilder: (context, index) {
                               var post = posts[index];
                               var postUser = user[index];
+                              var postLike = like[index];
                               if(postUser != null) {
                                 return Container(
                                   padding: EdgeInsets.all(10),
@@ -278,7 +296,9 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                     await RemovePost(post.id);  // Xóa bài viết
                                                     setState(() {
                                                       posts.remove(post); // Xóa bài viết khỏi danh sách cục bộ
-                                                      user.remove(postUser);   // Xóa thông tin người dùng tương ứng
+                                                      user.remove(postUser); // Xóa thông tin người dùng tương ứng
+                                                      isLike.removeAt(index);
+                                                      postLike.remove(postLike);
                                                     });
                                                     break;
                                                   case 'hide':
@@ -305,16 +325,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                         Icon(Icons.delete, color: Colors.red),
                                                         SizedBox(width: 10),
                                                         Text('Xóa bài viết'),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  PopupMenuItem<String>(
-                                                    value: 'hide',
-                                                    child: Row(
-                                                      children: [
-                                                        Icon(Icons.visibility_off, color: Colors.grey),
-                                                        SizedBox(width: 10),
-                                                        Text('Ẩn bài viết'),
                                                       ],
                                                     ),
                                                   ),
@@ -353,7 +363,14 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                             if (imgIndex == 3 && post.media.length > 4) {
                                               return GestureDetector(
                                                 onTap: () {
-                                                  print("Xem thêm ảnh");
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => FullScreenImageGallery(
+                                                        images: post.media, // Toàn bộ danh sách ảnh
+                                                      ),
+                                                    ),
+                                                  );
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(
@@ -398,7 +415,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                             GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  like++;
+                                                  isLike[index] = !isLike[index];
                                                 });
                                               },
                                               child: Container(
@@ -406,11 +423,11 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                 child: Row(
                                                   children: [
                                                     Icon(
-                                                      Icons.thumb_up_alt_outlined,
+                                                      getCategoryIcon(index),
                                                       color: Colors.blue,
                                                     ),
                                                     SizedBox(width: 10),
-                                                    Text(like.toString()),
+                                                    Text(postLike.length.toString()),
                                                   ],
                                                 ),
                                               ),
