@@ -9,7 +9,6 @@ const addLike = catchAsync(async (req, res) => {
 });
 
 const removeLike = catchAsync(async (req, res) => {
-    console.log(req.params.likeId);
     await likesService.removeLike(req.params.likeId);
     res.sendStatus(httpStatus.NO_CONTENT);
 });
