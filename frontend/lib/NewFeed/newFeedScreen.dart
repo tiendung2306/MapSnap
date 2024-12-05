@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Manager/CURD_comment.dart';
 import 'package:mapsnap_fe/Manager/CURD_posts.dart';
 import 'package:mapsnap_fe/Manager/Like.dart';
 import 'package:mapsnap_fe/Model/Comment.dart';
@@ -26,7 +27,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
   late Future<List<Posts>> listPost;
   late List<User?> user; // Cho phép null
   late List<List<Like?>> like;
-  late List<List<Comment?>> comments;
+  late List<List<Comment>> comments;
 
   final TextEditingController commentController = TextEditingController();
 
@@ -46,13 +47,8 @@ class _newFeedScreenState extends State<newFeedScreen> {
     listPost = resetData().then((posts) async {
       user = List<User?>.generate(posts.length, (index) => null);
       like = List<List<Like?>>.generate(posts.length, (index) => []);
-      comments = List<List<Comment?>>.generate(posts.length, (index) => []);
+      comments = List<List<Comment>>.generate(posts.length, (index) => []);
       var accountModel = Provider.of<AccountModel>(context, listen: false);
-
-      accountModel.resetListComment();
-      for (int i = 0; i < posts.length; i++) { // Tạo dữ liệu giả
-        accountModel.addListComment();
-      }
 
       // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
       await Future.wait(posts.asMap().entries.map((entry) async {
@@ -60,9 +56,9 @@ class _newFeedScreenState extends State<newFeedScreen> {
         Posts post = entry.value;
         user[index] = await getUser(post.userId, accountModel.token_access);
         like[index]= await getLikePost(post.id);
+        comments[index]= await getCommentPost(post.id);
 
         isLike.add(like[index].any((like) => like?.userId.toString() == accountModel.idUser.toString()));
-        print(isLike);
 
       }));
       return posts;
@@ -84,22 +80,22 @@ class _newFeedScreenState extends State<newFeedScreen> {
   }
 
   IconData getCategoryIcon(int index) {
-    print("isLike[$index]: ${isLike[index]}"); // Debug giá trị
     if (!isLike[index]) {
-      print("Returning thumb_up_alt_outlined");
       return Icons.thumb_up_alt_outlined;
     } else {
-      print("Returning thumb_up_alt_rounded");
       return Icons.thumb_up_alt_rounded;
     }
   }
 
-  void showComments(BuildContext context, int index) {
+  void showComments(BuildContext context, List<Comment> comment, Posts post) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return CommentScreen(index: index);
+        return CommentScreen(
+            listComment: comment,
+            post: post
+        );
       },
     );
   }
@@ -125,10 +121,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                 ),
               );
             }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            if (!snapshot.hasData || snapshot.data!.isEmpty ) {
               return Center(
                   child: Scaffold(
                     appBar: AppBar(
@@ -140,11 +133,13 @@ class _newFeedScreenState extends State<newFeedScreen> {
                         },
                       ),
                     ),
+                    body: Center(child: Text('Error: ${snapshot.error}')),
                   )
               );
             }
 
             var posts = snapshot.data!; // Lấy dữ liệu từ snapshot
+            print(comments);
 
 
             return Consumer<AccountModel>(
@@ -215,6 +210,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           isLike.insert(0, false);
                                           user[0] = await getUser(success.userId, accountModel.token_access);
                                           like.insert(0, []);
+                                          comments.insert(0, []);
                                           accountModel.addListComment();
                                         });
                                       });
@@ -242,6 +238,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                               var post = posts[index];
                               var postUser = user[index];
                               var postLike = like[index];
+                              var postComment = comments[index];
                               if(postUser != null) {
                                 return Container(
                                   padding: EdgeInsets.all(10),
@@ -427,11 +424,13 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                             GestureDetector(
                                               onTap: () async {
                                                 Like? like;
+                                                DateTime now = DateTime.now();
+                                                DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
                                                 if(!isLike[index]) {
                                                   addLike ADDLIKE = addLike(
                                                     postId: post.id,
                                                     userId: accountModel.idUser,
-                                                    createdAt: 463542343,
+                                                    createdAt: vietnamTime.millisecondsSinceEpoch,
                                                   );
                                                   like = await AddLike(ADDLIKE);
                                                 } else {
@@ -463,7 +462,10 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                             ),
                                             SizedBox(width: 30),
                                             GestureDetector(
-                                              onTap: () => showComments(context, index ),
+                                              onTap: () {
+                                                print(postComment.isEmpty);
+                                                showComments(context,postComment,post);
+                                              },
                                               child: Container(
                                                 height: 30,
                                                 child: Row(

@@ -88,7 +88,7 @@ class ImageScreenState extends State<ImageScreen> {
               Container(
                 height: screenHeight - 150,
                 decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: Colors.white,
                     image: DecorationImage(
                       image: NetworkImage(widget.picture.link),
                       fit: BoxFit.contain,

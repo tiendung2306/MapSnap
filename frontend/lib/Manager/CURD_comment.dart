@@ -38,7 +38,7 @@ Future<Comment?> AddComment(addComment addComment) async {
 }
 
 
-Future<void> updateComment(addComment addComment, String id) async {
+Future<Comment?> updateComment(addComment addComment, String id) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/posts/comments/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
@@ -57,10 +57,12 @@ Future<void> updateComment(addComment addComment, String id) async {
   );
   // Kiểm tra trạng thái phản hồi
   if (response.statusCode == 200) {
-    print('Cập nhật thành công:');
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    return Comment.fromJson(data);
   } else {
     print('Cập nhật thất bại:');
   }
+  return null;
 }
 
 
@@ -76,18 +78,22 @@ Future<List<Comment>> getCommentPost(String postId) async {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
-      List<Comment> comments = data.map((json) => Comment.fromJson(json)).toList();
-      return comments;
+      if (data is List) {
+        List<Comment> comments =
+        data.map((json) => Comment.fromJson(json)).toList();
+        return comments;
+      } else {
+        print("Dữ liệu không hợp lệ: $data");
+        return [];
+      }
     } else {
-      print('Lỗi: ${response.statusCode}');
+      throw Exception('Failed to load comments. Status code: ${response.statusCode}');
     }
-  } catch (e) {
-    print('Lỗi khi gọi API: $e');
+  } catch (error) {
+    print('Lỗi khi gọi API: $error');
+    return [];
   }
-  return [];
 }
-
 
 
 
@@ -100,7 +106,7 @@ Future<void> RemoveComments(String id) async {
       'Content-Type': 'application/json',
     },
   );
-  if (response.statusCode == 200) {
+  if (response.statusCode == 204) {
     print("Xóa thành công");
   } else {
     print('Lỗi: ${response.statusCode}');
