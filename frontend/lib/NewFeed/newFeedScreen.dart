@@ -28,6 +28,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
   late List<User?> user; // Cho phép null
   late List<List<Like?>> like;
   late List<List<Comment>> comments;
+  List<Like?> likeId = [];
 
   final TextEditingController commentController = TextEditingController();
 
@@ -58,7 +59,18 @@ class _newFeedScreenState extends State<newFeedScreen> {
         like[index]= await getLikePost(post.id);
         comments[index]= await getCommentPost(post.id);
 
-        isLike.add(like[index].any((like) => like?.userId.toString() == accountModel.idUser.toString()));
+        bool userLiked = like[index].any((like) => like?.userId.toString() == accountModel.idUser.toString());
+        isLike.add(userLiked);
+
+        if (userLiked) {
+          like[index].forEach((like) {
+            if (like?.userId.toString() == accountModel.idUser.toString() && like != null) {
+              likeId.add(like); // Thêm ID của like vào danh sách likeId
+            }
+          });
+        } else {
+          likeId.add(null);
+        }
 
       }));
       return posts;
@@ -434,13 +446,15 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                   );
                                                   like = await AddLike(ADDLIKE);
                                                 } else {
-                                                  await RemoveLike(postLike[0]!.id);
+                                                  await RemoveLike(likeId[index]!.id);
                                                 }
                                                 setState(() {
                                                   if(!isLike[index]) {
-                                                    postLike.insert(0,like);
+                                                    postLike.add(like);
+                                                    likeId[index] = like;
                                                   } else {
-                                                    postLike.removeAt(0);
+                                                    postLike.remove(likeId[index]);
+                                                    likeId[index] = null;
                                                   }
                                                   isLike[index] = !isLike[index];
                                                 });
@@ -475,7 +489,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                       color: Colors.green,
                                                     ),
                                                     SizedBox(width: 10),
-                                                    Text("Comment"),
+                                                    Text(postComment.length.toString()),
                                                   ],
                                                 ),
                                               ),

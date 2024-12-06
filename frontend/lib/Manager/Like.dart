@@ -69,7 +69,7 @@ Future<List<Like>> getLikePost(String postId) async {
 
 
 Future<void> RemoveLike(String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/like/$id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/likes/$id');
 
   final response = await http.delete(
     url,
