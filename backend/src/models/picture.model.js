@@ -19,12 +19,10 @@ const pictureSchema = new Schema({
   visitId: {
     type: Schema.Types.ObjectId,
     ref: 'Visit',
-    required: true,
   },
   journeyId: {
     type: Schema.Types.ObjectId,
     ref: 'Journey',
-    required: true,
   },
   link: {
     type: String,
