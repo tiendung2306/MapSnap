@@ -9,12 +9,12 @@ import 'package:mapsnap_fe/Services/APIService.dart';
 import 'dart:math';
 import 'Point.dart';
 
-class AddVisitScreen extends StatefulWidget {
+class CreateJourneyScreen extends StatefulWidget {
   @override
-  State<AddVisitScreen> createState() => _AddVisitScreenState();
+  State<CreateJourneyScreen> createState() => _CreateJourneyScreenState();
 }
 
-class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProviderStateMixin{
+class _CreateJourneyScreenState extends State<CreateJourneyScreen> with SingleTickerProviderStateMixin{
   final  _apiService = ApiService();
 
   bool isDataLoad = false;
@@ -175,9 +175,9 @@ class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProvid
         markerId: MarkerId('select'),
         position: pos,
         infoWindow: InfoWindow(
-          title: 'New Marker',
-          snippet: 'Tap add visit',
-          onTap: onInfoWindowTap
+            title: 'New Marker',
+            snippet: 'Tap add visit',
+            onTap: onInfoWindowTap
         ),
       ));
       _controller.showMarkerInfoWindow(MarkerId('select'));
@@ -277,15 +277,15 @@ class _AddVisitScreenState extends State<AddVisitScreen> with SingleTickerProvid
 
 
       final markerTab3 = Marker(
-        markerId: MarkerId(points[i].name),
-        position: start,
-        icon: points[i].type == 'visit' ? visitTab3 : positionTab3,
-        anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
-        rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].name),
-        onTap: (){
-          _scrollToIndex(i);
-        }
+          markerId: MarkerId(points[i].name),
+          position: start,
+          icon: points[i].type == 'visit' ? visitTab3 : positionTab3,
+          anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
+          rotation: rotation, // Góc xoay
+          infoWindow: InfoWindow(title: points[i].name),
+          onTap: (){
+            _scrollToIndex(i);
+          }
       );
 
       _markers.add(markerTab3);

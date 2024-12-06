@@ -1,7 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/HomePage.dart';
-import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
-import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
 import '../Widget/UpdateUser.dart';
@@ -13,9 +13,8 @@ import 'package:mapsnap_fe/Widget/normalForm.dart';
 import 'package:mapsnap_fe/Widget/outline_IconButton.dart';
 import '../Services/AuthService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart'; // Import file model
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:provider/provider.dart';
+
 
 
 
@@ -62,6 +61,7 @@ class _SignInState extends State<SignIn> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userData', jsonEncode(data));
 
       var accountModel = Provider.of<AccountModel>(context, listen: false);
       Token token = Token.fromJson(data);

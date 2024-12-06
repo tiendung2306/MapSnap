@@ -7,7 +7,7 @@ import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
 import 'dart:math';
 import 'AddVisit.dart';
-import 'Positions.dart';
+import 'Point.dart';
 
 class MapScreen extends StatefulWidget {
   @override

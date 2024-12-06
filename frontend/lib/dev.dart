@@ -1,95 +1,127 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
-class DevScreen extends StatefulWidget {
-  @override
-  _DevScreenState createState() => _DevScreenState();
-}
+class ButtonPage extends StatelessWidget {
+  Future<void> createJourneys() async {
+    final String apiUrl = 'http://10.0.2.2:3000/v1/journey/672b2c4241382c06b026f861/create-journey';
 
-class _DevScreenState extends State<DevScreen> {
-  late GoogleMapController _mapController;
-  Set<Marker> _markers = {};
+    // Danh sách các hành trình
+    final List<Map<String, dynamic>> journeys = [
+      {
+        "title": "Tham quan Bảo tàng Lịch sử Việt Nam",
+        "startedAt": 1731090000000,
+        "endedAt": 1731093600000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Khám phá Chợ Đồng Xuân",
+        "startedAt": 1731100000000,
+        "endedAt": 1731103600000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Hành trình Hồ Tây vào buổi chiều",
+        "startedAt": 1731110000000,
+        "endedAt": 1731117200000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Chuyến xe qua cầu Long Biên",
+        "startedAt": 1731120000000,
+        "endedAt": 1731123600000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Tham quan Văn Miếu - Quốc Tử Giám",
+        "startedAt": 1731130000000,
+        "endedAt": 1731133600000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Trải nghiệm chợ đêm Hà Nội",
+        "startedAt": 1731140000000,
+        "endedAt": 1731147200000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Tham quan đền Quán Thánh",
+        "startedAt": 1731150000000,
+        "endedAt": 1731153600000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      },
+      {
+        "title": "Khám phá làng gốm Bát Tràng",
+        "startedAt": 1731160000000,
+        "endedAt": 1731167200000,
+        "updatedAt": 1731072409000,
+        "status": "enabled",
+        "updatedByUser": true,
+        "isAutomaticAdded": true
+      }
+      // Thêm các hành trình khác tương tự...
+    ];
 
-  @override
-  void initState() {
-    super.initState();
-    _addMarkers();
-  }
+    for (var journey in journeys) {
+      try {
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(journey),
+        );
 
-  void _addMarkers() {
-    _markers.add(
-      Marker(
-        markerId: MarkerId('marker_1'),
-        position: LatLng(21.028511, 105.804817), // Tọa độ Hà Nội
-        infoWindow: InfoWindow(title: 'Marker 1', snippet: 'This is Marker 1'),
-        onTap: () {
-          _updateMarker('marker_1');
-        },
-      ),
-    );
-
-    _markers.add(
-      Marker(
-        markerId: MarkerId('marker_2'),
-        position: LatLng(21.0245, 105.8067), // Tọa độ gần Hà Nội
-        infoWindow: InfoWindow(title: 'Marker 2', snippet: 'This is Marker 2'),
-        onTap: () {
-          _updateMarker('marker_2');
-        },
-      ),
-    );
-  }
-
-  void _updateMarker(String markerId) async {
-    print('asdasd');
-    final BitmapDescriptor visitTab1 = await BitmapDescriptor.asset(
-      const ImageConfiguration(size: Size(20, 20)),
-      'assets/Common/visitTab1.png', // Đường dẫn tới icon của bạn
-    );
-    setState(() {
-      _markers = _markers.map((marker) {
-        if (marker.markerId.value == markerId) {
-          return marker.copyWith(
-            iconParam: visitTab1
-          );
+        if (response.statusCode == 200) {
+          print('Tạo hành trình "${journey['title']}" thành công!');
+        } else {
+          print('Lỗi khi tạo hành trình "${journey['title']}": ${response.body}');
         }
-        return marker;
-      }).toSet();
-    });
-  }
-
-
-  void _onMarkerTapped(String markerName) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Marker Tapped'),
-        content: Text('You tapped on $markerName'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('Close'),
-          ),
-        ],
-      ),
-    );
+      } catch (e) {
+        print('Lỗi khi kết nối API: $e');
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Maps Marker Interaction'),
+        title: Text('Nút ở giữa màn hình'),
       ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(21.028511, 105.804817),
-          zoom: 15,
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            createJourneys();
+          },
+          child: Text('Bấm vào tôi'),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            textStyle: TextStyle(fontSize: 18.0),
+          ),
         ),
-        markers: _markers,
-        onMapCreated: (GoogleMapController controller) {
-          _mapController = controller;
-        },
       ),
     );
   }

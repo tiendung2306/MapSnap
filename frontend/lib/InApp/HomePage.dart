@@ -1,13 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
-
+import 'package:provider/provider.dart';
 import '../LocationScreen/locationScreen.dart';
 import '../NewFeed/newFeedScreen.dart';
 import '../PictureScreen/pictureManager.dart';
 import 'package:mapsnap_fe/Widget/bottomNavigationBar.dart';
+import 'package:mapsnap_fe/Services/APIService.dart';
+
+import '../Widget/accountModel.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,15 +17,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final  _apiService = ApiService();
+  List<dynamic> data = [];
+
+  bool isDataLoad = false;
+
+
+  void loadData() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    final response = await _apiService.GetAllJourney(accountModel.idUser, 'asc', 'startedAt', '');
+
+    setState(() {
+      data = response['data']['result'];
+      isDataLoad = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  String calculateDuration(int startedAt, int endedAt) {
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(startedAt);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(endedAt);
+
+    Duration difference = end.difference(start);
+
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes % 60;
+    int seconds = difference.inSeconds % 60;
+
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
     int currentTabIndex = 0;
-
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double Xpix = screenWidth * 0.01; // Chiều rộng bằng 10% chiều rộng màn hình
-    double Ypix = screenHeight * 0.01; // Chiều rộng bằng 10% chiều rộng màn hình
 
     void onTabTapped(int index) {
       setState(() {
@@ -43,7 +74,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: SizedBox(
-                height: 5 * Ypix,
+                height: 45,
                 child: TextField(
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(vertical: 8.0),
@@ -88,7 +119,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 10),
             Text(
-              "40",
+              data.length.toString(),
               style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
             ),
             Text(
@@ -179,10 +210,11 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.favorite, size: 30,),
-                        onPressed: () {},
+                        icon: Icon(Icons.show_chart, size: 30,),
+                        onPressed: () {
+                        },
                       ),
-                      Text('Favorite')
+                      Text('Data')
                     ],
                   ),
                 ],
@@ -249,48 +281,31 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(height: 10),
           Container(
-            height: Ypix * 50,
-            child: ListView(
-              children: [
-                JourneyTile(
-                  title: "Tây du ký",
-                  subtitle: "81 kiếp nạn",
-                  icon: Icons.directions_walk,
-                ),
-                JourneyTile(
-                  title: "Đi tù",
-                  subtitle: "12 năm",
-                  icon: Icons.directions_run,
-                ),
-                JourneyTile(
-                  title: "Đại hải trình",
-                  subtitle: "1122 tập",
-                  icon: Icons.sailing,
-                ),
-                JourneyTile(
-                  title: "Học đại học",
-                  subtitle: "Ongoing",
-                  icon: Icons.school,
-                ),
-                JourneyTile(
-                  title: "Học đại học",
-                  subtitle: "Ongoing",
-                  icon: Icons.school,
-                ),
-                JourneyTile(
-                  title: "Học đại học",
-                  subtitle: "Ongoing",
-                  icon: Icons.school,
-                ),
-                JourneyTile(
-                  title: "Học đại học",
-                  subtitle: "Ongoing",
-                  icon: Icons.school,
-                ),
-              ],
+            height: 450,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: data.length,
+              itemBuilder: (context, index){
+                return JourneyTile(
+                      title: data[index]['title'],
+                      subtitle: calculateDuration(data[index]['startedAt'], data[index]['endedAt']),
+                      icon: Icons.directions_walk,
+                );
+              },
             ),
           ),
         ],
+      );
+    }
+
+    Container LoadingScreen(){
+      return Container(
+        color: Colors.white,
+        child: Center(
+          child: Text(
+              'Loading'
+          ),
+        ),
       );
     }
 
@@ -384,7 +399,11 @@ class _HomePageState extends State<HomePage> {
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       );
     }
-    return Body();
+    return Scaffold(
+      body: !isDataLoad ?
+      LoadingScreen():
+      Body(),
+    );
   }
 }
 

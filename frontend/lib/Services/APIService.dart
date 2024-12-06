@@ -240,5 +240,48 @@ class ApiService {
     }
   }
 
+    Future<Map<String, dynamic>> GetAllJourney (String userId, String sortType, String sortField, String keyword) async {
+    final url = Uri.parse('$_baseUrl/journey/{userId}/get-journeys'.replaceFirst("{userId}", userId));
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "isAutomaticAdded": true,
+          "updatedByUser": true,
+          "status": "enabled",
+          "sortType": sortType,
+          "sortField": sortField,
+          "searchText": keyword,
+        }),
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get Journey success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get Journey failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get Journey failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
 
 }
