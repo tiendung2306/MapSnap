@@ -126,6 +126,7 @@ class ConfirmScreen extends StatelessWidget {
       journeyId: "60c72b2f9af1b8124cf74c9d",
       link: imagePath,
       capturedAt: vietnamTime,
+      isTakenByCamera: true,
     );
 
 

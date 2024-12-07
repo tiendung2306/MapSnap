@@ -37,6 +37,7 @@ class CreatePicture {
   String journeyId;
   String link;
   DateTime capturedAt;
+  bool isTakenByCamera;
 
   CreatePicture({
     required this.userId,
@@ -45,6 +46,7 @@ class CreatePicture {
     required this.journeyId,
     required this.link,
     required this.capturedAt,
+    required this.isTakenByCamera,
   });
 
   factory CreatePicture.fromJson(Map<String, dynamic> json) {
@@ -54,7 +56,8 @@ class CreatePicture {
         visitId: json['visitId'],
         journeyId: json['journeyId'],
         link: json['link'],
-        capturedAt: json['capturedAt']
+        capturedAt: json['capturedAt'],
+        isTakenByCamera: json['isTakenByCamera']
     );
   }
 }

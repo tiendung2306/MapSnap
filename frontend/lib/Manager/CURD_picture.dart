@@ -38,6 +38,7 @@ Future<List<Picture>?> upLoadImage(CreatePicture createPicture) async {
   request.fields['visitId'] = createPicture.visitId;
   request.fields['journeyId'] = createPicture.journeyId;
   request.fields['capturedAt'] = createPicture.capturedAt.millisecondsSinceEpoch.toString();
+  request.fields['isTakenByCamera'] = createPicture.isTakenByCamera.toString();
 
   // Gửi yêu cầu
   final response = await request.send();

@@ -164,6 +164,7 @@ class _FullImageScreenState extends State<FullImageScreen> {
                   journeyId: "5f8a5e7f575d7a2b9c0d47e5",
                   link: images![i].path,
                   capturedAt: vietnamTime,
+                  isTakenByCamera: false,
                 );
                 List<Picture>? picture = await upLoadImage(createPicture);
                 print("Server link: ${picture![0].link}");
