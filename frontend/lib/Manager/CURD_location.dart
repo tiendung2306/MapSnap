@@ -67,6 +67,12 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
       'categoryId': body,
     };
   }
+
+  if(check == 'sortField') {
+    updatedData = {
+      "sortField": body,
+    };
+  }
   if(check == '') {
     updatedData = {};
   }

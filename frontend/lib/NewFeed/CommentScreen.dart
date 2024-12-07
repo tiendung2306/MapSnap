@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Manager/CURD_comment.dart';
@@ -27,7 +29,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
   double keyboardHeight = 0;
   String commentId = "";
   int commentIndex = 0;
-  List<User> listUser = [];
+  List<User?> listUser = [];
   bool isReset = false;
 
   @override
@@ -46,17 +48,17 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
 
   Future<void> loadAllUsers() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
+    listUser = [];
     for (var comment in widget.listComment) {
       User? user = await fetchData(comment.userId, accountModel.token_access);
-      if (user != null) {
-        listUser.add(user);
-      }
+      listUser.add(user);
     }
   }
 
-  Future<void> okeData() async {
+  Future<void> OKE() async {
 
   }
+
 
   @override
   void dispose() {
@@ -71,7 +73,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
 
     return Scaffold(
       body: FutureBuilder(
-        future: isReset == false ? loadAllUsers() : okeData(),
+        future: isReset == false ? loadAllUsers() : OKE(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting && !isReset) {
             // Hiển thị màn hình chờ trong khi tải dữ liệu
@@ -113,7 +115,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                           itemCount: widget.listComment.length,
                           itemBuilder: (context, index) {
                             var comment = widget.listComment[index];
-                            var user = listUser[index]; // Sử dụng user từ listUser
+                            var user = listUser[index];
                             return ListTile(
                               leading: CircleAvatar(
                                 maxRadius: 30,
@@ -125,7 +127,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                                       shape: BoxShape.circle,
                                       color: Colors.grey,
                                       image: DecorationImage(
-                                        image: NetworkImage(user.avatar),
+                                        image: NetworkImage(user!.avatar),
                                         fit: BoxFit.cover,
                                       )
                                   ),
@@ -195,8 +197,10 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                                     updatedAt: vietnamTime.millisecondsSinceEpoch,
                                   );
                                   comment = await AddComment(addcomment);
+                                  User? user = await fetchData(comment!.userId, accountModel.token_access);
                                   setState(() {
                                     widget.listComment.insert(0, comment!);
+                                    listUser.insert(0, user);
                                   });
                                 } else {
                                   addComment addcomment = addComment(

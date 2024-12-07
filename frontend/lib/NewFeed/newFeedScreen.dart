@@ -8,6 +8,7 @@ import 'package:mapsnap_fe/Model/Posts.dart';
 import 'package:mapsnap_fe/Model/User_2.dart';
 import 'package:mapsnap_fe/NewFeed/CommentScreen.dart';
 import 'package:mapsnap_fe/NewFeed/FullScreenImageGallery.dart';
+import 'package:mapsnap_fe/NewFeed/ImageFullScreen.dart';
 import 'package:mapsnap_fe/NewFeed/PostScreen.dart';
 import 'package:mapsnap_fe/Widget/UpdateUser.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
@@ -102,15 +103,32 @@ class _newFeedScreenState extends State<newFeedScreen> {
   void showComments(BuildContext context, List<Comment> comment, Posts post) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: true, // Cho phép điều chỉnh chiều cao
+      backgroundColor: Colors.transparent, // Nền trong suốt
       builder: (context) {
-        return CommentScreen(
-            listComment: comment,
-            post: post
+        return DraggableScrollableSheet(
+          initialChildSize: 0.9, // Bắt đầu từ 90% chiều cao màn hình
+          minChildSize: 0.9, // Chiều cao tối thiểu là 90%
+          maxChildSize: 1.0, // Có thể kéo lên chiếm toàn bộ màn hình
+          builder: (context, scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // Nền màu trắng
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20), // Bo góc phía trên
+                ),
+              ),
+              child: CommentScreen(
+                listComment: comment,
+                post: post,
+              ),
+            );
+          },
         );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -382,6 +400,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           itemCount: post.media.length > 4 ? 4 : post.media.length,
                                           itemBuilder: (context, imgIndex) {
                                             if (imgIndex == 3 && post.media.length > 4) {
+                                              print(post.media.length);
                                               return GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(
@@ -412,8 +431,8 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                      builder: (context) => FullScreenImageGallery(
-                                                        images: post.media, // Toàn bộ danh sách ảnh
+                                                      builder: (context) => ImageFullScreen(
+                                                        image: post.media[imgIndex]['url'].toString(), // Toàn bộ danh sách ảnh
                                                       ),
                                                     ),
                                                   );

@@ -164,6 +164,27 @@ class AccountModel extends ChangeNotifier {
   }
 
 
+
+  List<Location> _locationManager3 = [];
+  List<Location> get locationManager3 => _locationManager3;
+
+  void addLocation3(Location? location) {
+    _locationManager3.add(location!);
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+
+  void removeLocation3(Location location) {
+    _locationManager3.remove(location);
+    notifyListeners();
+  }
+
+  void resetLocation3() {
+    _locationManager3 = [];
+    notifyListeners();
+  }
+
+
 //===================
 
   Map<LocationCategory,List<Location>> _locationCategoryManager = {};

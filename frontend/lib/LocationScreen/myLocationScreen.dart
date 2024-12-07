@@ -57,22 +57,26 @@ class _myLocationScreenState extends State<myLocationScreen> {
   }
 
 
+
+
   IconData getCategoryIcon(String categoryType) {
     switch (categoryType) {
-      case 'Home':
-        return Icons.home; // Icon cho nhà
-      case 'School':
-        return Icons.school; // Icon cho trường
-      case 'Company':
-        return Icons.work; // Icon cho công viên
-      case 'restaurant':
-        return Icons.restaurant; // Icon cho nhà hàng
-      case 'hospital':
+      case 'Nhà':
+        return Icons.home;
+      case 'Trường học':
+        return Icons.school;
+      case 'Công ty':
+        return Icons.work;
+      case 'Nhà hàng':
+        return Icons.restaurant;
+      case 'Bệnh viện':
         return Icons.local_hospital;
-      case 'Supermarket':
+      case 'Siêu thị':
         return Icons.shopping_cart;
-      case 'Park':
+      case 'Công viên':
         return Icons.park;
+      case 'Biển':
+        return Icons.beach_access;
       default:
         return Icons.location_on; // Icon mặc định
     }

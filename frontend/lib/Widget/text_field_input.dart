@@ -36,10 +36,12 @@ class TextFieldInput extends StatelessWidget {
         filled: true,
         fillColor: Colors.white, // Màu nền của TextField
         contentPadding: const EdgeInsets.fromLTRB(16,8,16,8),
+
       ),
       keyboardType: textInputType,
       obscureText: isPass,
       enabled: isEnabled,
+      style: TextStyle(fontSize: 20),
     );
   }
 }
