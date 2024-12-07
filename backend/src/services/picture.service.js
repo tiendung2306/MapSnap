@@ -50,7 +50,7 @@ const getPictureById = async (id) => {
 
 // eslint-disable-next-line no-unused-vars
 const getPictures = async (req, res) => {
-  return Picture.find(req.query);
+  return Picture.find({ ...req.query, isTakenByCamera: true });
 };
 
 const deletePictureById = async (id) => {
