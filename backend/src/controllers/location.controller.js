@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const Message = require('../utils/Message');
 const catchAsync = require('../utils/catchAsync');
 const locationService = require('../services/location.service');
+const goongService = require('../services/goong.service');
 
 const createLocation = catchAsync(async (req, res) => {
   const requestBody = req.body;
@@ -52,6 +53,29 @@ const deleteHardLocation = catchAsync(async (req, res) => {
   });
 });
 
+const reverseGeocoding = catchAsync(async (req, res) => {
+  const { results } = await goongService.reverseGeocoding(req, res);
+  console.log(results);
+  const address = results[0].formatted_address;
+  const country = "Việt Nam";
+  const district = results[0].compound.district;
+  const classify = results[0].types[0];
+  const homeNumber = results[0].address_components[0].long_name + (results[0].address_components[1].long_name !== results[0].compound.commune ? ', ' + results[0].address_components[1].long_name : '');
+  const commune = results[0].compound.commune;
+  const province = results[0].compound.province;
+  // console.log(results[0].address_components[1], ' ', results[0].compound.commune);
+  const location = {
+    address,
+    country,
+    district,
+    classify,
+    homeNumber,
+    commune,
+    province,
+  };
+  res.json(location);
+});
+
 module.exports = {
   createLocation,
   getLocation,
@@ -59,4 +83,5 @@ module.exports = {
   updateLocation,
   deleteLocation,
   deleteHardLocation,
+  reverseGeocoding,
 };
