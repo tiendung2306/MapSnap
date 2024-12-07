@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/LocationCategory.dart';
 import '../Model/Picture.dart';
+import '../Model/Posts.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
 
@@ -163,6 +164,27 @@ class AccountModel extends ChangeNotifier {
   }
 
 
+
+  List<Location> _locationManager3 = [];
+  List<Location> get locationManager3 => _locationManager3;
+
+  void addLocation3(Location? location) {
+    _locationManager3.add(location!);
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+
+  void removeLocation3(Location location) {
+    _locationManager3.remove(location);
+    notifyListeners();
+  }
+
+  void resetLocation3() {
+    _locationManager3 = [];
+    notifyListeners();
+  }
+
+
 //===================
 
   Map<LocationCategory,List<Location>> _locationCategoryManager = {};
@@ -211,12 +233,10 @@ class AccountModel extends ChangeNotifier {
   List<List<String>> _comments = [];
   List<List<String>> get comments => _comments;
 
-
   void resetListComment() {
     _comments = [];
     notifyListeners();
   }
-
 
   void addComment(int index, String newComment) {
     if (index < _comments.length) {
@@ -231,9 +251,9 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void addListComment() {
-    _comments.add([]);
+    _comments.insert(0,[]);
     notifyListeners();
   }
+
 }

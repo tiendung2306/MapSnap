@@ -40,12 +40,76 @@ class _addCityScreenState extends State<addCityScreen> {
 
 
 
+  String selectedCity = 'Chọn thành phố';
 
-  //List giới tính
-  final List<String> status = [
-    'enabled',
-    'unenabled',
+
+  final List<String> cities = [
+    'An Giang',
+    'Bà Rịa - Vũng Tàu',
+    'Bắc Giang',
+    'Bắc Kạn',
+    'Bạc Liêu',
+    'Bắc Ninh',
+    'Bến Tre',
+    'Bình Định',
+    'Bình Dương',
+    'Bình Phước',
+    'Bình Thuận',
+    'Cà Mau',
+    'Cần Thơ',
+    'Cao Bằng',
+    'Đà Nẵng',
+    'Đắk Lắk',
+    'Đắk Nông',
+    'Điện Biên',
+    'Đồng Nai',
+    'Đồng Tháp',
+    'Gia Lai',
+    'Hà Giang',
+    'Hà Nam',
+    'Hà Nội',
+    'Hà Tĩnh',
+    'Hải Dương',
+    'Hải Phòng',
+    'Hậu Giang',
+    'Hòa Bình',
+    'Hưng Yên',
+    'Khánh Hòa',
+    'Kiên Giang',
+    'Kon Tum',
+    'Lai Châu',
+    'Lâm Đồng',
+    'Lạng Sơn',
+    'Lào Cai',
+    'Long An',
+    'Nam Định',
+    'Nghệ An',
+    'Ninh Bình',
+    'Ninh Thuận',
+    'Phú Thọ',
+    'Phú Yên',
+    'Quảng Bình',
+    'Quảng Nam',
+    'Quảng Ngãi',
+    'Quảng Ninh',
+    'Quảng Trị',
+    'Sóc Trăng',
+    'Sơn La',
+    'Tây Ninh',
+    'Thái Bình',
+    'Thái Nguyên',
+    'Thanh Hóa',
+    'Thừa Thiên Huế',
+    'Tiền Giang',
+    'Thành phố Hồ Chí Minh',
+    'Trà Vinh',
+    'Tuyên Quang',
+    'Vĩnh Long',
+    'Vĩnh Phúc',
+    'Yên Bái',
   ];
+
+
 
 
   String statusController = 'enabled';
@@ -129,18 +193,48 @@ class _addCityScreenState extends State<addCityScreen> {
                           ],
                         ),
                         SizedBox(height: screenHeight / 70),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: screenWidth / 10),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                buildTextField("Tên", nameController, "Nhập tên địa điểm", TextInputType.text),
-                              ],
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Thành phố", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 5),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              width: screenWidth,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2 (
+                                  isExpanded: true,
+                                  dropdownStyleData:const DropdownStyleData(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    maxHeight: 200,
+                                  ),
+                                  value: selectedCity == 'Chọn thành phố' ? null : selectedCity,
+                                  hint: Text(selectedCity),
+                                  iconStyleData: const IconStyleData(
+                                    icon: Icon(Icons.arrow_drop_down), // Biểu tượng mũi tên
+                                    iconSize: 30,
+                                  ),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedCity = newValue!;
+                                    });
+
+                                  },
+                                  items: cities.map<DropdownMenuItem<String>>((String city) {
+                                    return DropdownMenuItem<String>(
+                                      value: city,
+                                      child: Text(city),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                         const SizedBox(height: 30),
 
@@ -148,19 +242,19 @@ class _addCityScreenState extends State<addCityScreen> {
                           color: Colors.blueAccent,
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
-                              onTap:  () async {
-                                if (nameController.text.isEmpty ) {
-                                  Notification = "Vui lòng nhập thông tin";
+                              onTap: () async {
+                                if (selectedCity == 'Chọn thành phố') {
+                                  Notification = "Vui lòng chọn thông tin";
                                   colorNotification = Colors.red;
                                 } else {
                                   // Nếu tất cả đều hợp lệ, lưu dữ liệu
                                   var accountModel = Provider.of<AccountModel>(context, listen: false);
-                                  Notification = "Lưu thông tin thành công";
+                                  Notification = "Thêm thành phố thành công";
                                   colorNotification = Colors.blue;
                                   DateTime now = DateTime.now();
                                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Múi giờ Việt Nam
                                   CreateCity createCity = CreateCity(
-                                    name: nameController.text,
+                                    name: selectedCity,
                                     visitedTime: 1,
                                     createdAt: vietnamTime.millisecondsSinceEpoch,
                                     status: "enabled",
@@ -211,25 +305,6 @@ class _addCityScreenState extends State<addCityScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildTextField(String label, TextEditingController controller, String hintText, TextInputType inputType, {bool enabled = true}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 3),
-        TextFieldInput(
-          textEditingController: controller,
-          hintText: hintText,
-          textInputType: inputType,
-          isEnabled: enabled,
-        ),
-      ],
     );
   }
 }

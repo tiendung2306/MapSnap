@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
+import 'package:mapsnap_fe/Widget/AutoRefreshToken.dart';
+import 'package:mapsnap_fe/Widget/accountModel.dart';
+import 'package:provider/provider.dart';
 
 import '../LocationScreen/locationScreen.dart';
 import '../NewFeed/newFeedScreen.dart';
@@ -15,6 +18,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    // 2 dòng này sẽ được để vào HomeScreen để liên tục làm mới token
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
+    //===============================================================
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

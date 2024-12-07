@@ -58,6 +58,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
     var screenWidth = MediaQuery.of(context).size.width;
 
 
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: GestureDetector(

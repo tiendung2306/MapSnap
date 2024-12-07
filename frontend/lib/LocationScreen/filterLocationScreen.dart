@@ -38,6 +38,8 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
   }
 
 
+
+
   Future<void> fetchCityByUserId() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
@@ -272,7 +274,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                         List<Location> locations = entry.value;
                         return Column(
                           children: [
-                            Text(city.name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                            Text(city.name, style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
                             ...locations.map((location) {
                               return GestureDetector(
                                 onTap: () {
@@ -299,7 +301,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                                       Text(
                                         location.title,
                                         style: TextStyle(
-                                            fontSize: 25,
+                                            fontSize: 35,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Row(
@@ -308,13 +310,13 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                                             'Số lần đến: ',
                                             style: TextStyle(
                                                 fontSize: 25,
-                                                fontWeight: FontWeight.bold),
+                                                ),
                                           ),
                                           Text(
                                             location.visitedTime.toString(),
                                             style: TextStyle(
                                                 fontSize: 25,
-                                                fontWeight: FontWeight.bold),
+                                               ),
                                           ),
                                         ],
                                       ),
@@ -326,7 +328,6 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                                               'Địa chỉ: ${location.address}' ,
                                               style: TextStyle(
                                                 fontSize: 25,
-                                                fontWeight: FontWeight.bold,
                                               ),
                                               maxLines: 2, // Giới hạn 2 dòng
                                               overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
