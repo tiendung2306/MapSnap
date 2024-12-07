@@ -149,33 +149,48 @@ class _FullImageScreenState extends State<FullImageScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: _isUploading ? null : () async {
+            onPressed: _isUploading
+                ? null // Vô hiệu hóa nút nếu đang tải
+                : () async {
               setState(() {
                 _isUploading = true; // Bắt đầu upload
               });
 
-              DateTime now = DateTime.now();
-              DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
-              for (int i = 0; i < images!.length; i++) {
-                CreatePicture createPicture = CreatePicture(
-                  userId: accountModel.idUser,
-                  locationId: "5f8a5e7f575d7a2b9c0d47e5",
-                  visitId: "5f8a5e7f575d7a2b9c0d47e5",
-                  journeyId: "5f8a5e7f575d7a2b9c0d47e5",
-                  link: images![i].path,
-                  capturedAt: vietnamTime,
-                  isTakenByCamera: false,
-                );
-                List<Picture>? picture = await upLoadImage(createPicture);
-                print("Server link: ${picture![0].link}");
-                selectedImages.add(picture[0].link);
-              }
+              try {
+                DateTime now = DateTime.now();
+                DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
 
-              await sendSelectedImages();
-              setState(() {
-                _isUploading = false; // Kết thúc upload
-              });
-              Navigator.pop(context, selectedImages);
+                // Lưu danh sách các tác vụ upload
+                List<Future<void>> uploadTasks = images!.map((file) async {
+                  CreatePicture createPicture = CreatePicture(
+                    userId: accountModel.idUser,
+                    locationId: "5f8a5e7f575d7a2b9c0d47e5",
+                    visitId: "5f8a5e7f575d7a2b9c0d47e5",
+                    journeyId: "5f8a5e7f575d7a2b9c0d47e5",
+                    link: file.path,
+                    capturedAt: vietnamTime,
+                    isTakenByCamera: false,
+                  );
+                  List<Picture>? picture = await upLoadImage(createPicture);
+                  print("Server link: ${picture![0].link}");
+                  selectedImages.add(picture[0].link);
+                }).toList();
+
+                // Chờ tất cả các tác vụ upload hoàn thành
+                await Future.wait(uploadTasks);
+
+                // Gửi danh sách ảnh đã chọn
+                await sendSelectedImages();
+              } catch (e) {
+                print("Lỗi khi upload ảnh: $e");
+              } finally {
+                setState(() {
+                  _isUploading = false; // Kết thúc upload
+                });
+
+                // Trả kết quả về màn hình trước
+                Navigator.pop(context, selectedImages);
+              }
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(
@@ -188,6 +203,7 @@ class _FullImageScreenState extends State<FullImageScreen> {
             )
                 : const Text("Gửi ảnh đã chọn", style: TextStyle(fontSize: 20)),
           ),
+
 
         ],
       ),
