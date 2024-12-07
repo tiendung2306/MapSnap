@@ -39,9 +39,6 @@ module.exports = router;
  *             type: object
  *             required:
  *               - userId
- *               - locationId
- *               - visitId
- *               - journeyId
  *               - capturedAt
  *             properties:
  *               userId:

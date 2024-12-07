@@ -12,7 +12,8 @@ const cloudinary = require('../config/cloudinary'); // Import Cloudinary config
 const createPicture = async (req, res) => {
   uploadPicture(req, res, async (err) => {
     if (err) {
-      return res.status(httpStatus.BAD_REQUEST).send({ message: 'Invalid file' });
+      console.log(err);
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
     }
     if (!req.files) {
       return res.status(httpStatus.BAD_REQUEST).send({ message: 'No file uploaded' });

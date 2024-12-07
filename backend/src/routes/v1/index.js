@@ -12,6 +12,7 @@ const locationCategoryRoute = require('./locationCategory.route');
 const postRoute = require('./post.route');
 const likesRoute = require('./likes.route');
 const commentsRoute = require('./comments.route');
+const goongRoute = require('./goong.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -64,6 +65,10 @@ const defaultRoutes = [
   {
     path: '/posts/comments',
     route: commentsRoute,
+  },
+  {
+    path: '/goong',
+    route: goongRoute,
   }
 ];
 

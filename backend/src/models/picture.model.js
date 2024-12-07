@@ -14,7 +14,6 @@ const pictureSchema = new Schema({
   locationId: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
-    required: true,
   },
   visitId: {
     type: Schema.Types.ObjectId,
@@ -36,6 +35,10 @@ const pictureSchema = new Schema({
     type: String,
     required: true,
   },
+  isTakenByCamera: {
+    type: Boolean,
+    default: true,
+  }
 });
 
 pictureSchema.plugin(toJSON);
