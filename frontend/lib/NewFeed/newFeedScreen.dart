@@ -135,7 +135,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
-
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -241,7 +240,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           user[0] = await getUser(success.userId, accountModel.token_access);
                                           like.insert(0, []);
                                           comments.insert(0, []);
-                                          accountModel.addListComment();
                                         });
                                       });
                                     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/PictureScreen/ImageScreen.dart';
+import 'package:mapsnap_fe/Widget/DownloadImage.dart';
 import 'package:provider/provider.dart';
 
 import '../Model/Picture.dart';
@@ -173,26 +174,6 @@ class _journeyScreenState  extends State<journeyScreen>{
   }
 }
 
-// class ImageScreen extends StatelessWidget {
-//   final String imagePath;
-//
-//   const ImageScreen({Key? key, required this.imagePath}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Ảnh lớn"),
-//       ),
-//       body: Center(
-//         child: Image.asset(
-//           imagePath,
-//           fit: BoxFit.contain,
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class ImageScreen extends StatefulWidget {
   final String picture;
@@ -210,7 +191,6 @@ class ImageScreen extends StatefulWidget {
 }
 
 class ImageScreenState extends State<ImageScreen> {
-
 
 
   @override
@@ -298,6 +278,7 @@ class ImageScreenState extends State<ImageScreen> {
                             onConfirm: () {
                               print('Tải xuống');
                               // Thực hiện tải xuống ảnh ở đây
+                              downloadImage(widget.picture);
                             },
                           );
                         },

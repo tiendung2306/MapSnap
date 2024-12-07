@@ -164,6 +164,7 @@ class AccountModel extends ChangeNotifier {
   }
 
 
+  //=============================
 
   List<Location> _locationManager3 = [];
   List<Location> get locationManager3 => _locationManager3;
@@ -230,29 +231,17 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
   //=====================================================================
-  List<List<String>> _comments = [];
-  List<List<String>> get comments => _comments;
+  List<Picture> _fullImage = [];
+  List<Picture> get fullImage => _fullImage;
 
-  void resetListComment() {
-    _comments = [];
+  void resetFullImage() {
+    _fullImage = [];
     notifyListeners();
   }
 
-  void addComment(int index, String newComment) {
-    if (index < _comments.length) {
-      _comments[index].insert(0, newComment);
-    } else {
-      // Thay vì truy cập trực tiếp, bạn nên kiểm tra và tạo danh sách nếu cần.
-      while (_comments.length <= index) {
-        _comments.add([]);
-      }
-      _comments[index].insert(0, newComment);
-    }
-    notifyListeners();
-  }
 
-  void addListComment() {
-    _comments.insert(0,[]);
+  void addFullImage(Picture picture) {
+    _fullImage.insert(0,picture);
     notifyListeners();
   }
 
