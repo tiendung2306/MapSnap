@@ -159,6 +159,8 @@ class _FullImageScreenState extends State<FullImageScreen> {
               try {
                 DateTime now = DateTime.now();
                 DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
+                // Gửi danh sách ảnh đã chọn
+                await sendSelectedImages();
 
                 // Lưu danh sách các tác vụ upload
                 List<Future<void>> uploadTasks = images!.map((file) async {
@@ -174,13 +176,12 @@ class _FullImageScreenState extends State<FullImageScreen> {
                   List<Picture>? picture = await upLoadImage(createPicture);
                   print("Server link: ${picture![0].link}");
                   selectedImages.add(picture[0].link);
+                  print(selectedImages);
                 }).toList();
 
                 // Chờ tất cả các tác vụ upload hoàn thành
                 await Future.wait(uploadTasks);
 
-                // Gửi danh sách ảnh đã chọn
-                await sendSelectedImages();
               } catch (e) {
                 print("Lỗi khi upload ảnh: $e");
               } finally {
