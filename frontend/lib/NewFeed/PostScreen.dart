@@ -73,22 +73,28 @@ class _PostScreenState extends State<PostScreen> {
             ),
             SizedBox(height: 20),
             // Chọn journey
-            DropdownButtonFormField<String>(
-              value: selectedJourney,
-              items: journeys.map((journey) {
-                return DropdownMenuItem(
-                  value: journey["id"],
-                  child: Text(journey["name"]!),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedJourney = value;
-                });
+            GestureDetector(
+              onTap: () {
+                print("Chọn hành trình");
               },
-              decoration: InputDecoration(
-                labelText: "Chọn hành trình",
-                border: OutlineInputBorder(),
+              child: Container(
+                width: 150,
+                height: 50,
+
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Center(
+                  child: Text(
+                    "Chọn hành trình",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+
+                    ),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -122,9 +128,7 @@ class _PostScreenState extends State<PostScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text(selectedJourney == null
-                            ? "Vui lòng chọn hành trình!"
-                            : "Vui lòng nhập nội dung bài viết!")),
+                        content: Text("Vui lòng nhập nội dung bài viết!")),
                   );
                 }
               },
@@ -135,7 +139,7 @@ class _PostScreenState extends State<PostScreen> {
                 MaterialStateProperty.all<Color>(Colors.white), // Màu chữ
               ),
               icon: Icon(Icons.post_add_outlined),
-              label: Text("Đăng bài"),
+              label: Text("Đăng bài", style: TextStyle(fontSize: 16),),
             ),
           ],
         ),

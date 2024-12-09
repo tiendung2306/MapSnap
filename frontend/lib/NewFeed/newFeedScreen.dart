@@ -4,6 +4,7 @@ import 'package:mapsnap_fe/Manager/CURD_posts.dart';
 import 'package:mapsnap_fe/Manager/Like.dart';
 import 'package:mapsnap_fe/Model/Comment.dart';
 import 'package:mapsnap_fe/Model/Like.dart';
+import 'package:mapsnap_fe/Model/PagePost.dart';
 import 'package:mapsnap_fe/Model/Posts.dart';
 import 'package:mapsnap_fe/Model/User_2.dart';
 import 'package:mapsnap_fe/NewFeed/CommentScreen.dart';
@@ -30,6 +31,13 @@ class _newFeedScreenState extends State<newFeedScreen> {
   late List<List<Like?>> like;
   late List<List<Comment>> comments;
   List<Like?> likeId = [];
+  List<Posts> posts = [];
+  PagePost? pagePost;
+  int currentPage = 1;
+  int totalPages = 1;
+  bool isLoadData = true;
+  ScrollController scrollController = ScrollController();
+  bool hehe = true;
 
   final TextEditingController commentController = TextEditingController();
 
@@ -43,22 +51,83 @@ class _newFeedScreenState extends State<newFeedScreen> {
     print("Tab $index selected");
   }
 
+  Future<void> getPageData() async {
+    pagePost = await getInfoPosts2(1.toString(),"page");
+    totalPages = pagePost!.totalPages;
+  }
+
   @override
   void initState() {
+    getPageData();
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge && scrollController.position.pixels != 0 && isLoadData) {
+        currentPage++;
+        // Load next page when scrolled to the bottom
+        print("hehe");
+        print(currentPage);
+        listPost = resetData(currentPage).then((posts) async {
+          user = List<User?>.generate(posts.length, (index) => null);
+          like = List<List<Like?>>.generate(posts.length, (index) => []);
+          comments = List<List<Comment>>.generate(posts.length, (index) => []);
+          var accountModel = Provider.of<AccountModel>(context, listen: false);
+
+          // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
+          await Future.wait(posts.asMap().entries.map((entry) async {
+            int index = entry.key;
+            Posts post = entry.value;
+            user[index] = await getUser(post.userId, accountModel.token_access);
+            like[index]= await getLikePost(post.id);
+            comments[index]= await getCommentPost(post.id);
+
+            bool userLiked = like[index].any((like) => like?.userId.toString() == accountModel.idUser.toString());
+            isLike.add(userLiked);
+
+            if (userLiked) {
+              like[index].forEach((like) {
+                if (like?.userId.toString() == accountModel.idUser.toString() && like != null) {
+                  likeId.add(like); // Thêm ID của like vào danh sách likeId
+                }
+              });
+            } else {
+              likeId.add(null);
+            }
+
+          }));
+          return posts;
+        });
+
+        setState(() {
+          if(currentPage == totalPages){
+            isLoadData = false;
+          }
+        });
+      }
+    });
+    listPost = Future.value([]);
+    if(hehe) {
+      initializePageData();
+    }
     super.initState();
-    listPost = resetData().then((posts) async {
+  }
+
+  Future<void> initializePageData() async {
+    // Đợi getPageData hoàn tất
+    await getPageData();
+
+    // Thực hiện các lệnh khác sau khi getPageData hoàn tất
+    listPost = resetData(currentPage).then((posts) async {
       user = List<User?>.generate(posts.length, (index) => null);
       like = List<List<Like?>>.generate(posts.length, (index) => []);
       comments = List<List<Comment>>.generate(posts.length, (index) => []);
       var accountModel = Provider.of<AccountModel>(context, listen: false);
 
-      // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
+      // Đợi tất cả các tác vụ bất đồng bộ hoàn thành
       await Future.wait(posts.asMap().entries.map((entry) async {
         int index = entry.key;
         Posts post = entry.value;
         user[index] = await getUser(post.userId, accountModel.token_access);
-        like[index]= await getLikePost(post.id);
-        comments[index]= await getCommentPost(post.id);
+        like[index] = await getLikePost(post.id);
+        comments[index] = await getCommentPost(post.id);
 
         bool userLiked = like[index].any((like) => like?.userId.toString() == accountModel.idUser.toString());
         isLike.add(userLiked);
@@ -72,16 +141,21 @@ class _newFeedScreenState extends State<newFeedScreen> {
         } else {
           likeId.add(null);
         }
-
       }));
       return posts;
     });
+    setState(() {
+      hehe = false; // Đánh dấu hoàn thành
+    });
+  }
+
+  Future<List<Posts>> resetData(int page) async {
+    pagePost = await getInfoPosts2(page.toString(),"page");
+    posts.addAll(pagePost!.results);
+    return posts;
   }
 
 
-  Future<List<Posts>> resetData() async {
-    return await getInfoPosts('-createdAt',"sortBy");
-  }
 
   Future<User?> getUser(String userId, String token_access) async {
     try {
@@ -141,7 +215,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
         body: FutureBuilder<List<Posts>>(
           future: listPost,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting && hehe) {
               return Center(
                   child:AnimatedRotation(
                     turns: 1, // xoay một vòng
@@ -162,13 +236,23 @@ class _newFeedScreenState extends State<newFeedScreen> {
                         },
                       ),
                     ),
-                    body: Center(child: Text('Error: ${snapshot.error}')),
+                    body: Center(child:AnimatedRotation(
+                      turns: 1, // xoay một vòng
+                      duration: Duration(seconds: 1),
+                      child: CircularProgressIndicator(),
+                    ),),
                   )
               );
             }
 
-            var posts = snapshot.data!; // Lấy dữ liệu từ snapshot
-            print(comments);
+            var post = snapshot.data!; // Lấy dữ liệu từ snapshot
+            if(posts.length == 0) {
+              posts = post;
+            }
+            else {
+              post.map((i) => posts.add(i));
+            }
+
 
 
             return Consumer<AccountModel>(
@@ -260,6 +344,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                         SizedBox(height: 5),
                         Expanded(
                           child: ListView.builder(
+                            controller: scrollController,
                             // reverse: true,
                             itemCount: posts.length, // Dùng posts.length thay vì count
                             itemBuilder: (context, index) {
@@ -398,7 +483,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           itemCount: post.media.length > 4 ? 4 : post.media.length,
                                           itemBuilder: (context, imgIndex) {
                                             if (imgIndex == 3 && post.media.length > 4) {
-                                              print(post.media.length);
                                               return GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(
@@ -494,7 +578,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                             SizedBox(width: 30),
                                             GestureDetector(
                                               onTap: () {
-                                                print(postComment.isEmpty);
                                                 showComments(context,postComment,post);
                                               },
                                               child: Container(

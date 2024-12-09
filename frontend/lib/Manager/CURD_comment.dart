@@ -28,7 +28,6 @@ Future<Comment?> AddComment(addComment addComment) async {
   if (response.statusCode == 201) {
     // Xử lý thành công
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    print(data);
     return Comment.fromJson(data);
   } else {
     // Xử lý lỗi từ API

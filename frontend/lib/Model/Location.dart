@@ -91,21 +91,34 @@ class CreateLocation {
 
   });
 
-  factory CreateLocation.fromJson(Map<String, dynamic> json) {
-    return CreateLocation(
-      cityId: json['cityId'],
-      categoryId: json['categoryId'],
-      title: json['title'],
-      visitedTime: json['visitedTime'],
-      longitude: json['longitude'],
-      latitude: json['latitude'],
-      createdAt: json['createdAt'],
-      status: json['status'],
-      updatedByUser: json['updatedByUser'],
-      isAutomaticAdded: json['isAutomaticAdded'],
+}
+
+class InfoVisit {
+  String address;
+  String country;
+  String district;
+  String homeNumber;
+  String commune;
+  String province;
+
+  InfoVisit({
+    required this.address,
+    required this.country,
+    required this.district ,
+    required this.homeNumber,
+    required this.commune,
+    required this.province,
+  });
+
+  factory InfoVisit.fromJson(Map<String, dynamic> json) {
+    return InfoVisit(
       address: json['address'],
       country: json['country'],
       district: json['district'],
+      homeNumber: json['homeNumber'],
+      commune: json['commune'],
+      province: json['province'],
+
     );
   }
 }

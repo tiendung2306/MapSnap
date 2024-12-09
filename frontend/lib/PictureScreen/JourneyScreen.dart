@@ -50,126 +50,128 @@ class _journeyScreenState  extends State<journeyScreen>{
     var screenWidth = MediaQuery.of(context).size.width;
 
 
-    return Scaffold(
-      body: Consumer<AccountModel>(
-        builder: (context, accountModel, child) {
-          final imageManager = accountModel.imageManager[widget.journey];
-          final List<String> visitList = imageManager!.keys.toList();
-          return Stack(
-            children: [
-              Image.asset(
-                'assets/Image/Background.png',
-                width: screenHeight,
-                height: screenHeight,
-                fit: BoxFit.none,
-              ),
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
+    return SafeArea(
+      child: Scaffold(
+        body: Consumer<AccountModel>(
+          builder: (context, accountModel, child) {
+            final imageManager = accountModel.imageManager[widget.journey];
+            final List<String> visitList = imageManager!.keys.toList();
+            return Stack(
+              children: [
+                Image.asset(
+                  'assets/Image/Background.png',
+                  width: screenHeight,
+                  height: screenHeight,
+                  fit: BoxFit.none,
+                ),
+                SingleChildScrollView(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                child: Icon(Icons.chevron_left, size: 50,),
+                              ),
+                            ),
+                            Text('Ảnh theo địa điểm', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                            Container(
                               width: 50,
                               height: 50,
-                              child: Icon(Icons.chevron_left, size: 50,),
-                            ),
-                          ),
-                          Text('Ảnh theo địa điểm', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-                          Container(
-                            width: 50,
-                            height: 50,
-                          )
-                        ],
-                      ),
-                    ),
-                    // Hiển thị các container cho từng ngày
-                    for (int i = accountModel.imageManager[widget.journey]!.length - 1; i >= 0 ; i--) ...[
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                spreadRadius: 3,
-                                blurRadius: 6,
-                                offset: Offset(5, 5)
                             )
                           ],
                         ),
-
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${visitList![i]}",
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 5,),
-                            Container(
-                              height: 2,
-                              color: Colors.black54,
-                            ),
-                            SizedBox(height: 15,),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: accountModel.imageManager[widget.journey]![visitList![i]]!.length,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 5,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
+                      ),
+                      // Hiển thị các container cho từng ngày
+                      for (int i = accountModel.imageManager[widget.journey]!.length - 1; i >= 0 ; i--) ...[
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  spreadRadius: 3,
+                                  blurRadius: 6,
+                                  offset: Offset(5, 5)
+                              )
+                            ],
+                          ),
+      
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${visitList![i]}",
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              itemBuilder: (context, index) {
-                                final String imagePath = accountModel.imageManager[widget.journey]![visitList?[i]]![index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    navigateToImageScreen2(context,imagePath,widget.journey,visitList[i]);
-                                    // navigateToImageScreen(imagePath);
-                                  },
-                                  child: Container(
-                                    height: 70,
-                                    width: 70,
-                                    child: Image.asset(
-                                      imagePath,
-                                      fit: BoxFit.cover,
+                              SizedBox(height: 5,),
+                              Container(
+                                height: 2,
+                                color: Colors.black54,
+                              ),
+                              SizedBox(height: 15,),
+                              GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: accountModel.imageManager[widget.journey]![visitList![i]]!.length,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                ),
+                                itemBuilder: (context, index) {
+                                  final String imagePath = accountModel.imageManager[widget.journey]![visitList?[i]]![index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      navigateToImageScreen2(context,imagePath,widget.journey,visitList[i]);
+                                      // navigateToImageScreen(imagePath);
+                                    },
+                                    child: Container(
+                                      height: 70,
+                                      width: 70,
+                                      child: Image.asset(
+                                        imagePath,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
+                      ],
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          k++;
+                          accountModel.addImageLocation(
+                            "assets/Image/${k%7 + 1}.jpg",
+                            widget.journey,
+                            "Công viên nước",
+                          );
+                        },
+                        child: const Text("Thêm ảnh vào địa điểm hiện tại"),
                       ),
                     ],
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        k++;
-                        accountModel.addImageLocation(
-                          "assets/Image/${k%7 + 1}.jpg",
-                          widget.journey,
-                          "Công viên nước",
-                        );
-                      },
-                      child: const Text("Thêm ảnh vào địa điểm hiện tại"),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        }
-      )
+              ],
+            );
+          }
+        )
+      ),
     );
   }
 }

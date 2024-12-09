@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'package:mapsnap_fe/Model/City.dart';
+import 'package:mapsnap_fe/Model/PagePost.dart';
 import 'dart:convert';
 
 import 'package:mapsnap_fe/Model/Posts.dart';
 
 
 
-// API để gọi tải thành phố lên Database
 Future<Posts?> upLoadPost(CreatePost createPost) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/posts');
   final Map<String, dynamic> loadData = {
@@ -32,7 +32,6 @@ Future<Posts?> upLoadPost(CreatePost createPost) async {
     if (response.statusCode == 201) {
       // Xử lý thành công
       final data = jsonDecode(response.body) as Map<String, dynamic>;
-      print(data);
       return Posts.fromJson(data);
     } else {
       // Xử lý lỗi từ API
@@ -51,25 +50,25 @@ Future<List<Posts>> getInfoPosts(String parameters, String check) async {
   // Xác định URL dựa trên giá trị của check
   switch (check) {
     case 'userId':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?userId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?userId=$parameters&sortBy=-createdAt');
       break;
     case 'likesCount':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?likesCount=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?likesCount=$parameters&sortBy=-createdAt');
       break;
     case 'commentsCount':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?commentsCount=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?commentsCount=$parameters&sortBy=-createdAt');
       break;
     case 'limit':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?limit=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?limit=$parameters&sortBy=-createdAt');
       break;
     case 'page':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?page=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?page=$parameters&sortBy=-createdAt');
       break;
     case 'sortBy':
       url = Uri.parse('http://10.0.2.2:3000/v1/posts?sortBy=$parameters');
       break;
     case '':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts');
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts&sortBy=-createdAt');
       break;
     default:
       print('Tham số không hợp lệ');
@@ -85,7 +84,6 @@ Future<List<Posts>> getInfoPosts(String parameters, String check) async {
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       List<dynamic> data = json['results'];
-      print(data);
       List<Posts> posts = data.map((json) => Posts.fromJson(json)).toList();
       return posts;
     } else {
@@ -95,6 +93,55 @@ Future<List<Posts>> getInfoPosts(String parameters, String check) async {
     print('Lỗi khi gọi API: $e');
   }
   return [];
+}
+
+
+Future<PagePost?> getInfoPosts2(String parameters, String check) async {
+  Uri? url;
+  // Xác định URL dựa trên giá trị của check
+  switch (check) {
+    case 'userId':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?userId=$parameters&sortBy=-createdAt');
+      break;
+    case 'likesCount':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?likesCount=$parameters&sortBy=-createdAt');
+      break;
+    case 'commentsCount':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?commentsCount=$parameters&sortBy=-createdAt');
+      break;
+    case 'limit':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?limit=$parameters&sortBy=-createdAt');
+      break;
+    case 'page':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?page=$parameters&sortBy=-createdAt');
+      break;
+    case 'sortBy':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts?sortBy=$parameters');
+      break;
+    case '':
+      url = Uri.parse('http://10.0.2.2:3000/v1/posts');
+      break;
+    default:
+      print('Tham số không hợp lệ');
+      return null;
+  }
+
+  try {
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return PagePost.fromJson(data);
+    } else {
+      print('Lỗi: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Lỗi khi gọi API: $e');
+  }
+  return null;
 }
 
 
@@ -162,3 +209,7 @@ Future<void> RemovePost(String id ) async {
     print('Lỗi: ${response.statusCode}');
   }
 }
+
+
+
+
