@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Model/Token_2.dart';
 import 'accountModel.dart';
@@ -33,10 +34,22 @@ void startAutoRefreshToken(BuildContext context,DateTime token_access_expires, S
 
 Future<void> refreshTokenFunction(String userId, String Tokenrefresh, BuildContext context) async {
   Token? newToken = await refreshToken(userId, Tokenrefresh, context);
+  final prefs = await SharedPreferences.getInstance();
   if (newToken != null) {
-    print("Token đã được làm mới thành công!");
+    print("Token đã được làm mới thành công!-----------------------------------------sadnsald-"
+        "--------------------------------------------------------------------------------"
+        "-----------------------------------------------------------------------------------"
+        "----------------------------------------------------------------------------------"
+        "----------------------------------------------------------------------------------"
+        "----------------------------------------------------------------------------------"
+        "----------------------------------------------------------------------------------"
+        "----------------------------------------------------------------------------------"
+        "----------------------------------------------------------------------------------"
+        "---------------");
+    await prefs.setString('newtoken', jsonEncode(newToken.toJson()));
     startAutoRefreshToken(context, newToken.token_access_expires, newToken.token_refresh, userId); // Tự động làm mới lại với token mới
   } else {
+    await prefs.setBool('isLoggedIn', false);
     print("Không thể làm mới token.");
   }
 }

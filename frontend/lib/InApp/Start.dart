@@ -50,7 +50,7 @@ class _StartScreenState extends State<StartScreen> {
         }
         else{
           var accountModel = Provider.of<AccountModel>(context, listen: false);
-          final data = await prefs.getString('userData')!;
+          final data = await prefs.getString('newtoken')!;
           Token token = Token.fromJson(jsonDecode(data));
           accountModel.setToken(token);
           User? user = await fetchData(token.idUser,token.token_access);
@@ -62,7 +62,7 @@ class _StartScreenState extends State<StartScreen> {
         }
 
 
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => nextPage), // Thay bằng màn hình chính
         );

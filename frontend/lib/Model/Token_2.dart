@@ -23,4 +23,22 @@ class Token {
       idUser: json['user']['id'] ?? 'NoID',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'tokens': {
+        'access': {
+          'token': token_access,
+          'expires': token_access_expires.toIso8601String(),
+        },
+        'refresh': {
+          'token': token_refresh,
+          'expires': token_refresh_expires.toIso8601String(),
+        },
+      },
+      'user': {
+        'id': idUser,
+      },
+    };
+  }
 }

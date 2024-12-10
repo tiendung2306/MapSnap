@@ -8,7 +8,7 @@ class Position {
   final String? country;  // Quốc gia (tùy chọn)
   final String? city;     // Thành phố (tùy chọn)
   final String? district; // Quận/huyện (tùy chọn)
-  final String? homeNumber; // Số nhà (tùy chọn)
+  final int? homeNumber; // Số nhà (tùy chọn)
   final String? id;       // ID của đối tượng (tùy chọn)
 
   Position({
@@ -30,7 +30,7 @@ class Position {
     return Position(
       longitude: json['longitude'],
       latitude: json['latitude'],
-      createdAt: json['createdAt'],
+      createdAt: 10, //error
       locationId: json['locationId'],
       userId: json['userId'],
       address: json['address'],

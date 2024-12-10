@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapsnap_fe/Model/Journey.dart';
 import 'package:mapsnap_fe/Model/Visit.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
+import 'package:mapsnap_fe/Model/Position.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
 import 'dart:math';
 import 'AddVisit.dart';
@@ -25,9 +26,10 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   int currIndex = 0;
   Color tabColor = Colors.green;
 
-  late Journey journey;
-  final List<Position> visits = [];
-  final List<Location> locations = [];
+  List<Point> points = [];
+
+  List<Point> visits = [];
+
 
   late GoogleMapController _controller;
   Set<Marker> _markers = {};
@@ -40,6 +42,9 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   Set<Polyline> _visitPolylines = {};
   Set<Polyline> _pathPolylines = {};
   Set<Polyline> _periodPolylines = {};
+
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
 
 
   @override
@@ -83,31 +88,42 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   }
 
   void loadData() async{
-    // final response = await _apiService.GetJourney('67424c5cd90b1044dcf97d40');
-    // final data = response["data"]["result"];
-    // journey = Journey.fromJson(data);
-    //
-    // List<LatLng> points = [];
-    //
-    // for (var visitId in journey.visitIds) {
-    //   final visit_response = await _apiService.GetVisit(visitId);
-    //   Visit visit = Visit.fromJson(visit_response["data"]["result"]);
-    //   visits.add(visit);
-    //
-    //   final location_response = await _apiService.GetLocation(visit.locationId);
-    //   Location location = Location.fromJson(location_response["data"]["result"]);
-    //   positions.add(location);
-    //
-    //   points.add(LatLng(location.latitude, location.longitude));
-    // }
+    final response = await _apiService.GetJourneyToday('672b2c4241382c06b026f861');
+    final data = response["data"]["results"][0];
 
-    //api need
+    Visit? preVisit = null;
+    for (var visitId in data['visitIds']) {
+      final visit_response = await _apiService.GetVisit(visitId);
+      Visit visit = Visit.fromJson(visit_response["data"]["result"]);
 
-    sortVisit(positions);
+      final location_response = await _apiService.GetLocation(visit.locationId);
+      Location location = Location.fromJson(location_response["data"]["result"]);
 
-    addMarkersWithRotation(positions);
+      Point point = new Point(type: 'visit', longitude: (location.longitude).toDouble(), latitude: (location.latitude).toDouble(), visit: visit, location: location);
 
-    addPolyline(positions);
+      if(preVisit != null){
+        final l_response = await _apiService.GetPositionPeriod('672b2c4241382c06b026f861', preVisit.endedAt, visit.startedAt);
+        final l_data = l_response["data"]["result"];
+        for(var positionData in l_data){
+          Position position = Position.fromJson(positionData);
+
+          final l_location_response = await _apiService.GetLocation(position.locationId);
+          Location l_location = Location.fromJson(l_location_response["data"]["result"]);
+
+          Point l_point = new Point(type: 'position', longitude: (position.longitude).toDouble(), latitude: (position.latitude).toDouble(), location: l_location);
+          points.add(l_point);
+        }
+      }
+
+      points.add(point);
+      visits.add(point);
+
+      preVisit = visit;
+    }
+
+    addMarkersWithRotation(points);
+
+    addPolyline(points);
 
     setState(() {
       _markers = _visitMarkers;
@@ -126,21 +142,21 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       else{
         currIndex = index;
         _deleteMarker('current_marker');
-        late Position currPos;
+        late Point currPos;
         switch (_tabController.index) {
           case 0:
             currPos = visits[currIndex];
             break;
           case 1:
-            currPos = positions[currIndex];
+            currPos = points[currIndex];
             break;
           case 2:
-            currPos = positions[currIndex];
+            currPos = points[currIndex];
             break;
           default:
         }
 
-        _controller.showMarkerInfoWindow(MarkerId(currPos.name));
+        _controller.showMarkerInfoWindow(MarkerId(currPos.getName()));
         CameraUpdate cameraUpdate = CameraUpdate.newLatLngZoom(LatLng(currPos.latitude,
             currPos.longitude), 17);
         _controller.animateCamera(cameraUpdate);
@@ -192,13 +208,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     });
   }
 
-  void sortVisit(List<Position> points){
-    for (int i = 0; i < points.length; i++) {
-      if(points[i].type == 'visit')
-        visits.add(points[i]);
-    }
-  }
-
   double calculateBearing(LatLng start, LatLng end) {
     final double startLat = start.latitude * (pi / 180); // Chuyển đổi sang radian
     final double startLng = start.longitude * (pi / 180);
@@ -215,7 +224,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     return bearing;
   }
 
-  void addMarkersWithRotation(List<Position> points) async {
+  void addMarkersWithRotation(List<Point> points) async {
     final BitmapDescriptor visitTab1 = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(20, 20)),
       'assets/Common/visitTab1.png', // Đường dẫn tới icon của bạn
@@ -252,30 +261,30 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       final double rotation = calculateBearing(start, next); // Tính góc giữa 2 điểm
 
       final markerTab1 = Marker(
-        markerId: MarkerId(points[i].name),
+        markerId: MarkerId(points[i].getName()),
         position: start,
         icon: points[i].type == 'visit' ? visitTab1 : positionTab1,
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
         rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].name),
+        infoWindow: InfoWindow(title: points[i].getName()),
       );
 
       final markerTab2 = Marker(
-        markerId: MarkerId(points[i].name),
+        markerId: MarkerId(points[i].getName()),
         position: start,
         icon: points[i].type == 'visit' ? visitTab2 : positionTab2,
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
         rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].name),
+        infoWindow: InfoWindow(title: points[i].getName()),
       );
 
       final markerTab3 = Marker(
-        markerId: MarkerId(points[i].name),
+        markerId: MarkerId(points[i].getName()),
         position: start,
         icon: points[i].type == 'visit' ? visitTab3 : positionTab3,
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
         rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].name),
+        infoWindow: InfoWindow(title: points[i].getName()),
       );
 
       _visitMarkers.add(markerTab1);
@@ -301,7 +310,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     });
   }
 
-  void addPolyline(List<Position> points){
+  void addPolyline(List<Point> points){
     List<LatLng> _points = [];
     for (int i = 0; i < points.length; i++) {
       _points.add(LatLng(points[i].latitude, points[i].longitude));
@@ -370,7 +379,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     return GoogleMap(
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(
-        target: LatLng(positions[0].latitude, positions[0].longitude),
+        target: LatLng(points[0].latitude, points[0].longitude),
         zoom: _zoomLevel,
       ),
       myLocationEnabled: true,
@@ -381,6 +390,22 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
 
     );
+  }
+
+  Future<void> _selectTime(BuildContext context, bool isStart) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          startTime = picked;
+        } else {
+          endTime = picked;
+        }
+      });
+    }
   }
 
   Positioned Header(){
@@ -425,10 +450,10 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         left: 10,
         child: ElevatedButton.icon(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddVisitScreen()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => AddVisitScreen()),
+            // );
           },
           icon: Icon(Icons.add),
           label: Text(
@@ -537,7 +562,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                         type: 'Tab1Visit',
                         index: index,
                         isFocus: currIndex == index,
-                        title: visits[index].name,
+                        title: visits[index].getName(),
                         subtitle: "Subtitle",
                         content: "Content",
                         onTapFunc: onTap,
@@ -549,13 +574,13 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   color: Colors.white,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: positions.length,
+                    itemCount: points.length,
                     itemBuilder: (context, index){
                       return ExpandableListTile(
-                        type: positions[index].type == 'visit' ? 'Tab2Visit' : 'Tab2Position',
+                        type: points[index].type == 'visit' ? 'Tab2Visit' : 'Tab2Position',
                         index: index,
                         isFocus: currIndex == index,
-                        title: positions[index].name,
+                        title: points[index].getName(),
                         subtitle: "Subtitle",
                         content: "Content",
                         onTapFunc: onTap,
@@ -563,23 +588,110 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                     },
                   ),
                 ),
-                Container(
-                  color: Colors.white,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: positions.length,
-                    itemBuilder: (context, index){
-                      return ExpandableListTile(
-                        type: positions[index].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
-                        index: index,
-                        isFocus: currIndex == index,
-                        title: positions[index].name,
-                        subtitle: "Subtitle",
-                        content: "Content",
-                        onTapFunc: onTap,
-                      );
-                    },
-                  ),
+                Stack(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 100.0),
+                      color: Colors.white,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: points.length * 2,
+                        itemBuilder: (context, index){
+                          return ExpandableListTile(
+                            type: points[index % points.length].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
+                            index: index % points.length,
+                            isFocus: currIndex == index % points.length,
+                            title: points[index % points.length].getName(),
+                            subtitle: "Subtitle",
+                            content: "Content",
+                            onTapFunc: onTap,
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      color: Colors.red,
+                      height: 100, width: double.infinity,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) => AddVisitScreen()),
+                                    // );
+                                  },
+                                  icon: Icon(Icons.access_time_outlined, size: 30,),
+                                  label: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "From",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      Text('9:30'),
+                                    ],
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    shadowColor: Colors.black,
+                                    side: BorderSide(color: Colors.blue, width: 2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded (
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(builder: (context) => AddVisitScreen()),
+                                    // );
+                                  },
+                                  icon: Icon(Icons.access_time_outlined, size: 30,),
+                                  label: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "To",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      Text('9:30'),
+                                    ],
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    shadowColor: Colors.black,
+                                    side: BorderSide(color: Colors.blue, width: 2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          ElevatedButton(
+                            onPressed: (){},
+                            child: Text('Apply'),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

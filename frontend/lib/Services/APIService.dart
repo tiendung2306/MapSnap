@@ -83,6 +83,42 @@ class ApiService {
     }
   }
 
+    Future<Map<String, dynamic>> GetJourneyToday (String userId) async {
+    final url = Uri.parse('$_baseUrl/journey/{userId}/get-journeys-today'.replaceFirst("{userId}", userId));
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get Journey success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get Journey failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get Journey failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
     Future<Map<String, dynamic>> CreateVisit (String userId, String title) async {
     final url = Uri.parse('$_baseUrl/visit/{userId}/create-visit'.replaceFirst("{userId}", userId));
 
@@ -228,6 +264,46 @@ class ApiService {
         catch(e){
           return {
             'mess': "Create failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
+    Future<Map<String, dynamic>> GetPositionPeriod (String userId, int from, int to) async {
+    final url = Uri.parse('$_baseUrl/position/{userId}/get-position'.replaceFirst("{userId}", userId));
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "from": from,
+          "to": to
+        }),
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get position success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get position failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get position failed",
             'data': null,
           };
         }

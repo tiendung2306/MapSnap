@@ -61,10 +61,18 @@ class _SignInState extends State<SignIn> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('userData', jsonEncode(data));
+
+      Token token = Token(
+        token_access: data['tokens']['access']['token'] ?? 'NoTokenAccess',
+        token_access_expires: DateTime.parse(data['tokens']['access']['expires']),
+        token_refresh: data['tokens']['refresh']['token'] ?? 'NoTokenRefresh',
+        token_refresh_expires: DateTime.parse(data['tokens']['refresh']['expires']),
+        idUser: data['user']['id'] ?? 'NoID',
+      );
+
+      await prefs.setString('newtoken', jsonEncode(token.toJson()));
 
       var accountModel = Provider.of<AccountModel>(context, listen: false);
-      Token token = Token.fromJson(data);
       accountModel.setToken(token);
       User? user = await fetchData(token.idUser,token.token_access);
       accountModel.setUser(user!);
