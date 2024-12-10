@@ -42,7 +42,7 @@ const createVisit = async (requestBody) => {
   const journeyId = _.get(requestBody, 'journeyId');
   const visitId = _.get(visit, '_id');
   await _addVisitInJourney({ journeyId, visitId });
-  await _createHistoryLog({ journeyId: visit._id, visitBody: requestBody, activityType: 'Create' });
+  await _createHistoryLog({ visitId: visit._id, visitBody: requestBody, activityType: 'Create' });
   return visit;
 };
 
