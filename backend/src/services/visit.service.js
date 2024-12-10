@@ -3,9 +3,23 @@ const httpStatus = require('http-status');
 const _ = require('lodash');
 const Visit = require('../models/visit.model');
 const Journey = require('../models/journey.model');
+const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
 // const UserModel = require('../models/user.model');
+
+const _createHistoryLog = async ({ visitId, visitBody, activityType }) => {
+  const historyLogRequest = {
+    activityType,
+    modelImpact: 'Visit',
+    objectIdImpact: visitId,
+    userId: visitBody.userId,
+    createdAt: Date.now(),
+    updatedByUser: visitBody.updatedByUser,
+    isAutomaticAdded: visitBody.isAutomaticAdded,
+  };
+  await HistoryLogService.createHistoryLog(historyLogRequest);
+};
 
 const _addVisitInJourney = async ({ journeyId, visitId }) => {
   const journey = await Journey.findById(journeyId);
@@ -28,6 +42,7 @@ const createVisit = async (requestBody) => {
   const journeyId = _.get(requestBody, 'journeyId');
   const visitId = _.get(visit, '_id');
   await _addVisitInJourney({ journeyId, visitId });
+  await _createHistoryLog({ journeyId: visit._id, visitBody: requestBody, activityType: 'Create' });
   return visit;
 };
 
@@ -83,6 +98,7 @@ const updateVisit = async ({ visitId, requestBody }) => {
     if (lastJourneyId) await _deleteVisitInJourney({ journeyId: lastJourneyId, visitId });
   }
   const visit = await Visit.findByIdAndUpdate(visitId, requestBody, { new: true });
+  await _createHistoryLog({ visitId, visitBody: visit, activityType: 'Update' });
   return visit;
 };
 
@@ -91,7 +107,8 @@ const deleteVisit = async (visitId) => {
 };
 
 const deleteHardVisit = async (visitId) => {
-  await Visit.findByIdAndDelete(visitId);
+  const visitBody = await Visit.findByIdAndDelete(visitId);
+  await _createHistoryLog({ visitId, visitBody, activityType: 'Delete' });
 };
 
 module.exports = {

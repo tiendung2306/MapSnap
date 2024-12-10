@@ -21,13 +21,10 @@ const getPosition = async (positionBody) => {
   const { userId, locationId, from, to } = positionBody;
   const filter = { userId };
   if (locationId) filter.locationId = locationId;
-  if (from) {
-    filter.startedAt = {};
-    filter.startedAt.$gte = from;
-  }
-  if (to) {
-    filter.endedAt = {};
-    filter.endedAt.$lte = to;
+  if (from || to) {
+    filter.createdAt = {};
+    if (from) filter.createdAt.$gte = from;
+    if (to) filter.createdAt.$lte = to;
   }
   const positions = await Position.find(filter);
   return positions;

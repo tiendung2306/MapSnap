@@ -2,9 +2,23 @@ const httpStatus = require('http-status');
 const mongoose = require('mongoose');
 // const _ = require('lodash');
 const Journey = require('../models/journey.model');
+const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
 // const UserModel = require('../models/user.model');
+
+const _createHistoryLog = async ({ journeyId, journeyBody, activityType }) => {
+  const historyLogRequest = {
+    activityType,
+    modelImpact: 'Journey',
+    objectIdImpact: journeyId,
+    userId: journeyBody.userId,
+    createdAt: Date.now(),
+    updatedByUser: journeyBody.updatedByUser,
+    isAutomaticAdded: journeyBody.isAutomaticAdded,
+  };
+  await HistoryLogService.createHistoryLog(historyLogRequest);
+};
 
 const createJourney = async (journeyBody) => {
   const journey = await Journey.findOne(journeyBody);
@@ -12,6 +26,7 @@ const createJourney = async (journeyBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, Message.journeyMsg.nameExisted);
   }
   const journeyModel = await Journey.create(journeyBody);
+  await _createHistoryLog({ journeyId: journeyModel._id, journeyBody, activityType: 'Create' });
   return journeyModel;
 };
 
@@ -45,8 +60,9 @@ const getJourneyByJourneyId = async (journeyId) => {
 };
 
 const updateJourney = async ({ journeyId, requestBody }) => {
-  const journeyModel = await Journey.findOneAndUpdate(journeyId, requestBody, { new: true });
-  return journeyModel;
+  const journey = await Journey.findOneAndUpdate(journeyId, requestBody, { new: true });
+  await _createHistoryLog({ journeyId, journeyBody: journey, activityType: 'Update' });
+  return journey;
 };
 
 const deleteJourney = async (journeyId) => {
@@ -54,7 +70,8 @@ const deleteJourney = async (journeyId) => {
 };
 
 const deleteHardJourney = async (journeyId) => {
-  await Journey.findByIdAndDelete(journeyId);
+  const journeyBody = await Journey.findByIdAndDelete(journeyId);
+  await _createHistoryLog({ journeyId, journeyBody, activityType: 'Delete' });
 };
 
 const getJourneysToday = async (userId) => {
