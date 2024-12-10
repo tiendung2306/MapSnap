@@ -4,9 +4,23 @@ const _ = require('lodash');
 const Position = require('../models/position.model');
 const Location = require('../models/location.model');
 const { createLocation } = require('./location.service');
+const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
 // const UserModel = require('../models/user.model');
+
+const _createHistoryLog = async ({ positionId, positionBody, activityType }) => {
+  const historyLogRequest = {
+    activityType,
+    modelImpact: 'Position',
+    objectIdImpact: positionId,
+    userId: positionBody.userId,
+    createdAt: Date.now(),
+    updatedByUser: false,
+    isAutomaticAdded: true,
+  };
+  await HistoryLogService.createHistoryLog(historyLogRequest);
+};
 
 const createPosition = async (requestBody) => {
   const existedPosition = await Position.findOne(requestBody);
@@ -14,6 +28,7 @@ const createPosition = async (requestBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, Message.positionMsg.nameExisted);
   }
   const position = await Position.create(requestBody);
+  await _createHistoryLog({ positionId: position._id, positionBody: requestBody, activityType: 'Create' });
   return position;
 };
 
@@ -21,13 +36,10 @@ const getPosition = async (positionBody) => {
   const { userId, locationId, from, to } = positionBody;
   const filter = { userId };
   if (locationId) filter.locationId = locationId;
-  if (from) {
-    filter.startedAt = {};
-    filter.startedAt.$gte = from;
-  }
-  if (to) {
-    filter.endedAt = {};
-    filter.endedAt.$lte = to;
+  if (from || to) {
+    filter.createdAt = {};
+    if (from) filter.createdAt.$gte = from;
+    if (to) filter.createdAt.$lte = to;
   }
   const positions = await Position.find(filter);
   return positions;
@@ -35,6 +47,7 @@ const getPosition = async (positionBody) => {
 
 const deletePosition = async (positionId) => {
   const position = await Position.findByIdAndDelete(positionId);
+  await _createHistoryLog({ positionId: position._id, positionBody: position, activityType: 'Delete' });
   return position;
 };
 
