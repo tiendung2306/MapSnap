@@ -13,6 +13,7 @@ const postRoute = require('./post.route');
 const likesRoute = require('./likes.route');
 const commentsRoute = require('./comments.route');
 const goongRoute = require('./goong.route');
+const historyLogRoute = require('./historyLog.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -69,7 +70,11 @@ const defaultRoutes = [
   {
     path: '/goong',
     route: goongRoute,
-  }
+  },
+  {
+    path: '/historyLog',
+    route: historyLogRoute,
+  },
 ];
 
 const devRoutes = [

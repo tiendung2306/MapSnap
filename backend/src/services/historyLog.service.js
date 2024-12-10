@@ -8,13 +8,17 @@ const createHistoryLog = async (historyLogBody) => {
   return historyLog;
 };
 
-const getHistoryLogs = async (historyLogBody) => {
-  const { userId, searchText, status = 'enabled' } = historyLogBody;
-  const filter = { userId, status };
-  if (searchText) {
-    filter.name = { $regex: searchText, $options: 'i' };
+const getHistoryLogs = async (visitBody) => {
+  const { userId, isAutomaticAdded, updatedByUser, from, to } = visitBody;
+  const filter = { userId };
+  if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
+  if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
+  if (from || to) {
+    filter.createdAt = {};
+    if (from) filter.createdAt.$gte = from;
+    if (to) filter.createdAt.$lte = to;
   }
-  const historyLog = await HistoryLog.find(filter);
+  const historyLog = await HistoryLog.find(filter).sort({ createdAt: -1 });
   return historyLog;
 };
 
