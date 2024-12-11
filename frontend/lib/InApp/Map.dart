@@ -32,16 +32,16 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
 
   late GoogleMapController _controller;
-  Set<Marker> _markers = {};
-  Set<Marker> _visitMarkers = {};
-  Set<Marker> _pathMarkers = {};
-  Set<Marker> _periodMarkers = {};
+  List<Marker> _markers = [];
+  List<Marker> _visitMarkers = [];
+  List<Marker> _pathMarkers = [];
+  List<Marker> _periodMarkers = [];
 
   double _zoomLevel = 14.0;
-  Set<Polyline> _polylines = {};
-  Set<Polyline> _visitPolylines = {};
-  Set<Polyline> _pathPolylines = {};
-  Set<Polyline> _periodPolylines = {};
+  List<Polyline> _polylines = [];
+  List<Polyline> _visitPolylines = [];
+  List<Polyline> _pathPolylines = [];
+  List<Polyline> _periodPolylines = [];
 
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -91,6 +91,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     final response = await _apiService.GetJourneyToday('672b2c4241382c06b026f861');
     final data = response["data"]["results"][0];
 
+    int id = 0;
     Visit? preVisit = null;
     for (var visitId in data['visitIds']) {
       final visit_response = await _apiService.GetVisit(visitId);
@@ -98,8 +99,6 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
 
       final location_response = await _apiService.GetLocation(visit.locationId);
       Location location = Location.fromJson(location_response["data"]["result"]);
-
-      Point point = new Point(type: 'visit', longitude: (location.longitude).toDouble(), latitude: (location.latitude).toDouble(), visit: visit, location: location);
 
       if(preVisit != null){
         final l_response = await _apiService.GetPositionPeriod('672b2c4241382c06b026f861', preVisit.endedAt, visit.startedAt);
@@ -110,10 +109,14 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
           final l_location_response = await _apiService.GetLocation(position.locationId);
           Location l_location = Location.fromJson(l_location_response["data"]["result"]);
 
-          Point l_point = new Point(type: 'position', longitude: (position.longitude).toDouble(), latitude: (position.latitude).toDouble(), location: l_location);
+          Point l_point = new Point(id: id, type: 'position', longitude: (position.longitude).toDouble(), latitude: (position.latitude).toDouble(), location: l_location);
+          id++;
           points.add(l_point);
         }
       }
+
+      Point point = new Point(id: id, type: 'visit', longitude: (location.longitude).toDouble(), latitude: (location.latitude).toDouble(), visit: visit, location: location);
+      id++;
 
       points.add(point);
       visits.add(point);
@@ -261,7 +264,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       final double rotation = calculateBearing(start, next); // Tính góc giữa 2 điểm
 
       final markerTab1 = Marker(
-        markerId: MarkerId(points[i].getName()),
+        markerId: MarkerId(points[i].id.toString()),
         position: start,
         icon: points[i].type == 'visit' ? visitTab1 : positionTab1,
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
@@ -270,7 +273,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       );
 
       final markerTab2 = Marker(
-        markerId: MarkerId(points[i].getName()),
+        markerId: MarkerId(points[i].id.toString()),
         position: start,
         icon: points[i].type == 'visit' ? visitTab2 : positionTab2,
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
@@ -279,7 +282,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       );
 
       final markerTab3 = Marker(
-        markerId: MarkerId(points[i].getName()),
+        markerId: MarkerId(points[i].id.toString()),
         position: start,
         icon: points[i].type == 'visit' ? visitTab3 : positionTab3,
         anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
@@ -329,12 +332,14 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       width: 7,
     ),);
 
-    _periodPolylines.add(Polyline(
-      polylineId: PolylineId('route'),
-      points: _points,
-      color: Colors.yellow,
-      width: 5,
-    ),);
+    for (int i = 0; i < _points.length - 1; i++) {
+      _periodPolylines.add(Polyline(
+        polylineId: PolylineId(points[i].id.toString()),
+        points: [_points[i], _points[i + 1]],
+        color: Colors.yellow,
+        width: 5,
+      ));
+    }
   }
 
   void _moveCamera(LatLng position) {
@@ -386,7 +391,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false, // Tắt nút phóng to/thu nhỏ mặc định
       markers: _markers.toSet(),
-      polylines: _polylines,
+      polylines: _polylines.toSet(),
 
 
     );
@@ -406,6 +411,49 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         }
       });
     }
+  }
+
+  int timeOfDayToEpoch(TimeOfDay timeOfDay, {DateTime? baseDate}) {
+    // Sử dụng ngày hiện tại nếu không truyền `baseDate`
+    final DateTime now = baseDate ?? DateTime.now();
+
+    // Tạo một đối tượng DateTime từ TimeOfDay
+    final DateTime dateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      timeOfDay.hour,
+      timeOfDay.minute,
+    );
+
+    // Trả về số mili giây từ epoch
+    return dateTime.millisecondsSinceEpoch;
+  }
+
+  void updateMap(){
+    print('ajdhakjlsdakjsdnaslkjdhasldas');
+  }
+
+  void findPeriod(){
+    int startId = -1; int endId = -1;
+    int start = timeOfDayToEpoch(startTime!) - 345600000; //fix
+    int end = timeOfDayToEpoch(endTime!) - 345600000;
+
+    for (var point in points) {
+      if (point.getStart() >= start){
+        startId = point.id;
+        break;
+      }
+    }
+
+    for (int i = points.length - 1; i >= 0; i--) {
+      if (points[i].getEnd() <= end){
+        endId = points[i].id;
+        break;
+      }
+    }
+    if(startId < endId && startId != -1 && endId != -1)
+      updateMap();
   }
 
   Positioned Header(){
@@ -588,110 +636,158 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                     },
                   ),
                 ),
-                Stack(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(top: 100.0),
-                      color: Colors.white,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: points.length * 2,
-                        itemBuilder: (context, index){
-                          return ExpandableListTile(
-                            type: points[index % points.length].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
-                            index: index % points.length,
-                            isFocus: currIndex == index % points.length,
-                            title: points[index % points.length].getName(),
-                            subtitle: "Subtitle",
-                            content: "Content",
-                            onTapFunc: onTap,
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      color: Colors.red,
-                      height: 100, width: double.infinity,
-                      child: Column(
-                        children: [
-                          Row(
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 148, width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => AddVisitScreen()),
-                                    // );
-                                  },
-                                  icon: Icon(Icons.access_time_outlined, size: 30,),
-                                  label: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "From",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () => _selectTime(context, true),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start, // Căn giữa theo chiều ngang
+                                          children: [
+                                            Icon(Icons.access_time_outlined, size: 45, color: Colors.grey[500],),
+                                            SizedBox(width: 10,),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('From time'),
+                                                Text(
+                                                  startTime != null ? startTime!.format(context) : '..:..',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Text('9:30'),
-                                    ],
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    shadowColor: Colors.black,
-                                    side: BorderSide(color: Colors.blue, width: 2),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 20),
+                                    child: Container(width: 2, height: 40, color: Colors.grey[300],),
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () => _selectTime(context, false),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center, // Căn giữa theo chiều ngang
+                                          children: [
+                                            Icon(Icons.access_time_outlined, size: 45, color: Colors.grey[500],),
+                                            SizedBox(width: 10,),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('To time'),
+                                                Text(
+                                                endTime != null ? endTime!.format(context) : '..:..',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(width: double.infinity, height: 2, color: Colors.grey[300],),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                        onTap: (){},
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.filter_list, size: 35, color: Colors.grey[500],),
+                                            SizedBox(width: 10,),
+                                            Text('Filter',
+                                              style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
+                                          ],
+                                        )
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () => findPeriod(),
+                                      child: Text('Apply', style: TextStyle(color: Colors.black),),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange, // Màu nền
+                                        side: BorderSide(color: Colors.white, width: 2), // Viền màu trắng
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                      ),
+
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Expanded (
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(builder: (context) => AddVisitScreen()),
-                                    // );
-                                  },
-                                  icon: Icon(Icons.access_time_outlined, size: 30,),
-                                  label: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "To",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      Text('9:30'),
-                                    ],
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    shadowColor: Colors.black,
-                                    side: BorderSide(color: Colors.blue, width: 2),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
-                                    ),
-                                  ),
-                                ),
-                              )
                             ],
                           ),
-                          ElevatedButton(
-                            onPressed: (){},
-                            child: Text('Apply'),
-                          )
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Container(
+                        height: 2, width: double.infinity,
+                        color: Colors.white,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,  // Bắt đầu gradient từ trên
+                              end: Alignment.bottomCenter, // Kết thúc gradient ở dưới
+                              colors: [
+                                Colors.grey.withOpacity(1.0), // Màu ở trên cùng, với độ mờ
+                                Colors.grey.withOpacity(0.0), // Màu ở dưới cùng, nhạt hơn
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        // padding: const EdgeInsets.only(top: 150.0),
+                        height: max(0, MediaQuery.of(context).size.height - SlideTabTop - 150),
+                        color: Colors.white,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: points.length * 2,
+                          itemBuilder: (context, index){
+                            return ExpandableListTile(
+                              type: points[index % points.length].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
+                              index: index % points.length,
+                              isFocus: currIndex == index % points.length,
+                              title: points[index % points.length].getName(),
+                              subtitle: "Subtitle",
+                              content: "Content",
+                              onTapFunc: onTap,
+                            );
+                          },
+                        ),
+                      ),
+
+                    ],
+                  ),
                 ),
               ],
             ),

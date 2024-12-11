@@ -3,6 +3,7 @@ import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/Position.dart';
 
 class Point {
+  final int id;
   final double longitude;
   final double latitude;
 
@@ -15,12 +16,26 @@ class Point {
   String getName() {
     if(type == 'visit')
       return visit?.title ?? 'unknown';
-
     else
       return position?.address ?? 'unknown';
   }
 
-  Point({required this.type, required this.longitude,required this.latitude, this.position, this.visit, this.location});
+  int getStart() {
+    if(type == 'visit')
+      return (visit?.startedAt)!;
+    else
+      return (position?.createdAt)!;
+  }
+
+  int getEnd() {
+    if(type == 'visit')
+      return (visit?.endedAt)!;
+    else
+      return (position?.createdAt)!;
+  }
+
+
+  Point({required this.id, required this.type, required this.longitude,required this.latitude, this.position, this.visit, this.location});
 }
 //
 // List<Point> positions = [
