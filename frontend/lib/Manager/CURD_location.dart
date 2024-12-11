@@ -23,6 +23,7 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
     'address': createLocation.address,
     'country': createLocation.country,
     'district': createLocation.district,
+    'homeNumber': createLocation.homeNumber,
   };
 
   try {
@@ -149,7 +150,6 @@ Future<void> updateLocation(CreateLocation createLocation,String id) async {
 
 
 
-// Gọi API để xóa thành phố
 Future<void> RemoveLocation(String id ) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$id');
 
@@ -167,9 +167,8 @@ Future<void> RemoveLocation(String id ) async {
 }
 
 
-// API để gọi tải ảnh lên Database
 Future<InfoVisit?> AutoLocation(double lat, double lng) async {
-  final url = Uri.parse('location/reverse-geocoding?lat=$lat&lng=$lng');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/location/reverse-geocoding?lat=$lat&lng=$lng');
   try {
     final response = await http.get(
       url,
@@ -181,6 +180,7 @@ Future<InfoVisit?> AutoLocation(double lat, double lng) async {
     if (response.statusCode == 200) {
       // Xử lý thành công
       final data = jsonDecode(response.body) as Map<String, dynamic>;
+      print(data);
       return InfoVisit.fromJson(data);
     } else {
       // Xử lý lỗi từ API

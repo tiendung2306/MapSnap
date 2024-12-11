@@ -15,6 +15,7 @@ class Location {
   String address;
   String country;
   String district;
+  String homeNumber;
 
   Location({
     required this.cityId,
@@ -33,6 +34,7 @@ class Location {
     required this.address,
     required this.country,
     required this.district,
+    required this.homeNumber,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
@@ -53,6 +55,7 @@ class Location {
       address: json['address'],
       country: json['country'],
       district: json['district'],
+      homeNumber: json['homeNumber'],
     );
   }
 }
@@ -72,7 +75,7 @@ class CreateLocation {
   String address;
   String country;
   String district;
-
+  String homeNumber;
 
   CreateLocation({
     required this.cityId,
@@ -88,7 +91,7 @@ class CreateLocation {
     required this.address,
     required this.country,
     required this.district,
-
+    required this.homeNumber,
   });
 
 }
