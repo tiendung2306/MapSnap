@@ -414,14 +414,21 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                     print("Chỉnh sửa bài viết");
                                                     break;
                                                   case 'delete':
-                                                  // Gọi API xóa bài viết
-                                                    await RemovePost(post.id);  // Xóa bài viết
-                                                    setState(() {
-                                                      posts.remove(post); // Xóa bài viết khỏi danh sách cục bộ
-                                                      user.remove(postUser); // Xóa thông tin người dùng tương ứng
-                                                      isLike.removeAt(index);
-                                                      postLike.remove(postLike);
-                                                    });
+                                                    if(post.userId == accountModel.idUser) {
+                                                      // Gọi API xóa bài viết
+                                                      await RemovePost(post.id);  // Xóa bài viết
+                                                      setState(() {
+                                                        posts.remove(post);
+                                                        user.remove(postUser);
+                                                        isLike.removeAt(index);
+                                                        postLike.remove(postLike);
+                                                      });
+                                                    } else {
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(
+                                                            content: Text("không thể xoá bài viết của người khác")),
+                                                      );
+                                                    }
                                                     break;
                                                   case 'hide':
                                                     print("Ẩn bài viết");
@@ -514,7 +521,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) => ImageFullScreen(
-                                                        image: post.media[imgIndex]['url'].toString(), // Toàn bộ danh sách ảnh
+                                                        image: post.media[imgIndex]['url'].toString(),
                                                       ),
                                                     ),
                                                   );

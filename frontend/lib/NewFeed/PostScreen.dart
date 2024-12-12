@@ -23,14 +23,6 @@ class _PostScreenState extends State<PostScreen> {
   List<String> imageULR = [];
 
 
-  // Journey đã có
-  String? selectedJourney; // Biến lưu Journey được chọn
-  List<Map<String, String>> journeys = [
-    {"id": "1", "name": "Hành trình Sapa"},
-    {"id": "2", "name": "Khám phá Đà Nẵng"},
-    {"id": "3", "name": "Thành phố Hồ Chí Minh"},
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
