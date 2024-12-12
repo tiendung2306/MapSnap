@@ -66,12 +66,15 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
       url = Uri.parse('http://10.0.2.2:3000/v1/pictures?userId=$parameters');
       break;
     case 'created_at':
-      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?locationId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?capturedAt=$parameters');
       break;
-    case 'journey_id':
+    case 'journeyId':
       url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journeyId=$parameters');
       break;
-    case 'visit_id':
+    case 'locationId':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?locationId=$parameters');
+      break;
+    case 'visitId':
       url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visitId=$parameters');
       break;
     case '':
@@ -92,6 +95,7 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
       if (response.statusCode == 200) {
         // Giải mã JSON và ánh xạ vào danh sách Picture
         List<dynamic> data = jsonDecode(response.body);
+        print(data);
         List<Picture> pictures = data.map((json) => Picture.fromJson(json)).toList();
         return pictures;
       } else {

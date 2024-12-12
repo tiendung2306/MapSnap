@@ -75,48 +75,31 @@ class AccountModel extends ChangeNotifier {
 
 
 //================== Quản lý ảnh theo địa điểm =====================
-  Map<String,Map<String,List<String>>> _imageManager = {
-    'Hà Nội': {
-      'Lăng Bác': ['assets/Image/1.jpg','assets/Image/2.jpg']
-    },
-    'Vinh': {
-      'Quảng trường': ['assets/Image/4.jpg','assets/Image/5.jpg'],
-      'BigC': ['assets/Image/6.jpg','assets/Image/7.jpg','assets/Image/8.jpg']
-    },
-  };
-  Map<String,Map<String,List<String>>> get imageManager => _imageManager;
+  Map<Location,List<Picture>> _imageLocation = {};
+  Map<Location,List<Picture>> get imageLocation => _imageLocation;
 
 
   // Hàm lưu ảnh theo địa điểm
-  void addImageLocation(String image, String journey, String visit) {
-    if (_imageManager.containsKey(journey)) {
-      if (_imageManager[journey]!.containsKey(visit)) {
-        print('0');
-        _imageManager[journey]![visit]!.insert(0, image);
-      } else {
-        _imageManager[journey]![visit] = [image];
-        print('1');
-      }
+  void addImageLocation(Location location, Picture picture) {
+    if (_imageLocation.containsKey(location)) {
+      _imageLocation[location]!.add(picture);
     } else {
-      _imageManager[journey] = {visit: [image]};
+      _imageLocation[location] = [picture];
     }
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
   // Hàm xóa ảnh theo địa điểm
-  void removeImageLocation(String image, String journey, String visit) {
-    if (_imageManager.containsKey(journey)) {
-      if (_imageManager[journey]!.containsKey(visit)) {
-        _imageManager[journey]![visit]!.remove(image);
-        if (_imageManager[journey]![visit]!.isEmpty) {
-          _imageManager[journey]!.remove(visit); // Xóa visit nếu danh sách ảnh trống
-        }
-        if (_imageManager[journey]!.isEmpty) {
-          _imageManager.remove(journey); // Xóa journey nếu không còn visit nào
-        }
-      }
+  void removeImageLocation(Location location, Picture picture) {
+    _imageLocation[location]!.remove(picture);
+    if(_imageLocation[location]!.length == 0) {
+      _imageLocation.remove(location);
     }
     notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void resetImageLocation() {
+    _imageLocation = {};
   }
 
   //=========================Quản lý location================================

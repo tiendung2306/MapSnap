@@ -1,7 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/LocationScreen/ImageLocationScreen.dart';
 import 'package:mapsnap_fe/Manager/CURD_location.dart';
+import 'package:mapsnap_fe/Manager/CURD_picture.dart';
 import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
+import 'package:mapsnap_fe/Model/Picture.dart';
+import 'package:mapsnap_fe/NewFeed/fullImage.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
 
@@ -30,13 +36,22 @@ class _visitLocationScreenState extends State<visitLocationScreen> {
   Future<void> fetchLocationByUserId() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     accountModel.resetLocation(widget.city);
+    accountModel.resetImageLocation();
     List<Location> locations = await getInfoLocation(accountModel.idUser, widget.city.id, 'city');
     if (locations.isNotEmpty) {
       for (var location in locations) {
         accountModel.addLocation(widget.city, location);
+        List<Picture> listPicture = await getInfoImages(location.id,'locationId');
+        print(listPicture);
+        if(listPicture.isNotEmpty) {
+          for(var image in listPicture) {
+            print("hehe");
+            accountModel.addImageLocation(location, image);
+          }
+        }
       }
     } else {
-      print('Không có thành phố nào được tìm thấy.');
+      print('Không có địa điểm nào được tìm thấy.');
     }
   }
 
@@ -238,65 +253,187 @@ class _visitLocationScreenState extends State<visitLocationScreen> {
                                 },
                               );
                             },
-                            child: Container(
-                              width: screenWidth - 20,
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFB0E0E6),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black.withOpacity(0.3),
-                                      spreadRadius: 3,
-                                      blurRadius: 6,
-                                      offset: Offset(5, 5)
-                                  )
-                                ]
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Stack(
                                 children: [
-                                  Text(
-                                    location.title,
-                                    style: TextStyle(
-                                        fontSize: 35,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Số lần đến: ',
-                                        style: TextStyle(
-                                            fontSize: 25,
-                                            ),
-                                      ),
-                                      Text(
-                                        location.visitedTime.toString(),
-                                        style: TextStyle(
-                                            fontSize: 25,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded( // Để tự động xuống dòng nếu chữ dài
-                                        child: Text(
-                                          'Địa chỉ: ${location.address}' ,
-                                          style: TextStyle(
-                                            fontSize: 25,
+                                  Container(
+                                    width: screenWidth - 20,
+                                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFB0E0E6),
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          spreadRadius: 3,
+                                          blurRadius: 6,
+                                          offset: const Offset(5, 5),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          location.title,
+                                          style: const TextStyle(
+                                            fontSize: 35,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          maxLines: 2, // Giới hạn 2 dòng
-                                          overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              'Số lần đến: ',
+                                              style: TextStyle(
+                                                fontSize: 25,
+                                              ),
+                                            ),
+                                            Text(
+                                              location.visitedTime.toString(),
+                                              style: const TextStyle(
+                                                fontSize: 25,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                'Địa chỉ: ${location.address}',
+                                                style: const TextStyle(
+                                                  fontSize: 25,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 12,
+                                    right: 20,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (accountModel.imageLocation[location] != null) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Imagelocationscreen(
+                                                listPicture: accountModel.imageLocation[location]!,
+                                                nameLocation: location.title,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        width: (accountModel.imageLocation[location] == null ? 60 : (accountModel.imageLocation[location]?.length ?? 0) > 3 ? (3 * 40 + 20) : (accountModel.imageLocation[location]?.length ?? 0) * 40 + 20),
+                                        height: 60,
+                                        child: Stack(
+                                          children: [
+                                            // Hiển thị ảnh chồng
+                                            if(accountModel.imageLocation[location] != null) ...[
+                                              for (int i = 0; i < accountModel.imageLocation[location]!.length && i < 3; i++) ...[
+                                                Positioned(
+                                                  left: i * 40.0, // Khoảng cách giữa các ảnh
+                                                  child: Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(accountModel.imageLocation[location]![i].link),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      border: Border.all(
+                                                        color: Colors.blue, // Màu viền
+                                                        width: 2, // Độ dày viền
+                                                      ),
+                                                      borderRadius: BorderRadius.circular(10), // Làm viền bo tròn (nếu cần)
+                                                    ),
+                                                  ),
+
+                                                ),
+                                              ],
+                                              // Hiển thị số ảnh dư
+                                              if ((accountModel.imageLocation[location]?.length ?? 0) > 3) ...[
+                                                Positioned(
+                                                  left: 80,
+                                                  child: Stack(
+                                                    alignment: Alignment.center, // Đặt Text vào giữa ảnh
+                                                    children: [
+                                                      Container(
+                                                        width: 60,
+                                                        height: 60,
+                                                        decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                            image: NetworkImage(accountModel.imageLocation[location]![2].link),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          border: Border.all(
+                                                            color: Colors.blue, // Màu viền
+                                                            width: 2, // Độ dày viền
+                                                          ),
+                                                          borderRadius: BorderRadius.circular(8),
+                                                        ),
+                                                        child: Opacity(
+                                                          opacity: 0.2, // Làm ảnh thứ 3 trong suốt
+                                                          child: Container(
+                                                            color: Colors.black, // Nền mờ màu đen
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "+${(accountModel.imageLocation[location]!.length - 3).toString()}",
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: Colors.white, // Màu chữ hiển thị trên nền mờ
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+
+                                            ]
+                                            else ...[
+                                              Container(
+                                                width: 60,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFFB6B6B6),
+                                                  border: Border.all(
+                                                    color: Colors.blue, // Màu viền
+                                                    width: 2, // Độ dày viền
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "0",
+                                                    style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white, // Màu chữ hiển thị trên nền mờ
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ]
+                                          ],
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ],
-                              ),
-                            ),
+                              )
                           );
                         }).toList(),
                       if (filteredLocations.isEmpty)

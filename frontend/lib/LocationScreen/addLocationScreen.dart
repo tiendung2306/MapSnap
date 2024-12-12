@@ -17,7 +17,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 
 class addLocationScreen extends StatefulWidget {
-  const addLocationScreen({Key? key}) : super(key: key);
+  addLocationScreen({Key? key}) : super(key: key);
 
   @override
   State<addLocationScreen> createState() => _addLocationScreenState();
