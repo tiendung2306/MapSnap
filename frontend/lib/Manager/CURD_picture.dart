@@ -34,9 +34,9 @@ Future<List<Picture>?> upLoadImage(CreatePicture createPicture) async {
   // Thêm file ảnh vào yêu cầu `multipart`
   request.files.add(multipartFile);
   request.fields['userId'] = createPicture.userId;
-  request.fields['locationId'] = createPicture.locationId;
-  request.fields['visitId'] = createPicture.visitId;
-  request.fields['journeyId'] = createPicture.journeyId;
+  request.fields['locationId'] = createPicture.locationId ?? "60c72b2f9af1b8124cf74c9b";
+  request.fields['visitId'] = createPicture.visitId ?? "60c72b2f9af1b8124cf74c9b";
+  request.fields['journeyId'] = createPicture.journeyId ?? "60c72b2f9af1b8124cf74c9b";
   request.fields['capturedAt'] = createPicture.capturedAt.millisecondsSinceEpoch.toString();
   request.fields['isTakenByCamera'] = createPicture.isTakenByCamera.toString();
 

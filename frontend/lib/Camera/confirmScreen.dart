@@ -97,6 +97,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mapsnap_fe/Manager/CURD_location.dart';
+import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/Picture.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
@@ -115,21 +117,6 @@ class ConfirmScreen extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
 
     var accountModel = Provider.of<AccountModel>(context, listen: false);
-    DateTime now = DateTime.now();
-    DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Chuyển sang múi giờ UTC+7
-    String dayString = '${vietnamTime.day}-${vietnamTime.month}-${vietnamTime.year}';
-
-    CreatePicture createPicture = CreatePicture(
-      userId: accountModel.idUser,
-      locationId: "60c72b2f9af1b8124cf74c9b",
-      visitId: "60c72b2f9af1b8124cf74c9c",
-      journeyId: "60c72b2f9af1b8124cf74c9d",
-      link: imagePath,
-      capturedAt: vietnamTime,
-      isTakenByCamera: true,
-    );
-
-
 
     return Scaffold(
       body: Column(
@@ -157,6 +144,21 @@ class ConfirmScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () async {
+                        DateTime now = DateTime.now();
+                        DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Chuyển sang múi giờ UTC+7
+                        String dayString = '${vietnamTime.day}-${vietnamTime.month}-${vietnamTime.year}';
+                        InfoVisit? infoLocation = await AutoLocation(20, 100);
+
+                        CreatePicture createPicture = CreatePicture(
+                          userId: accountModel.idUser,
+                          locationId: "60c72b2f9af1b8124cf74c9b",
+                          visitId: "60c72b2f9af1b8124cf74c9c",
+                          journeyId: "60c72b2f9af1b8124cf74c9d",
+                          link: imagePath,
+                          capturedAt: vietnamTime,
+                          isTakenByCamera: true,
+                        );
+
                         List<Picture>? picture = await upLoadImage(createPicture);
                         // Cập nhật ảnh vào ImageManager
                         // Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0]);

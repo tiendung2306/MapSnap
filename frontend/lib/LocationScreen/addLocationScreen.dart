@@ -250,7 +250,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                       title: titleController.text,
                                       visitedTime: 1,
                                       longitude: 20,
-                                      latitude: 500,
+                                      latitude: 100,
                                       createdAt: vietnamTime.millisecondsSinceEpoch,
                                       status: "enabled",
                                       updatedByUser: true,
@@ -258,7 +258,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                       address: infoLocation!.address,
                                       country: "Việt Nam",
                                       district: "Siuuuuuuuuuu",
-                                      homeNumber: infoLocation!.homeNumber,
+                                      homeNumber: infoLocation.homeNumber,
                                   );
                                   await upLoadLocation(createLocation, accountModel.idUser);
                                 }
