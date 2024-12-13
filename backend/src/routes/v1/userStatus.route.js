@@ -21,3 +21,36 @@ router.post(
 );
 
 module.exports = router;
+
+/**
+ * @swagger
+ * /userStatus/{userId}/periodically-automatic-feature:
+ *   post:
+ *     summary: Automatic check periodically
+ *     tags: [User Status]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "201":
+ *         description: User Status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: tính năng tự động thành công
+ *                 result:
+ *                   $ref: '#/components/schemas/UserStatus'
+ */
