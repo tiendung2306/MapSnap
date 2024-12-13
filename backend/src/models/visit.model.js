@@ -42,7 +42,6 @@ const visitSchema = new Schema({
   },
   endedAt: {
     type: Number,
-    required: true,
   },
   updatedAt: {
     type: Number,

@@ -52,9 +52,13 @@ const deletePosition = async (positionId) => {
 };
 
 const _getDistance = (longitudeStart, latitudeStart, longitudeDes, latitudeDes) => {
-  return (
-    (longitudeDes - longitudeStart) * (longitudeDes - longitudeStart) +
-    (latitudeDes - latitudeStart) * (latitudeDes - latitudeStart)
+  const latitudeStartKm = latitudeStart * 111.57;
+  const longitudeStartKm = longitudeStart * 111.32 * Math.cos(latitudeStartKm);
+  const latitudeDesKm = latitudeDes * 111.57;
+  const longitudeDesKm = longitudeDes * 111.32 * Math.cos(latitudeDesKm);
+  return Math.sqrt(
+    (longitudeDesKm - longitudeStartKm) * (longitudeDesKm - longitudeStartKm) +
+      (latitudeDesKm - latitudeStartKm) * (latitudeDesKm - latitudeStartKm)
   );
 };
 

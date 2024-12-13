@@ -15,6 +15,10 @@ const userStatusSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Location',
   },
+  createdAt: {
+    type: Number,
+    required: true,
+  },
   visitId: {
     type: Schema.Types.ObjectId,
     ref: 'Visit',
@@ -23,20 +27,15 @@ const userStatusSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Journey',
   },
-  timeStandStill: {
-    type: Number,
-    required: true,
-  },
   instantSpeed: {
     type: Number,
-    required: true,
   },
   longitude: {
     type: Number,
     required: true,
   },
   latitude: {
-    type: Number.EPSILON,
+    type: Number,
     required: true,
   },
 });
