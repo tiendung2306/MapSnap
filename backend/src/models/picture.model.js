@@ -38,7 +38,7 @@ const pictureSchema = new Schema({
   isTakenByCamera: {
     type: Boolean,
     default: true,
-  }
+  },
 });
 
 pictureSchema.plugin(toJSON);

@@ -24,11 +24,9 @@ const journeySchema = new Schema({
   },
   endedAt: {
     type: Number,
-    required: true,
   },
   updatedAt: {
     type: Number,
-    required: true,
   },
   status: {
     type: String,
