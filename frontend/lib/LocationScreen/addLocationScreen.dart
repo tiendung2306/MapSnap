@@ -243,13 +243,13 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                   //         accuracy: LocationAccuracy.high, // Độ chính xác cao
                                   //     ),
                                   // );
-                                  InfoVisit? infoLocation = await AutoLocation(20, 100);
+                                  InfoVisit? infoLocation = await AutoLocation(150, 100);
                                   CreateLocation createLocation = CreateLocation(
                                       cityId: city!.id,
                                       categoryId: Category!.id,
                                       title: titleController.text,
                                       visitedTime: 1,
-                                      longitude: 20,
+                                      longitude: 150,
                                       latitude: 100,
                                       createdAt: vietnamTime.millisecondsSinceEpoch,
                                       status: "enabled",

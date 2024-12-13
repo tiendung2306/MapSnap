@@ -38,7 +38,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
   bool isLoadData = true;
   ScrollController scrollController = ScrollController();
   bool hehe = true;
-  List<String> Location = [];
 
   final TextEditingController commentController = TextEditingController();
 
@@ -70,7 +69,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
           user = List<User?>.generate(posts.length, (index) => null);
           like = List<List<Like?>>.generate(posts.length, (index) => []);
           comments = List<List<Comment>>.generate(posts.length, (index) => []);
-          Location = List<String>.generate(posts.length, (index) => "");
           var accountModel = Provider.of<AccountModel>(context, listen: false);
 
           // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
@@ -122,7 +120,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
       user = List<User?>.generate(posts.length, (index) => null);
       like = List<List<Like?>>.generate(posts.length, (index) => []);
       comments = List<List<Comment>>.generate(posts.length, (index) => []);
-      Location = List<String>.generate(posts.length, (index) => "");
       var accountModel = Provider.of<AccountModel>(context, listen: false);
 
       // Đợi tất cả các tác vụ bất đồng bộ hoàn thành
@@ -159,7 +156,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
     return posts;
   }
 
-  RichText NameUser(int index, User user) {
+  RichText NameUser(int index, User user,Posts post) {
     return RichText(
       text: TextSpan(
         children: [
@@ -179,7 +176,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
             ),
           ),
           TextSpan(
-            text: Location[index],
+            text: post.address,
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
@@ -353,10 +350,9 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                     ),
                                   ).then((success) async {
                                     if (success != null) {
-                                      User? hihi = await getUser(success['post'].userId, accountModel.token_access);
+                                      User? hihi = await getUser(success.userId, accountModel.token_access);
                                       setState(()  {
-                                        posts.insert(0,success['post']);
-                                        Location.insert(0,success['Location']);
+                                        posts.insert(0,success);
                                         user.insert(0,null);
                                         isLike.insert(0, false);
                                         user[0] = hihi;
@@ -426,7 +422,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           Expanded(
                                             child: Container(
                                               padding: EdgeInsets.symmetric(vertical: 5),
-                                              child: NameUser(index, postUser),
+                                              child: NameUser(index, postUser,post),
                                             ),
                                           ),
                                           SizedBox(width: 20),

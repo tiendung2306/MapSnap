@@ -225,13 +225,11 @@ class _PostScreenState extends State<PostScreen> {
                     updatedAt: vietnamTime.millisecondsSinceEpoch,
                     commentsCount: 0,
                     likesCount: 0,
-                    journeyId: "5f8a5e7f575d7a2b9c0d47e5", // Gắn Journey đã chọn
+                    journeyId: "5f8a5e7f575d7a2b9c0d47e5",
+                    address: location == null ? "Một nơi nào đó": location!.address,
                   );
                   Posts posts = (await upLoadPost(createPost))!;
-                  Navigator.pop(context, {
-                    'post': posts,
-                    'Location': location == null ? "Một nơi nào đó": location!.address,
-                  }); // Quay lại màn hình chính
+                  Navigator.pop(context, posts);// Quay lại màn hình chính
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
