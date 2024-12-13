@@ -3,13 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
+import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
 import 'package:mapsnap_fe/Widget/AutoRefreshToken.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
 
 import '../LocationScreen/locationScreen.dart';
 import '../NewFeed/newFeedScreen.dart';
-import '../PictureScreen/pictureManager.dart';
 import 'package:mapsnap_fe/Widget/bottomNavigationBar.dart';
 
 class HomePage extends StatefulWidget {
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => pictureManager()),
+                            MaterialPageRoute(builder: (context) => daySaveScreen()),
                           );
                         },
                       ),

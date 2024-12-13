@@ -28,7 +28,6 @@ Future<City?> upLoadCity(CreateCity createCity, String userId) async {
     if (response.statusCode == 201) {
       // Xử lý thành công
       final data = jsonDecode(response.body) as Map<String, dynamic>;
-      print(data);
       return City.fromJson(data['result']);
     } else {
       // Xử lý lỗi từ API
@@ -55,7 +54,6 @@ Future<List<City>> getInfoCity(String userId) async {
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     List<dynamic> data = json['result'];
-    print(data);
     List<City> cities = data.map((json) => City.fromJson(json)).toList();
     return cities;
   } else {
@@ -75,7 +73,6 @@ Future<City?> getCityId(String Id) async {
   );
   if (response.statusCode == 201) {
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    print(data);
     return City.fromJson(data);
   } else {
     print('Lỗi: ${response.statusCode}');

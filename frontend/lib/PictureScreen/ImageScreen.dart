@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Model/Picture.dart';
+import 'package:mapsnap_fe/Widget/DownloadImage.dart';
 
 import '../Manager/CURD_picture.dart';
 
@@ -109,7 +110,7 @@ class ImageScreenState extends State<ImageScreen> {
                             content: "Bạn có muốn tải ảnh này xuống không?",
                             onConfirm: () {
                               print('Tải xuống');
-                              // Thực hiện tải xuống ảnh ở đây
+                              downloadImage(widget.picture.link);
                             },
                           );
                         },

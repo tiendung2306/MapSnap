@@ -34,6 +34,10 @@ const postSchema = new Schema({
     ref: 'Journey',
     required: true,
   },
+  adress: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Number,
     required: true,

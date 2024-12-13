@@ -27,7 +27,6 @@ Future<User?> fetchData(String userId, String token) async {
   );
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
-    print(data);
     return User.fromJson(data);
   } else {
     print('Lỗi: ${response.statusCode}');
