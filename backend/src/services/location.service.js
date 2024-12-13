@@ -5,7 +5,7 @@ const Location = require('../models/location.model');
 const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
-const { getClosestLocation } = require('../controllers/location.controller');
+// const { getClosestLocation } = require('../controllers/location.controller');
 // const UserModel = require('../models/user.model');
 
 const _createHistoryLog = async ({ locationId, locationBody, activityType }) => {
@@ -39,9 +39,9 @@ const getLocationByLocationId = async (locationId) => {
   return location;
 };
 
-const getClosestLocation = async (locationBody) => {
-  const { lat, lng } = locationBody
-}
+// const getClosestLocation = async (locationBody) => {
+//   const { lat, lng } = locationBody
+// }
 
 const getLocation = async (locationBody) => {
   const {
