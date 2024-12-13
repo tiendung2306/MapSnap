@@ -4,6 +4,7 @@ import 'package:mapsnap_fe/Manager/CURD_picture.dart';
 import 'package:mapsnap_fe/Manager/CURD_posts.dart';
 import 'package:mapsnap_fe/Model/Picture.dart';
 import 'package:mapsnap_fe/Model/Posts.dart';
+import 'package:mapsnap_fe/NewFeed/fullImage.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
 
@@ -21,13 +22,6 @@ class _PostScreenState extends State<PostScreen> {
   List<Map<String, String>> listMedia = [];
   List<String> imageULR = [];
 
-  // Journey đã có
-  String? selectedJourney; // Biến lưu Journey được chọn
-  List<Map<String, String>> journeys = [
-    {"id": "1", "name": "Hành trình Sapa"},
-    {"id": "2", "name": "Khám phá Đà Nẵng"},
-    {"id": "3", "name": "Thành phố Hồ Chí Minh"},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +33,18 @@ class _PostScreenState extends State<PostScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              final pickedFiles = await picker.pickMultiImage();
-              if (pickedFiles != null) {
-                setState(() {
-                  images = pickedFiles; // Lưu danh sách ảnh được chọn
-                });
-              }
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FullImageScreen(),
+                  )
+              ).then((values) {
+                if (values != null) {
+                  // Thêm các giá trị vào danh sách
+                  imageULR.addAll(values);
+                  print(imageULR); // In danh sách sau khi đã cập nhật
+                }
+              });
             },
             icon: Icon(Icons.photo, size: 30),
           ),
@@ -65,22 +65,28 @@ class _PostScreenState extends State<PostScreen> {
             ),
             SizedBox(height: 20),
             // Chọn journey
-            DropdownButtonFormField<String>(
-              value: selectedJourney,
-              items: journeys.map((journey) {
-                return DropdownMenuItem(
-                  value: journey["id"],
-                  child: Text(journey["name"]!),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedJourney = value;
-                });
+            GestureDetector(
+              onTap: () {
+                print("Chọn hành trình");
               },
-              decoration: InputDecoration(
-                labelText: "Chọn hành trình",
-                border: OutlineInputBorder(),
+              child: Container(
+                width: 150,
+                height: 50,
+
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Center(
+                  child: Text(
+                    "Chọn hành trình",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+
+                    ),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -88,24 +94,11 @@ class _PostScreenState extends State<PostScreen> {
             ElevatedButton.icon(
               onPressed: () async {
                 String content = postContentController.text.trim();
-                if (content.isNotEmpty && selectedJourney != null) {
+                if (content.isNotEmpty) {
+                  var accountModel = Provider.of<AccountModel>(context, listen: false);
                   DateTime now = DateTime.now();
                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
-                  var accountModel =
-                  Provider.of<AccountModel>(context, listen: false);
-                  for (int i = 0; i < images!.length; i++) {
-                    CreatePicture createPicture = CreatePicture(
-                      userId: accountModel.idUser,
-                      locationId: "5f8a5e7f575d7a2b9c0d47e5",
-                      visitId: "5f8a5e7f575d7a2b9c0d47e5",
-                      journeyId: "5f8a5e7f575d7a2b9c0d47e5",
-                      link: images![i].path,
-                      capturedAt: vietnamTime,
-                    );
-                    List<Picture>? picture = await upLoadImage(createPicture);
-                    imageULR.add(picture![0].link);
-                  }
-                  for (int i = 0; i < images!.length; i++) {
+                  for (int i = 0; i < imageULR.length; i++) {
                     listMedia.add({
                       "type": "image",
                       "url": imageULR[i],
@@ -120,16 +113,14 @@ class _PostScreenState extends State<PostScreen> {
                     updatedAt: vietnamTime.millisecondsSinceEpoch,
                     commentsCount: 0,
                     likesCount: 0,
-                    journeyId: selectedJourney!, // Gắn Journey đã chọn
+                    journeyId: "5f8a5e7f575d7a2b9c0d47e5", // Gắn Journey đã chọn
                   );
                   Posts posts = (await upLoadPost(createPost))!;
                   Navigator.pop(context, posts); // Quay lại màn hình chính
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text(selectedJourney == null
-                            ? "Vui lòng chọn hành trình!"
-                            : "Vui lòng nhập nội dung bài viết!")),
+                        content: Text("Vui lòng nhập nội dung bài viết!")),
                   );
                 }
               },
@@ -140,7 +131,7 @@ class _PostScreenState extends State<PostScreen> {
                 MaterialStateProperty.all<Color>(Colors.white), // Màu chữ
               ),
               icon: Icon(Icons.post_add_outlined),
-              label: Text("Đăng bài"),
+              label: Text("Đăng bài", style: TextStyle(fontSize: 16),),
             ),
           ],
         ),

@@ -34,10 +34,11 @@ Future<List<Picture>?> upLoadImage(CreatePicture createPicture) async {
   // Thêm file ảnh vào yêu cầu `multipart`
   request.files.add(multipartFile);
   request.fields['userId'] = createPicture.userId;
-  request.fields['locationId'] = createPicture.locationId;
-  request.fields['visitId'] = createPicture.visitId;
-  request.fields['journeyId'] = createPicture.journeyId;
+  request.fields['locationId'] = createPicture.locationId ?? "60c72b2f9af1b8124cf74c9b";
+  request.fields['visitId'] = createPicture.visitId ?? "60c72b2f9af1b8124cf74c9b";
+  request.fields['journeyId'] = createPicture.journeyId ?? "60c72b2f9af1b8124cf74c9b";
   request.fields['capturedAt'] = createPicture.capturedAt.millisecondsSinceEpoch.toString();
+  request.fields['isTakenByCamera'] = createPicture.isTakenByCamera.toString();
 
   // Gửi yêu cầu
   final response = await request.send();
@@ -65,12 +66,15 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
       url = Uri.parse('http://10.0.2.2:3000/v1/pictures?userId=$parameters');
       break;
     case 'created_at':
-      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?locationId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?capturedAt=$parameters');
       break;
-    case 'journey_id':
+    case 'journeyId':
       url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journeyId=$parameters');
       break;
-    case 'visit_id':
+    case 'locationId':
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?locationId=$parameters');
+      break;
+    case 'visitId':
       url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visitId=$parameters');
       break;
     case '':
@@ -118,7 +122,6 @@ Future<Picture?> getImage_ID(String id ) async {
   );
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
-    print(data);
     return Picture.fromJson(data);
   } else {
     print('Lỗi: ${response.statusCode}');

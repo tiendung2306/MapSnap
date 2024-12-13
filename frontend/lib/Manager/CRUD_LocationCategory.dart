@@ -28,7 +28,6 @@ Future<LocationCategory?> upLoadLocationCategory(CreateLocationCategory createLo
     if (response.statusCode == 201) {
       // Xử lý thành công
       final data = jsonDecode(response.body) as Map<String, dynamic>;
-      print(data);
       return LocationCategory.fromJson(data['result']);
     } else {
       // Xử lý lỗi từ API
@@ -54,7 +53,6 @@ Future<List<LocationCategory>> getInfoLocationCategory(String userId) async {
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     List<dynamic> data = json['result'];
-    print(data);
     List<LocationCategory> locationCategory = data.map((json) => LocationCategory.fromJson(json)).toList();
     return locationCategory;
   } else {
@@ -75,7 +73,6 @@ Future<LocationCategory?> getLocationCategoryId(String Id) async {
   );
   if (response.statusCode == 201) {
     final data = jsonDecode(response.body)  as Map<String, dynamic>;
-    print(data);
     return LocationCategory.fromJson(data);
   } else {
     print('Lỗi: ${response.statusCode}');

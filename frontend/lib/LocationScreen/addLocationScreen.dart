@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:mapsnap_fe/InApp/Positions.dart';
 import 'package:mapsnap_fe/Manager/CRUD_LocationCategory.dart';
 import 'package:mapsnap_fe/Manager/CURD_city.dart';
 import 'package:mapsnap_fe/Manager/CURD_location.dart';
@@ -15,7 +17,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 
 class addLocationScreen extends StatefulWidget {
-  const addLocationScreen({Key? key}) : super(key: key);
+  addLocationScreen({Key? key}) : super(key: key);
 
   @override
   State<addLocationScreen> createState() => _addLocationScreenState();
@@ -135,9 +137,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                buildTextField("Tên", titleController, "Thêm tiêu đề", TextInputType.text),
-                                const SizedBox(height: 15),
-                                buildTextField("Địa chỉ", addressController, "Nhập địa chỉ", TextInputType.text),
+                                buildTextField("Tên", titleController, "Tên địa điểm", TextInputType.text),
                                 const SizedBox(height: 15),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,7 +227,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
                               onTap:  () async {
-                                if (titleController.text.isEmpty || addressController.text.isEmpty ||
+                                if (titleController.text.isEmpty  ||
                                     city == null || Category == null) {
                                   Notification = "Vui lòng nhập thông tin";
                                   colorNotification = Colors.red;
@@ -238,20 +238,27 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                   colorNotification = Colors.blue;
                                   DateTime now = DateTime.now();
                                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
+                                  // Position position = await Geolocator.getCurrentPosition(
+                                  //     locationSettings: LocationSettings(
+                                  //         accuracy: LocationAccuracy.high, // Độ chính xác cao
+                                  //     ),
+                                  // );
+                                  InfoVisit? infoLocation = await AutoLocation(20, 100);
                                   CreateLocation createLocation = CreateLocation(
                                       cityId: city!.id,
                                       categoryId: Category!.id,
                                       title: titleController.text,
                                       visitedTime: 1,
-                                      longitude: 5,
-                                      latitude: 6,
+                                      longitude: 20,
+                                      latitude: 100,
                                       createdAt: vietnamTime.millisecondsSinceEpoch,
                                       status: "enabled",
                                       updatedByUser: true,
                                       isAutomaticAdded: false,
-                                      address: addressController.text,
+                                      address: infoLocation!.address,
                                       country: "Việt Nam",
-                                      district: "Siuuuuuuuuuu"
+                                      district: "Siuuuuuuuuuu",
+                                      homeNumber: infoLocation.homeNumber,
                                   );
                                   await upLoadLocation(createLocation, accountModel.idUser);
                                 }

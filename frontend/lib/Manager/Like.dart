@@ -27,7 +27,6 @@ Future<Like?> AddLike(addLike addLike) async {
     if (response.statusCode == 201) {
       // Xử lý thành công
       final data = jsonDecode(response.body) as Map<String, dynamic>;
-      print(data);
       return Like.fromJson(data);
     } else {
       // Xử lý lỗi từ API
@@ -53,7 +52,6 @@ Future<List<Like>> getLikePost(String postId) async {
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       List<dynamic> data = json['likes'];
-      print(data);
       List<Like> likes = data.map((json) => Like.fromJson(json)).toList();
       return likes;
     } else {

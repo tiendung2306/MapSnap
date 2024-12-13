@@ -4,6 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mapsnap_fe/InApp/Start.dart';
+import 'package:mapsnap_fe/Manager/LogOut.dart';
 import '../Widget/AutoRefreshToken.dart';
 import 'securityScreen.dart';
 import 'package:provider/provider.dart';
@@ -204,15 +206,29 @@ class settingScreenState extends State<settingScreen> {
                     const SizedBox(height: 30),
 
                     Material(
-                        color: Colors.white,
-                        child: InkWell(
-                          onTap: () {
-                            print("Đăng xuất");
-                          },
-                          splashColor: Colors.grey.withOpacity(0.2),
-                          child: buildButtonSetting(Icons.logout,"Đăng xuất","Thoát khỏi tài khoản hiện tại",screenWidth),
-                        )
+                      color: Colors.white,
+                      child: InkWell(
+                        onTap: () async {
+                          print("Đăng xuất");
+                          await LogOut(accountModel.token_refresh); // Hàm đăng xuất của bạn
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StartScreen(),
+                            ),
+                                (Route<dynamic> route) => false, // Loại bỏ tất cả các màn hình trước đó
+                          );
+                        },
+                        splashColor: Colors.grey.withOpacity(0.2),
+                        child: buildButtonSetting(
+                          Icons.logout,
+                          "Đăng xuất",
+                          "Thoát khỏi tài khoản hiện tại",
+                          screenWidth,
+                        ),
+                      ),
                     ),
+
                     const SizedBox(height: 30),
 
                     Material(
