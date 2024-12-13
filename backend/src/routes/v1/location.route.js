@@ -6,6 +6,10 @@ const locationController = require('../../controllers/location.controller');
 const router = express.Router();
 
 router
+  .route('/closest-location')
+  .get(locationController.getClosestLocation);
+
+router
   .route('/reverse-geocoding')
   .get(locationController.reverseGeocoding);
 /**
@@ -27,6 +31,11 @@ router
  *         schema:
  *           type: number
  *         description: Longitude
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema: 
+ *           type: string
  *     responses:
  *       "200":
  *         description: OK

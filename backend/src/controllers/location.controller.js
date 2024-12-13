@@ -3,6 +3,7 @@ const Message = require('../utils/Message');
 const catchAsync = require('../utils/catchAsync');
 const locationService = require('../services/location.service');
 const goongService = require('../services/goong.service');
+const cityService = require('../services/city.service');
 
 const createLocation = catchAsync(async (req, res) => {
   const requestBody = req.body;
@@ -55,7 +56,7 @@ const deleteHardLocation = catchAsync(async (req, res) => {
 
 const reverseGeocoding = catchAsync(async (req, res) => {
   const { results } = await goongService.reverseGeocoding(req, res);
-  console.log(results);
+  // console.log(results);
   const address = results[0].formatted_address;
   const country = "Việt Nam";
   const district = results[0].compound.district;
@@ -63,7 +64,8 @@ const reverseGeocoding = catchAsync(async (req, res) => {
   const homeNumber = results[0].address_components[0].long_name + (results[0].address_components[1].long_name !== results[0].compound.commune ? ', ' + results[0].address_components[1].long_name : '');
   const commune = results[0].compound.commune;
   const province = results[0].compound.province;
-  // console.log(results[0].address_components[1], ' ', results[0].compound.commune);
+  const cities = await cityService.getCities({ userId: req.query.userId, searchText: province });
+  const cityId = cities[0]._id;
   const location = {
     address,
     country,
@@ -72,8 +74,16 @@ const reverseGeocoding = catchAsync(async (req, res) => {
     homeNumber,
     commune,
     province,
+    cityId,
   };
+  // console.log(location);
   res.json(location);
+});
+
+const getClosestLocation = catchAsync(async (req, res) => {
+  const { lat, lng } = req.query;
+  const location = await locationService.getClosestLocation({ lat, lng });
+  res.send({ code: httpStatus.OK, message: Message.ok, result: location });
 });
 
 module.exports = {
@@ -84,4 +94,5 @@ module.exports = {
   deleteLocation,
   deleteHardLocation,
   reverseGeocoding,
+  getClosestLocation,
 };
