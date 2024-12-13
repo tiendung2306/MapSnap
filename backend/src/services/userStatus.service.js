@@ -23,12 +23,12 @@ const createUserStatus = async (userStatusBody) => {
 };
 
 const getUserStatus = async (userId) => {
-  const userStatus = await UserStatus.findOne(userId);
+  const userStatus = await UserStatus.findOne({ userId });
   return userStatus;
 };
 
 const updateUserStatus = async ({ userStatusId, requestBody }) => {
-  const userStatus = await UserStatus.findOneAndUpdate(userStatusId, requestBody, { new: true });
+  const userStatus = await UserStatus.findOneAndUpdate({ userStatusId }, requestBody, { new: true });
   return userStatus;
 };
 
@@ -46,7 +46,7 @@ const _getDistance = (longitudeStart, latitudeStart, longitudeDes, latitudeDes) 
 const periodicallyAutomaticFeature = async (userId) => {
   const userStatus = await getUserStatus(userId);
   const userStatusId = _.get(userStatus, '_id');
-  const position = await Position.findOne(userId).sort({ createdAt: -1 });
+  const position = await Position.findOne({ userId }).sort({ createdAt: -1 });
   if (!_.get(userStatus, 'journeyId')) {
     // Người dùng đang không ở bất kỳ Journey nào
     const location = await Location.findById(_.get(userStatus, 'locationId'));
