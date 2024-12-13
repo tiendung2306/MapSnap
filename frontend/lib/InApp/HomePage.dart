@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
 import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
+import 'package:mapsnap_fe/Widget/AutoCallAPI.dart';
 import 'package:mapsnap_fe/Widget/AutoRefreshToken.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
     //===============================================================
+     autoCallAPI();
     super.initState();
   }
 

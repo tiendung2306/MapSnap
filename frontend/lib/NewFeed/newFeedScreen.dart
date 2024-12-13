@@ -38,6 +38,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
   bool isLoadData = true;
   ScrollController scrollController = ScrollController();
   bool hehe = true;
+  List<String> Location = [];
 
   final TextEditingController commentController = TextEditingController();
 
@@ -69,6 +70,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
           user = List<User?>.generate(posts.length, (index) => null);
           like = List<List<Like?>>.generate(posts.length, (index) => []);
           comments = List<List<Comment>>.generate(posts.length, (index) => []);
+          Location = List<String>.generate(posts.length, (index) => "");
           var accountModel = Provider.of<AccountModel>(context, listen: false);
 
           // Sử dụng Future.wait để đợi tất cả dữ liệu người dùng được tải về
@@ -110,6 +112,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
     super.initState();
   }
 
+
   Future<void> initializePageData() async {
     // Đợi getPageData hoàn tất
     await getPageData();
@@ -119,6 +122,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
       user = List<User?>.generate(posts.length, (index) => null);
       like = List<List<Like?>>.generate(posts.length, (index) => []);
       comments = List<List<Comment>>.generate(posts.length, (index) => []);
+      Location = List<String>.generate(posts.length, (index) => "");
       var accountModel = Provider.of<AccountModel>(context, listen: false);
 
       // Đợi tất cả các tác vụ bất đồng bộ hoàn thành
@@ -154,6 +158,39 @@ class _newFeedScreenState extends State<newFeedScreen> {
     posts.addAll(pagePost!.results);
     return posts;
   }
+
+  RichText NameUser(int index, User user) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: "${user.username} ",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue, // Kiểu chữ cho tên người dùng
+            ),
+          ),
+          TextSpan(
+            text: "đang ở ",
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(0xFF7E7E7E), // Kiểu chữ cho chữ "đang ở"
+            ),
+          ),
+          TextSpan(
+            text: Location[index],
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Kiểu chữ cho địa điểm
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
 
 
@@ -314,17 +351,17 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => PostScreen(),
                                     ),
-                                  ).then((success) {
+                                  ).then((success) async {
                                     if (success != null) {
-                                      setState(() {
-                                        setState(() async {
-                                          posts.insert(0,success);  // Thêm bài viết mới vào đầu danh sách
-                                          user.insert(0,null);
-                                          isLike.insert(0, false);
-                                          user[0] = await getUser(success.userId, accountModel.token_access);
-                                          like.insert(0, []);
-                                          comments.insert(0, []);
-                                        });
+                                      User? hihi = await getUser(success['post'].userId, accountModel.token_access);
+                                      setState(()  {
+                                        posts.insert(0,success['post']);
+                                        Location.insert(0,success['Location']);
+                                        user.insert(0,null);
+                                        isLike.insert(0, false);
+                                        user[0] = hihi;
+                                        like.insert(0, []);
+                                        comments.insert(0, []);
                                       });
                                     }
                                   });
@@ -389,16 +426,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           Expanded(
                                             child: Container(
                                               padding: EdgeInsets.symmetric(vertical: 5),
-                                              height: 70,
-                                              child: Text(
-                                                postUser.username,
-                                                style: TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                              child: NameUser(index, postUser),
                                             ),
                                           ),
                                           SizedBox(width: 20),
