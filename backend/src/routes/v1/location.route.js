@@ -5,13 +5,9 @@ const locationController = require('../../controllers/location.controller');
 
 const router = express.Router();
 
-router
-  .route('/closest-location')
-  .get(locationController.getClosestLocation);
+router.route('/closest-location').get(locationController.getClosestLocation);
 
-router
-  .route('/reverse-geocoding')
-  .get(locationController.reverseGeocoding);
+router.route('/reverse-geocoding').get(locationController.reverseGeocoding);
 /**
  * @swagger
  * /location/reverse-geocoding:
@@ -34,7 +30,7 @@ router
  *       - in: query
  *         name: userId
  *         required: true
- *         schema: 
+ *         schema:
  *           type: string
  *     responses:
  *       "200":
@@ -104,7 +100,6 @@ router
   .get(locationController.getLocationByLocationId)
   .patch(locationController.updateLocation)
   .delete(locationController.deleteLocation);
-
 
 module.exports = router;
 
