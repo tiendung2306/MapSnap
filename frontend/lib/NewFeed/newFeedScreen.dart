@@ -287,8 +287,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
               post.map((i) => posts.add(i));
             }
 
-
-
             return Consumer<AccountModel>(
               builder: (context, accountModel, child) {
                 return Stack(
@@ -375,7 +373,8 @@ class _newFeedScreenState extends State<newFeedScreen> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        Expanded(
+                        Container(
+                          height: screenHeight * 4 / 5 + 10,
                           child: ListView.builder(
                             controller: scrollController,
                             // reverse: true,
@@ -640,9 +639,11 @@ class _newFeedScreenState extends State<newFeedScreen> {
                           height: 2,
                           color: Colors.grey,
                         ),
-                        CustomBottomNav(
-                          onTabTapped: onTabTapped,
-                          currentIndex: currentTabIndex,
+                        Expanded(
+                          child: CustomBottomNav(
+                            onTabTapped: onTabTapped,
+                            currentIndex: currentTabIndex,
+                          ),
                         ),
                       ],
                     ),

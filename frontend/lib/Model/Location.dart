@@ -3,8 +3,8 @@ class Location {
   String categoryId;
   String title;
   int visitedTime;
-  int longitude;
-  int latitude;
+  double longitude;
+  double latitude;
   // int createdAt;
   String status;
   bool updatedByUser;
@@ -66,8 +66,8 @@ class CreateLocation {
   String categoryId;
   String title;
   int visitedTime;
-  int longitude;
-  int latitude;
+  double longitude;
+  double latitude;
   int createdAt;
   String status;
   bool updatedByUser;

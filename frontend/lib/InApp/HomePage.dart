@@ -7,6 +7,7 @@ import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
 import 'package:mapsnap_fe/Widget/AutoCallAPI.dart';
 import 'package:mapsnap_fe/Widget/AutoRefreshToken.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
+import 'package:mapsnap_fe/statisticScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../LocationScreen/locationScreen.dart';
@@ -194,9 +195,14 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.favorite, size: 30,),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => statisticScreen()),
+                          );
+                        },
                       ),
-                      Text('Favorite')
+                      Text('Statistic')
                     ],
                   ),
                 ],

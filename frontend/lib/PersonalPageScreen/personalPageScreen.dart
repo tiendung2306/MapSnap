@@ -296,7 +296,7 @@ class personalPageScreenState extends State<personalPageScreen> {
                           ),
                           const SizedBox(height: 10,),
                           Container(
-                            height: screenHeight * 2 / 3 - 15,
+                            height: screenHeight * 2 / 3 - 25,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               boxShadow: [

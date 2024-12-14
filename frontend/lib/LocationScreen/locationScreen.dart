@@ -149,7 +149,7 @@ class _locationScreenState extends State<locationScreen> {
                           ),
                           SizedBox(height: 10),
                           Container(
-                            height: screenHeight * 4 / 5 + 15,
+                            height: screenHeight * 4 / 5 + 5,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               boxShadow: [
@@ -193,7 +193,7 @@ class _locationScreenState extends State<locationScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 15),
+                    SizedBox(height: 10),
                     Container(
                       height: 3,
                       color: Colors.grey,
