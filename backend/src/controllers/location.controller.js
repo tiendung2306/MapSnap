@@ -65,7 +65,8 @@ const reverseGeocoding = catchAsync(async (req, res) => {
   const commune = results[0].compound.commune;
   const province = results[0].compound.province;
   const cities = await cityService.getCities({ userId: req.query.userId, searchText: province });
-  const cityId = cities[0]._id;
+  console.log(cities);
+  const cityId = !!cities[0] ? cities[0]._id : null;
   const location = {
     address,
     country,
