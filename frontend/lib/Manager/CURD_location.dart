@@ -72,6 +72,11 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
       "sortField": body,
     };
   }
+  if(check == "searchText") {
+    updatedData = {
+      "searchText": body,
+    };
+  }
   if(check == '') {
     updatedData = {};
   }
@@ -86,6 +91,7 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     List<dynamic> data = json['result'];
+    print(data);
     List<Location> locations = data.map((json) => Location.fromJson(json)).toList();
     return locations;
   } else {

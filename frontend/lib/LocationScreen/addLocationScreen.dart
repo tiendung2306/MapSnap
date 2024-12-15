@@ -49,7 +49,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     locationCategory = await getInfoLocationCategory(accountModel.idUser);
-    listCity = await getInfoCity(accountModel.idUser);
+    listCity = await getInfoCity(accountModel.idUser,"","");
     setState(() {});
   }
 
@@ -255,7 +255,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                       isAutomaticAdded: false,
                                       address: infoLocation.formatted_address,
                                       country: "Việt Nam",
-                                      district: "Siuuuuuuuuuu",
+                                      district: infoLocation.name,
                                       homeNumber: infoLocation.name,
                                   );
                                   await upLoadLocation(createLocation, accountModel.idUser);

@@ -27,13 +27,16 @@ class _HomePageState extends State<HomePage> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
     //===============================================================
-     autoCallAPI();
+
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     int currentTabIndex = 0;
+    autoCallAPI(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;

@@ -61,7 +61,7 @@ const getLocation = async (locationBody) => {
   if (isAutomaticAdded !== undefined) filter.isAutomaticAdded = isAutomaticAdded;
   if (updatedByUser !== undefined) filter.updatedByUser = updatedByUser;
   if (searchText) {
-    filter.$or = [{ title: { $regex: searchText, $options: 'i' } }];
+    filter.$or = [{ address: { $regex: searchText, $options: 'i' } }];
   }
   const sortOption = { [sortField]: sortType === 'asc' ? 1 : -1 };
   const location = await Location.find(filter).sort(sortOption);

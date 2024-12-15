@@ -44,7 +44,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     accountModel.resetCity();
-    List<City> cities = await getInfoCity(accountModel.idUser);
+    List<City> cities = await getInfoCity(accountModel.idUser,"","");
     if (cities.isNotEmpty) {
       for (var city in cities) {
         // Kiểm tra xem đã tải ảnh chưa
