@@ -60,7 +60,6 @@ class _SignInState extends State<SignIn> {
       final data = response['data'];
 
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
 
       Token token = Token(
         token_access: data['tokens']['access']['token'] ?? 'NoTokenAccess',
@@ -70,7 +69,7 @@ class _SignInState extends State<SignIn> {
         idUser: data['user']['id'] ?? 'NoID',
       );
 
-      await prefs.setString('newtoken', jsonEncode(token.toJson()));
+      await prefs.setString('token', jsonEncode(token.toJson()));
 
       var accountModel = Provider.of<AccountModel>(context, listen: false);
       accountModel.setToken(token);

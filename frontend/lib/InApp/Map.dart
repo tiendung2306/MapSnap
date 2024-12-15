@@ -430,14 +430,28 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     return dateTime.millisecondsSinceEpoch;
   }
 
-  void updateMap(){
-    print('ajdhakjlsdakjsdnaslkjdhasldas');
+  void updatePolyline(int startId, int endId) {
+    for (int i = 0; i < _periodPolylines .length; i++) {
+      final polyline = _periodPolylines [i];
+      final int id = int.tryParse(polyline.polylineId.value)!; // Chuyển id sang số (nếu cần)
+
+      // Kiểm tra nếu id nằm trong khoảng
+      if (id >= startId && id < endId) {
+        // Tạo một polyline mới với màu được thay đổi
+        _periodPolylines [i] = polyline.copyWith(colorParam: Colors.red);
+      }
+      else
+        _periodPolylines [i] = polyline.copyWith(colorParam: Colors.yellow);
+    }
+    setState(() {
+      _polylines = _periodPolylines;
+    });
   }
 
   void findPeriod(){
     int startId = -1; int endId = -1;
-    int start = timeOfDayToEpoch(startTime!) - 345600000; //fix
-    int end = timeOfDayToEpoch(endTime!) - 345600000;
+    int start = timeOfDayToEpoch(startTime!) - 430680000; //fix
+    int end = timeOfDayToEpoch(endTime!) - 430680000;
 
     for (var point in points) {
       if (point.getStart() >= start){
@@ -452,8 +466,14 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         break;
       }
     }
-    if(startId < endId && startId != -1 && endId != -1)
-      updateMap();
+    print(start);
+    print(end);
+
+    if(startId < endId && startId != -1 && endId != -1){
+      print(startId);
+      print(endId);
+      updatePolyline(startId, endId);
+    }
   }
 
   Positioned Header(){

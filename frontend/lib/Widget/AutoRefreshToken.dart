@@ -36,17 +36,8 @@ Future<void> refreshTokenFunction(String userId, String Tokenrefresh, BuildConte
   Token? newToken = await refreshToken(userId, Tokenrefresh, context);
   final prefs = await SharedPreferences.getInstance();
   if (newToken != null) {
-    print("Token đã được làm mới thành công!-----------------------------------------sadnsald-"
-        "--------------------------------------------------------------------------------"
-        "-----------------------------------------------------------------------------------"
-        "----------------------------------------------------------------------------------"
-        "----------------------------------------------------------------------------------"
-        "----------------------------------------------------------------------------------"
-        "----------------------------------------------------------------------------------"
-        "----------------------------------------------------------------------------------"
-        "----------------------------------------------------------------------------------"
-        "---------------");
-    await prefs.setString('newtoken', jsonEncode(newToken.toJson()));
+    print("Token đã được làm mới thành công!");
+    await prefs.setString('token', jsonEncode(newToken.toJson()));
     startAutoRefreshToken(context, newToken.token_access_expires, newToken.token_refresh, userId); // Tự động làm mới lại với token mới
   } else {
     await prefs.setBool('isLoggedIn', false);

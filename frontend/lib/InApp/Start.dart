@@ -27,6 +27,14 @@ class _StartScreenState extends State<StartScreen> {
     _navigateTo(); // Chuyển sang màn hình chính
   }
 
+  Future accountModelSetup(Token token) async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    accountModel.setToken(token);
+    User? user = await fetchData(token.idUser,token.token_access);
+    accountModel.setUser(user!);
+
+    startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
+  }
 
   void _navigateTo() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -39,9 +47,9 @@ class _StartScreenState extends State<StartScreen> {
         Widget nextPage;
 
         final prefs = await SharedPreferences.getInstance();
-        final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+        final token_data = await prefs.getString('token') ?? 'null';
 
-        if(!isLoggedIn){
+        if(token_data == 'null'){
           final isFirstOpen = await prefs.getBool('isFirstOpen') ?? true;
           if(isFirstOpen)
             nextPage = Onboarding();
@@ -49,16 +57,28 @@ class _StartScreenState extends State<StartScreen> {
             nextPage = SignIn();
         }
         else{
-          var accountModel = Provider.of<AccountModel>(context, listen: false);
-          final data = await prefs.getString('newtoken')!;
-          Token token = Token.fromJson(jsonDecode(data));
-          accountModel.setToken(token);
-          User? user = await fetchData(token.idUser,token.token_access);
-          accountModel.setUser(user!);
+          final DateTime now = DateTime.now();
+          Token token = Token.fromJson(jsonDecode(token_data));
+          final Duration accesstimeLeft = token.token_access_expires.difference(now);
 
-          startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
-
-          nextPage = HomePage();
+          if (accesstimeLeft.isNegative) {
+            final Duration refreshtimeLeft = token.token_refresh_expires.difference(now);
+            print(refreshtimeLeft.inMinutes);
+            if(refreshtimeLeft.isNegative)
+              nextPage = SignIn();
+            else{
+              Token? newtoken = await refreshToken(token.idUser, token.token_refresh, context);
+              if(newtoken != null){
+                await accountModelSetup(newtoken);
+                nextPage = HomePage();
+              }
+              else
+                nextPage = SignIn();
+            }
+          } else {
+            await accountModelSetup(token);
+            nextPage = HomePage();
+          }
         }
 
 
