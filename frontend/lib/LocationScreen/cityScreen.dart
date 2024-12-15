@@ -52,6 +52,73 @@ class _cityScreenState extends State<cityScreen> {
     }
   }
 
+  final Map<String, String> listCity = {
+    'An Giang': 'AnGiang',
+    'Bà Rịa - Vũng Tàu': 'BaRiaVungTau',
+    'Bắc Giang': 'BacGiang',
+    'Bắc Kạn': 'BacKan',
+    'Bạc Liêu': 'BacLieu',
+    'Bắc Ninh': 'BacNinh',
+    'Bến Tre': 'BenTre',
+    'Bình Định': 'BinhDinh',
+    'Bình Dương': 'BinhDuong',
+    'Bình Phước': 'BinhPhuoc',
+    'Bình Thuận': 'BinhThuan',
+    'Cà Mau': 'CaMau',
+    'Cần Thơ': 'CanTho',
+    'Cao Bằng': 'CaoBang',
+    'Đà Nẵng': 'DaNang',
+    'Đắk Lắk': 'DakLak',
+    'Đắk Nông': 'DakNong',
+    'Điện Biên': 'DienBien',
+    'Đồng Nai': 'DongNai',
+    'Đồng Tháp': 'DongThap',
+    'Gia Lai': 'GiaLai',
+    'Hà Giang': 'HaGiang',
+    'Hà Nam': 'HaNam',
+    'Hà Nội': 'HaNoi',
+    'Hà Tĩnh': 'HaTinh',
+    'Hải Dương': 'HaiDuong',
+    'Hải Phòng': 'HaiPhong',
+    'Hậu Giang': 'HauGiang',
+    'Hòa Bình': 'HoaBinh',
+    'Hưng Yên': 'HungYen',
+    'Khánh Hòa': 'KhanhHoa',
+    'Kiên Giang': 'KienGiang',
+    'Kon Tum': 'KonTum',
+    'Lai Châu': 'LaiChau',
+    'Lâm Đồng': 'LamDong',
+    'Lạng Sơn': 'LangSon',
+    'Lào Cai': 'LaoCai',
+    'Long An': 'LongAn',
+    'Nam Định': 'NamDinh',
+    'Nghệ An': 'NgheAn',
+    'Ninh Bình': 'NinhBinh',
+    'Ninh Thuận': 'NinhThuan',
+    'Phú Thọ': 'PhuTho',
+    'Phú Yên': 'PhuYen',
+    'Quảng Bình': 'QuangBinh',
+    'Quảng Nam': 'QuangNam',
+    'Quảng Ngãi': 'QuangNgai',
+    'Quảng Ninh': 'QuangNinh',
+    'Quảng Trị': 'QuangTri',
+    'Sóc Trăng': 'SocTrang',
+    'Sơn La': 'SonLa',
+    'Tây Ninh': 'TayNinh',
+    'Thái Bình': 'ThaiBinh',
+    'Thái Nguyên': 'ThaiNguyen',
+    'Thanh Hóa': 'ThanhHoa',
+    'Thừa Thiên Huế': 'ThuaThienHue',
+    'Tiền Giang': 'TienGiang',
+    'Thành phố Hồ Chí Minh': 'TPHCM',
+    'Trà Vinh': 'TraVinh',
+    'Tuyên Quang': 'TuyenQuang',
+    'Vĩnh Long': 'VinhLong',
+    'Vĩnh Phúc': 'VinhPhuc',
+    'Yên Bái': 'YenBai',
+  };
+
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -129,13 +196,21 @@ class _cityScreenState extends State<cityScreen> {
                           )
                         ],
                         image: DecorationImage(
-                          image: AssetImage('assets/Image/${(i % 6)+10}.jpg'),
+                          image: AssetImage('assets/City/${listCity[cities[i].name]}.png'),
                           fit: BoxFit.cover, // Hoặc BoxFit.none nếu bạn muốn giữ nguyên kích thước ảnh
                         ),
                       ),
 
-                      child: Center(child: Text(cities[i].name, style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold, color: Color(
-                          0xFFFFFFFF)),)),
+                      child: Center(
+                          child: Text(
+                            cities[i].name,
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFFFFFFF)
+                            ),
+                          )
+                      ),
 
                     ),
                   ),

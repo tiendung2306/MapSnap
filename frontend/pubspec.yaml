@@ -36,6 +36,8 @@ dependencies:
   http: ^1.2.2
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.8
+  dio: ^5.7.0
+  permission_handler: ^11.3.1
   flutter:
     sdk: flutter
 
@@ -80,6 +82,7 @@ flutter:
     - assets/Login/
     - assets/Image/
     - assets/Common/
+    - assets/City/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

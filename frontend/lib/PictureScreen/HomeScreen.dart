@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/LocationScreen/locationScreen.dart';
-import 'package:mapsnap_fe/PictureScreen/pictureManager.dart';
+import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
 import '../Widget/bottomNavigationBar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => pictureManager()),
+                  MaterialPageRoute(builder: (context) => daySaveScreen()),
                 );
               },
               child: Container(

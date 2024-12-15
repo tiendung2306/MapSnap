@@ -2,9 +2,24 @@ const httpStatus = require('http-status');
 // const mongoose = require('mongoose');
 // const _ = require('lodash');
 const Location = require('../models/location.model');
+const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
+// const { getClosestLocation } = require('../controllers/location.controller');
 // const UserModel = require('../models/user.model');
+
+const _createHistoryLog = async ({ locationId, locationBody, activityType }) => {
+  const historyLogRequest = {
+    activityType,
+    modelImpact: 'Location',
+    objectIdImpact: locationId,
+    userId: locationBody.userId,
+    createdAt: Date.now(),
+    updatedByUser: locationBody.updatedByUser,
+    isAutomaticAdded: locationBody.isAutomaticAdded,
+  };
+  await HistoryLogService.createHistoryLog(historyLogRequest);
+};
 
 const createLocation = async (locationBody) => {
   const existedLocation = await Location.findOne(locationBody);
@@ -12,6 +27,7 @@ const createLocation = async (locationBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, Message.locationMsg.nameExisted);
   }
   const location = await Location.create(locationBody);
+  await _createHistoryLog({ locationId: location._id, locationBody, activityType: 'Create' });
   return location;
 };
 
@@ -22,6 +38,10 @@ const getLocationByLocationId = async (locationId) => {
   }
   return location;
 };
+
+// const getClosestLocation = async (locationBody) => {
+//   const { lat, lng } = locationBody
+// }
 
 const getLocation = async (locationBody) => {
   const {
@@ -50,6 +70,7 @@ const getLocation = async (locationBody) => {
 
 const updateLocation = async ({ locationId, requestBody }) => {
   const location = await Location.findByIdAndUpdate(locationId, requestBody, { new: true });
+  await _createHistoryLog({ locationId, journeyBody: location, activityType: 'Update' });
   return location;
 };
 
@@ -58,7 +79,8 @@ const deleteLocation = async (locationId) => {
 };
 
 const deleteHardLocation = async (locationId) => {
-  await Location.findByIdAndDelete(locationId);
+  const locationBody = await Location.findByIdAndDelete(locationId);
+  await _createHistoryLog({ locationId, locationBody, activityType: 'Delete' });
 };
 
 module.exports = {

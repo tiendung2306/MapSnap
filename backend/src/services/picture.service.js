@@ -12,14 +12,14 @@ const cloudinary = require('../config/cloudinary'); // Import Cloudinary config
 const createPicture = async (req, res) => {
   uploadPicture(req, res, async (err) => {
     if (err) {
-      return res.status(httpStatus.BAD_REQUEST).send({ message: 'Invalid file' });
+      return res.status(httpStatus.BAD_REQUEST).send({ message: err.message });
     }
     if (!req.files) {
       return res.status(httpStatus.BAD_REQUEST).send({ message: 'No file uploaded' });
     }
 
     try {
-      const { userId, locationId, visitId, journeyId, capturedAt } = req.body;
+      const { userId, locationId, visitId, journeyId, capturedAt, isTakenByCamera } = req.body;
 
       const pictures = await Promise.all(
         req.files.map((file) => {
@@ -32,6 +32,7 @@ const createPicture = async (req, res) => {
             link: filePath,
             capturedAt,
             public_id: file.filename,
+            isTakenByCamera,
           });
           return picture;
         })
@@ -49,7 +50,7 @@ const getPictureById = async (id) => {
 
 // eslint-disable-next-line no-unused-vars
 const getPictures = async (req, res) => {
-  return Picture.find(req.query);
+  return Picture.find({ ...req.query, isTakenByCamera: true });
 };
 
 const deletePictureById = async (id) => {

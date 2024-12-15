@@ -37,12 +37,19 @@ class _addMyLocationScreenState extends State<addMyLocationScreen> {
   late Color colorNotification;
 
 
+  String selectedCategory = 'Chọn loại địa điểm';
 
 
-  //List giới tính
-  final List<String> status = [
-    'enabled',
-    'unenabled',
+  final List<String> categorys = [
+    'Nhà',
+    'Trường học',
+    'Công ty',
+    'Nhà hàng',
+    'Bệnh viện',
+    'Siêu thị',
+    'Công viên',
+    'Biển',
+    'Khác',
   ];
 
 
@@ -137,7 +144,50 @@ class _addMyLocationScreenState extends State<addMyLocationScreen> {
                               children: [
                                 buildTextField("Tên", nameController, "Nhập tên địa điểm", TextInputType.text),
                                 const SizedBox(height: 15),
-                                buildTextField("Tiêu đề", titleController, "Thêm tiêu đề", TextInputType.text),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text("Loại địa điểm", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                    const SizedBox(height: 5),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      width: screenWidth,
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton2 (
+                                          isExpanded: true,
+                                          dropdownStyleData:const DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                            ),
+                                            maxHeight: 200,
+                                          ),
+                                          value: selectedCategory == 'Chọn loại địa điểm' ? null : selectedCategory,
+                                          hint: Text(selectedCategory, style: TextStyle(fontSize: 20),),
+                                          iconStyleData: const IconStyleData(
+                                            icon: Icon(Icons.arrow_drop_down), // Biểu tượng mũi tên
+                                            iconSize: 30,
+                                          ),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              selectedCategory = newValue!;
+                                            });
+
+                                          },
+                                          items: categorys.map<DropdownMenuItem<String>>((String category) {
+                                            return DropdownMenuItem<String>(
+                                              value: category,
+                                              child: Text(category, style: TextStyle(fontSize: 20),),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -149,7 +199,7 @@ class _addMyLocationScreenState extends State<addMyLocationScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
                               onTap:  () async {
-                                if (nameController.text.isEmpty || titleController.text.isEmpty ) {
+                                if (nameController.text.isEmpty || selectedCategory == 'Chọn loại địa điểm' ) {
                                   Notification = "Vui lòng nhập thông tin";
                                   colorNotification = Colors.red;
                                 } else {
@@ -161,7 +211,7 @@ class _addMyLocationScreenState extends State<addMyLocationScreen> {
                                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Múi giờ Việt Nam
                                   CreateLocationCategory createLocationCategory = CreateLocationCategory(
                                       name: nameController.text,
-                                      title: titleController.text,
+                                      title: selectedCategory,
                                       createdAt: vietnamTime.millisecondsSinceEpoch,
                                       status: "enabled",
                                   );
@@ -218,12 +268,12 @@ class _addMyLocationScreenState extends State<addMyLocationScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 3),
         TextFieldInput(
           textEditingController: controller,
-          hintText: hintText,
+          hintText: hintText ,
           textInputType: inputType,
           isEnabled: enabled,
         ),

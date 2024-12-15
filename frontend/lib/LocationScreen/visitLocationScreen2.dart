@@ -94,7 +94,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                           Text(
                             widget.locationCategory.name,
                             style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold),
+                                fontSize: 40, fontWeight: FontWeight.bold),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -245,7 +245,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                               margin: const EdgeInsets.symmetric(vertical: 10),
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: Colors.grey[200],
+                                color: Color(0xFFB0E0E6),
                                 borderRadius: BorderRadius.circular(20),
                                   boxShadow: [
                                     BoxShadow(
@@ -262,7 +262,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                   Text(
                                     location.title,
                                     style: TextStyle(
-                                        fontSize: 25,
+                                        fontSize: 35,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Row(
@@ -271,13 +271,13 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                         'Số lần đến: ',
                                         style: TextStyle(
                                             fontSize: 25,
-                                            fontWeight: FontWeight.bold),
+                                        )
                                       ),
                                       Text(
                                         location.visitedTime.toString(),
                                         style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold),
+                                          fontSize: 25,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -289,7 +289,6 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                                           'Địa chỉ: ${location.address}' ,
                                           style: TextStyle(
                                             fontSize: 25,
-                                            fontWeight: FontWeight.bold,
                                           ),
                                           maxLines: 2, // Giới hạn 2 dòng
                                           overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài

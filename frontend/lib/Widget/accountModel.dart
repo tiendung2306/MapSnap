@@ -5,6 +5,7 @@ import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/LocationCategory.dart';
 import '../Model/Picture.dart';
+import '../Model/Posts.dart';
 import '../Model/Token_2.dart';
 import '../Model/User_2.dart';
 
@@ -74,48 +75,31 @@ class AccountModel extends ChangeNotifier {
 
 
 //================== Quản lý ảnh theo địa điểm =====================
-  Map<String,Map<String,List<String>>> _imageManager = {
-    'Hà Nội': {
-      'Lăng Bác': ['assets/Image/1.jpg','assets/Image/2.jpg']
-    },
-    'Vinh': {
-      'Quảng trường': ['assets/Image/4.jpg','assets/Image/5.jpg'],
-      'BigC': ['assets/Image/6.jpg','assets/Image/7.jpg','assets/Image/8.jpg']
-    },
-  };
-  Map<String,Map<String,List<String>>> get imageManager => _imageManager;
+  Map<Location,List<Picture>> _imageLocation = {};
+  Map<Location,List<Picture>> get imageLocation => _imageLocation;
 
 
   // Hàm lưu ảnh theo địa điểm
-  void addImageLocation(String image, String journey, String visit) {
-    if (_imageManager.containsKey(journey)) {
-      if (_imageManager[journey]!.containsKey(visit)) {
-        print('0');
-        _imageManager[journey]![visit]!.insert(0, image);
-      } else {
-        _imageManager[journey]![visit] = [image];
-        print('1');
-      }
+  void addImageLocation(Location location, Picture picture) {
+    if (_imageLocation.containsKey(location)) {
+      _imageLocation[location]!.add(picture);
     } else {
-      _imageManager[journey] = {visit: [image]};
+      _imageLocation[location] = [picture];
     }
     notifyListeners(); // Gọi hàm để cập nhật lại UI
   }
 
   // Hàm xóa ảnh theo địa điểm
-  void removeImageLocation(String image, String journey, String visit) {
-    if (_imageManager.containsKey(journey)) {
-      if (_imageManager[journey]!.containsKey(visit)) {
-        _imageManager[journey]![visit]!.remove(image);
-        if (_imageManager[journey]![visit]!.isEmpty) {
-          _imageManager[journey]!.remove(visit); // Xóa visit nếu danh sách ảnh trống
-        }
-        if (_imageManager[journey]!.isEmpty) {
-          _imageManager.remove(journey); // Xóa journey nếu không còn visit nào
-        }
-      }
+  void removeImageLocation(Location location, Picture picture) {
+    _imageLocation[location]!.remove(picture);
+    if(_imageLocation[location]!.length == 0) {
+      _imageLocation.remove(location);
     }
     notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+  void resetImageLocation() {
+    _imageLocation = {};
   }
 
   //=========================Quản lý location================================
@@ -159,6 +143,28 @@ class AccountModel extends ChangeNotifier {
 
   void resetLocation(City city) {
     _locationManager[city] = [];
+    notifyListeners();
+  }
+
+
+  //=============================
+
+  List<Location> _locationManager3 = [];
+  List<Location> get locationManager3 => _locationManager3;
+
+  void addLocation3(Location? location) {
+    _locationManager3.add(location!);
+    notifyListeners(); // Gọi hàm để cập nhật lại UI
+  }
+
+
+  void removeLocation3(Location location) {
+    _locationManager3.remove(location);
+    notifyListeners();
+  }
+
+  void resetLocation3() {
+    _locationManager3 = [];
     notifyListeners();
   }
 
@@ -208,32 +214,18 @@ class AccountModel extends ChangeNotifier {
     notifyListeners();
   }
   //=====================================================================
-  List<List<String>> _comments = [];
-  List<List<String>> get comments => _comments;
+  List<Picture> _fullImage = [];
+  List<Picture> get fullImage => _fullImage;
 
-
-  void resetListComment() {
-    _comments = [];
+  void resetFullImage() {
+    _fullImage = [];
     notifyListeners();
   }
 
 
-  void addComment(int index, String newComment) {
-    if (index < _comments.length) {
-      _comments[index].insert(0, newComment);
-    } else {
-      // Thay vì truy cập trực tiếp, bạn nên kiểm tra và tạo danh sách nếu cần.
-      while (_comments.length <= index) {
-        _comments.add([]);
-      }
-      _comments[index].insert(0, newComment);
-    }
+  void addFullImage(Picture picture) {
+    _fullImage.insert(0,picture);
     notifyListeners();
   }
 
-
-  void addListComment() {
-    _comments.add([]);
-    notifyListeners();
-  }
 }

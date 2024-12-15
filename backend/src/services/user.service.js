@@ -3,6 +3,7 @@ const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { uploadAvatar } = require('../middlewares/upload');
 const cloudinary = require('../config/cloudinary'); // Import Cloudinary config
+const userStatusService = require('./userStatus.service');
 
 /**
  * Create a user
@@ -13,7 +14,10 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  return User.create(userBody);
+  const user = User.create(userBody);
+  const userStatus = { userId: user._id, createdAt: Date.now() };
+  await userStatusService.createUserStatus(userStatus);
+  return user;
 };
 
 /**

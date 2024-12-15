@@ -356,14 +356,22 @@ components:
       type: object
       required:
         - userId
-        - timeStandStill
-        - instantSpeed
       properties:
         userId:
           type: string
-        timeStandStill:
+        locationId:
+          type: string
+        visitId:
+          type: string
+        journeyId:
+          type: string
+        createdAt:
           type: number
         instantSpeed:
+          type: number
+        longitude:
+          type: number
+        latitude:
           type: number
   responses:
     DuplicateEmail:

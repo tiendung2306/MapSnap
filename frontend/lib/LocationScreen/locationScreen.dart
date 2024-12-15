@@ -175,7 +175,7 @@ class _locationScreenState extends State<locationScreen> {
                                     tabs: [
                                       Tab(text: "Thành phố"),
                                       Tab(text: "Của tôi"),
-                                      Tab(text: "Gần đây",)
+                                      Tab(text: "Yêu thích",)
                                     ],
                                   ),
                                 ),

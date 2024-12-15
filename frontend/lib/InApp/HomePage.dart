@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
+import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
+import 'package:mapsnap_fe/Widget/AutoRefreshToken.dart';
+import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart';
+
 import '../LocationScreen/locationScreen.dart';
 import '../NewFeed/newFeedScreen.dart';
-import '../PictureScreen/pictureManager.dart';
 import 'package:mapsnap_fe/Widget/bottomNavigationBar.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
 
@@ -51,6 +54,7 @@ class _HomePageState extends State<HomePage> {
 
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => pictureManager()),
+                            MaterialPageRoute(builder: (context) => daySaveScreen()),
                           );
                         },
                       ),

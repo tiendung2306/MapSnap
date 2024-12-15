@@ -14,17 +14,14 @@ const pictureSchema = new Schema({
   locationId: {
     type: Schema.Types.ObjectId,
     ref: 'Location',
-    required: true,
   },
   visitId: {
     type: Schema.Types.ObjectId,
     ref: 'Visit',
-    required: true,
   },
   journeyId: {
     type: Schema.Types.ObjectId,
     ref: 'Journey',
-    required: true,
   },
   link: {
     type: String,
@@ -37,6 +34,10 @@ const pictureSchema = new Schema({
   public_id: {
     type: String,
     required: true,
+  },
+  isTakenByCamera: {
+    type: Boolean,
+    default: true,
   },
 });
 
