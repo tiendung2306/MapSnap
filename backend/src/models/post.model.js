@@ -34,7 +34,7 @@ const postSchema = new Schema({
     ref: 'Journey',
     required: true,
   },
-  adress: {
+  address: {
     type: String,
     required: true,
   },

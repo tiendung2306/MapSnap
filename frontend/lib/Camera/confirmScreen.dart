@@ -95,6 +95,7 @@
 // }
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/Manager/CURD_location.dart';
@@ -105,12 +106,35 @@ import 'package:provider/provider.dart';
 
 import '../Manager/CURD_picture.dart';
 
-class ConfirmScreen extends StatelessWidget {
+class ConfirmScreen extends StatefulWidget {
   final String imagePath;
 
   const ConfirmScreen({Key? key, required this.imagePath}) : super(key: key);
 
+  @override
+  State<ConfirmScreen> createState() {
+    return _ConfirmScreenState();
+  }
+}
 
+class _ConfirmScreenState  extends State<ConfirmScreen>{
+
+
+  List<Location> listLocation = [];
+
+
+  @override
+  void initState() {
+    fetchLocation();
+    super.initState();
+  }
+
+
+  Future<void> fetchLocation() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    listLocation = await getInfoLocation(accountModel.idUser,"","");
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -123,7 +147,7 @@ class ConfirmScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Image.file(
-              File(imagePath),
+              File(widget.imagePath),
               fit: BoxFit.cover,
             ),
           ),
@@ -147,14 +171,14 @@ class ConfirmScreen extends StatelessWidget {
                         DateTime now = DateTime.now();
                         DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Chuyển sang múi giờ UTC+7
                         String dayString = '${vietnamTime.day}-${vietnamTime.month}-${vietnamTime.year}';
-                        InfoVisit? infoLocation = await AutoLocation(20, 100);
-
+                        Location randomLocationId = listLocation[Random().nextInt(listLocation.length)];
+                        print(randomLocationId.address);
                         CreatePicture createPicture = CreatePicture(
                           userId: accountModel.idUser,
-                          locationId: "60c72b2f9af1b8124cf74c9b",
+                          locationId: randomLocationId.id,
                           visitId: "60c72b2f9af1b8124cf74c9c",
                           journeyId: "60c72b2f9af1b8124cf74c9d",
-                          link: imagePath,
+                          link: widget.imagePath,
                           capturedAt: vietnamTime,
                           isTakenByCamera: true,
                         );

@@ -306,8 +306,6 @@ class _visitLocationScreenState extends State<visitLocationScreen> {
                                                 style: const TextStyle(
                                                   fontSize: 25,
                                                 ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],

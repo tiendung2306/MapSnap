@@ -8,6 +8,7 @@ import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/City.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/LocationCategory.dart';
+import 'package:mapsnap_fe/Model/forwardGeocoding.dart';
 import 'package:mapsnap_fe/Widget//text_field_input.dart';
 import 'package:provider/provider.dart';
 import '../Widget/accountModel.dart';
@@ -48,7 +49,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     locationCategory = await getInfoLocationCategory(accountModel.idUser);
-    listCity = await getInfoCity(accountModel.idUser);
+    listCity = await getInfoCity(accountModel.idUser,"","");
     setState(() {});
   }
 
@@ -137,7 +138,9 @@ class _addLocationScreenState extends State<addLocationScreen> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                buildTextField("Tên", titleController, "Tên địa điểm", TextInputType.text),
+                                buildTextField("Tên", titleController, "Nhập tên", TextInputType.text),
+                                const SizedBox(height: 15),
+                                buildTextField("Địa chỉ", addressController, "Nhập địa chỉ", TextInputType.text),
                                 const SizedBox(height: 15),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,38 +230,33 @@ class _addLocationScreenState extends State<addLocationScreen> {
                           borderRadius: BorderRadius.circular(15),
                           child: InkWell(
                               onTap:  () async {
-                                if (titleController.text.isEmpty  ||
+                                if (titleController.text.isEmpty  || addressController.text.isEmpty ||
                                     city == null || Category == null) {
                                   Notification = "Vui lòng nhập thông tin";
                                   colorNotification = Colors.red;
                                 } else {
                                   // Nếu tất cả đều hợp lệ, lưu dữ liệu
                                   var accountModel = Provider.of<AccountModel>(context, listen: false);
-                                  Notification = "Lưu thông tin thành công";
+                                  Notification = "Thêm địa điểm thành công";
                                   colorNotification = Colors.blue;
                                   DateTime now = DateTime.now();
                                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7));
-                                  // Position position = await Geolocator.getCurrentPosition(
-                                  //     locationSettings: LocationSettings(
-                                  //         accuracy: LocationAccuracy.high, // Độ chính xác cao
-                                  //     ),
-                                  // );
-                                  InfoVisit? infoLocation = await AutoLocation(20, 100);
+                                  ForwardGeocoding? infoLocation = await GetLatIngbyAddress(addressController.text);
                                   CreateLocation createLocation = CreateLocation(
                                       cityId: city!.id,
                                       categoryId: Category!.id,
                                       title: titleController.text,
                                       visitedTime: 1,
-                                      longitude: 20,
-                                      latitude: 100,
+                                      longitude: infoLocation!.lng.toDouble(),
+                                      latitude: infoLocation.lat.toDouble(),
                                       createdAt: vietnamTime.millisecondsSinceEpoch,
                                       status: "enabled",
                                       updatedByUser: true,
                                       isAutomaticAdded: false,
-                                      address: infoLocation!.address,
+                                      address: infoLocation.formatted_address,
                                       country: "Việt Nam",
-                                      district: "Siuuuuuuuuuu",
-                                      homeNumber: infoLocation.homeNumber,
+                                      district: infoLocation.name,
+                                      homeNumber: infoLocation.name,
                                   );
                                   await upLoadLocation(createLocation, accountModel.idUser);
                                 }

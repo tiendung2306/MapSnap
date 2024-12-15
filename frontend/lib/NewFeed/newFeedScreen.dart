@@ -110,6 +110,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
     super.initState();
   }
 
+
   Future<void> initializePageData() async {
     // Đợi getPageData hoàn tất
     await getPageData();
@@ -154,6 +155,39 @@ class _newFeedScreenState extends State<newFeedScreen> {
     posts.addAll(pagePost!.results);
     return posts;
   }
+
+  RichText NameUser(int index, User user,Posts post) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: "${user.username} ",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue, // Kiểu chữ cho tên người dùng
+            ),
+          ),
+          TextSpan(
+            text: "đang ở ",
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(0xFF7E7E7E), // Kiểu chữ cho chữ "đang ở"
+            ),
+          ),
+          TextSpan(
+            text: post.address,
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Kiểu chữ cho địa điểm
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
 
 
@@ -253,8 +287,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
               post.map((i) => posts.add(i));
             }
 
-
-
             return Consumer<AccountModel>(
               builder: (context, accountModel, child) {
                 return Stack(
@@ -314,17 +346,16 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => PostScreen(),
                                     ),
-                                  ).then((success) {
+                                  ).then((success) async {
                                     if (success != null) {
-                                      setState(() {
-                                        setState(() async {
-                                          posts.insert(0,success);  // Thêm bài viết mới vào đầu danh sách
-                                          user.insert(0,null);
-                                          isLike.insert(0, false);
-                                          user[0] = await getUser(success.userId, accountModel.token_access);
-                                          like.insert(0, []);
-                                          comments.insert(0, []);
-                                        });
+                                      User? hihi = await getUser(success.userId, accountModel.token_access);
+                                      setState(()  {
+                                        posts.insert(0,success);
+                                        user.insert(0,null);
+                                        isLike.insert(0, false);
+                                        user[0] = hihi;
+                                        like.insert(0, []);
+                                        comments.insert(0, []);
                                       });
                                     }
                                   });
@@ -342,7 +373,8 @@ class _newFeedScreenState extends State<newFeedScreen> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        Expanded(
+                        Container(
+                          height: screenHeight * 4 / 5 + 10,
                           child: ListView.builder(
                             controller: scrollController,
                             // reverse: true,
@@ -389,16 +421,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           Expanded(
                                             child: Container(
                                               padding: EdgeInsets.symmetric(vertical: 5),
-                                              height: 70,
-                                              child: Text(
-                                                postUser.username,
-                                                style: TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                              child: NameUser(index, postUser,post),
                                             ),
                                           ),
                                           SizedBox(width: 20),
@@ -616,9 +639,11 @@ class _newFeedScreenState extends State<newFeedScreen> {
                           height: 2,
                           color: Colors.grey,
                         ),
-                        CustomBottomNav(
-                          onTabTapped: onTabTapped,
-                          currentIndex: currentTabIndex,
+                        Expanded(
+                          child: CustomBottomNav(
+                            onTabTapped: onTabTapped,
+                            currentIndex: currentTabIndex,
+                          ),
                         ),
                       ],
                     ),

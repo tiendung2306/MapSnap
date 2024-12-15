@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
 import 'package:mapsnap_fe/PictureScreen/daySavePicture.dart';
+import 'package:mapsnap_fe/Widget/AutoCallAPI.dart';
 import 'package:mapsnap_fe/Widget/AutoRefreshToken.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
+import 'package:mapsnap_fe/statisticScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../LocationScreen/locationScreen.dart';
@@ -25,12 +27,16 @@ class _HomePageState extends State<HomePage> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     startAutoRefreshToken(context, accountModel.token_refresh_expires,accountModel.token_refresh,accountModel.idUser);
     //===============================================================
+
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     int currentTabIndex = 0;
+    autoCallAPI(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -192,9 +198,14 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.favorite, size: 30,),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => statisticScreen()),
+                          );
+                        },
                       ),
-                      Text('Favorite')
+                      Text('Statistic')
                     ],
                   ),
                 ],

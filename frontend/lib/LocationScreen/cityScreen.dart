@@ -29,7 +29,7 @@ class _cityScreenState extends State<cityScreen> {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     accountModel.resetCity();
-    List<City> cities = await getInfoCity(accountModel.idUser);
+    List<City> cities = await getInfoCity(accountModel.idUser,"","");
     if (cities.isNotEmpty) {
       for (var city in cities) {
         // accountModel.addCity(city);

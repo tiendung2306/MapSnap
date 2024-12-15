@@ -3,10 +3,9 @@ import 'package:mapsnap_fe/Model/City.dart';
 import 'dart:convert';
 
 import 'package:mapsnap_fe/Model/Location.dart';
+import 'package:mapsnap_fe/Model/forwardGeocoding.dart';
 
 
-
-// API để gọi tải ảnh lên Database
 Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/create-location');
   final Map<String, dynamic> loadData = {
@@ -52,7 +51,7 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
 }
 
 
-// Hàm gọi API lấy hết thông tin location theo .....
+
 Future<List<Location>> getInfoLocation(String userId, String body, String check) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/get-location');
   late Map<String, dynamic> updatedData;
@@ -73,6 +72,11 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
       "sortField": body,
     };
   }
+  if(check == "searchText") {
+    updatedData = {
+      "searchText": body,
+    };
+  }
   if(check == '') {
     updatedData = {};
   }
@@ -87,6 +91,7 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     List<dynamic> data = json['result'];
+    print(data);
     List<Location> locations = data.map((json) => Location.fromJson(json)).toList();
     return locations;
   } else {
@@ -96,7 +101,7 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
 }
 
 
-// Hàm gọi API lấy thông tin location theo id
+
 Future<Location?> getLocationId(String Id) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/location/$Id');
   final response = await http.get(
@@ -115,8 +120,6 @@ Future<Location?> getLocationId(String Id) async {
 }
 
 
-
-// Gọi API để update thông tin
 Future<void> updateLocation(CreateLocation createLocation,String id) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/city/$id');
   // Dữ liệu cần cập nhật
@@ -127,7 +130,7 @@ Future<void> updateLocation(CreateLocation createLocation,String id) async {
     'visitedTime': createLocation.visitedTime,
     'longitude': createLocation.longitude,
     'latitude': createLocation.latitude,
-    'createdAt': createLocation.createdAt,
+    // 'createdAt': createLocation.createdAt,
     'status': createLocation.status,
     'updatedByUser': createLocation.updatedByUser,
     'isAutomaticAdded': createLocation.isAutomaticAdded,
@@ -182,6 +185,34 @@ Future<InfoVisit?> AutoLocation(double lat, double lng) async {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       print(data);
       return InfoVisit.fromJson(data);
+    } else {
+      // Xử lý lỗi từ API
+      print(response.statusCode);
+    }
+  } catch (e) {
+    // Xử lý lỗi khác
+    print('Error: $e');
+  }
+  return null;
+}
+
+
+
+Future<ForwardGeocoding?> GetLatIngbyAddress(String address) async {
+  final url = Uri.parse('http://10.0.2.2:3000/v1/goong/forward-geocoding?address=$address');
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json', // Định dạng JSON
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Xử lý thành công
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      // print(data);
+      return ForwardGeocoding.fromJson(data);
     } else {
       // Xử lý lỗi từ API
       print(response.statusCode);

@@ -205,7 +205,7 @@ class _addMyLocationScreenState extends State<addMyLocationScreen> {
                                 } else {
                                   // Nếu tất cả đều hợp lệ, lưu dữ liệu
                                   var accountModel = Provider.of<AccountModel>(context, listen: false);
-                                  Notification = "Lưu thông tin thành công";
+                                  Notification = "Thêm loại địa điểm thành công";
                                   colorNotification = Colors.blue;
                                   DateTime now = DateTime.now();
                                   DateTime vietnamTime = now.toUtc().add(Duration(hours: 7)); // Múi giờ Việt Nam
