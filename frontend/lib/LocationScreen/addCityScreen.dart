@@ -200,6 +200,7 @@ class _addCityScreenState extends State<addCityScreen> {
                             const SizedBox(height: 5),
                             Container(
                               decoration: BoxDecoration(
+                                color: Colors.white,
                                 border: Border.all(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8),
                               ),

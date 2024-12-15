@@ -28,7 +28,9 @@ class _FullImageScreenState extends State<FullImageScreen> {
   @override
   void initState() {
     super.initState();
-    fetchImagesByUserId();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchImagesByUserId();
+    });
   }
 
   Future<void> fetchImagesByUserId() async {

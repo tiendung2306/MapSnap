@@ -22,8 +22,10 @@ class _thirdScreenState  extends State<thirdScreen>{
   int k = 1;
 
   void initState() {
-    fetchCityByUserId();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchLocationByUserId();
+    });
   }
 
   Color getRankColor(int rank) {
@@ -40,7 +42,7 @@ class _thirdScreenState  extends State<thirdScreen>{
 
 
 
-  Future<void> fetchCityByUserId() async {
+  Future<void> fetchLocationByUserId() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     accountModel.resetLocation3();

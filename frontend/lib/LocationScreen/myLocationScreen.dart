@@ -26,8 +26,11 @@ class _myLocationScreenState extends State<myLocationScreen> {
 
   @override
   void initState() {
-    fetchCategory();
     super.initState();
+    // Đảm bảo hàm được gọi sau khi widget đã được xây dựng
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchCategory();
+    });
   }
 
   Future<void> fetchCategory() async {
@@ -98,7 +101,6 @@ class _myLocationScreenState extends State<myLocationScreen> {
                 for(int i = 0 ;i < category.length; i++) ...[
                   GestureDetector(
                     onTap: () {
-                      print("Siuuuuuuuuuuuuuu");
                       setState(() {
                         Navigator.push(
                             context,

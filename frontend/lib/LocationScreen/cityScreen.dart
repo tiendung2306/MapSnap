@@ -21,8 +21,10 @@ class _cityScreenState extends State<cityScreen> {
 
   @override
   void initState() {
-    fetchCityByUserId();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchCityByUserId();
+    });
   }
 
   Future<void> fetchCityByUserId() async {
@@ -136,7 +138,6 @@ class _cityScreenState extends State<cityScreen> {
                 for(int i = 0 ;i < cities.length; i++) ...[
                   GestureDetector(
                     onTap: () {
-                      print("Siuuuuuuuuuuuuuu");
                       Navigator.push(
                           context,
                           MaterialPageRoute(

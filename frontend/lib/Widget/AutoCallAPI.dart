@@ -80,7 +80,6 @@ Map<String, double> randomVietnamCoordinates() {
 
 int randomvisitedTime() {
   final random = Random();
-
   // Random số nguyên từ 1 đến 200
   return random.nextInt(200) + 1; // nextInt(200) trả giá trị từ 0 đến 199, cộng thêm 1 để thành 1 đến 200
 }

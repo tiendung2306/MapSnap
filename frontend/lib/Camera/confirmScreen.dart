@@ -183,11 +183,21 @@ class _ConfirmScreenState  extends State<ConfirmScreen>{
                           isTakenByCamera: true,
                         );
 
-                        List<Picture>? picture = await upLoadImage(createPicture);
-                        // Cập nhật ảnh vào ImageManager
-                        // Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0]);
-                        Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0], dayString);
-                        Navigator.pop(context); // Quay lại màn hình trước đó
+                        // Hiển thị spinner
+                        showLoadingDialog(context);
+                        try {
+                          // Thực hiện upload ảnh
+                          List<Picture>? picture = await upLoadImage(createPicture);
+                          // Thêm ảnh vào AccountModel nếu thành công
+                          Provider.of<AccountModel>(context, listen: false).addImageDay(picture![0], dayString);
+                        } catch (e) {
+                          print('Lỗi khi upload ảnh: $e');
+                        } finally {
+                          // Đóng spinner
+                          Navigator.of(context).pop();
+                        }
+                        // Thoát màn hình
+                        Navigator.pop(context);
                       },
                       child: button(Icons.check, Alignment.bottomRight, (screenHeight / 5) * 1 / 2, screenHeight / 20, screenWidth / 10, Colors.green),
                     ),
@@ -234,6 +244,18 @@ class _ConfirmScreenState  extends State<ConfirmScreen>{
       ),
     );
   }
+}
+
+void showLoadingDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Không cho phép thoát khi nhấn bên ngoài
+    builder: (BuildContext context) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+  );
 }
 
 

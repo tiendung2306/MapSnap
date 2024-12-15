@@ -26,7 +26,9 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
   @override
   void initState() {
     super.initState();
-    fetchLocationByUserId();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchLocationByUserId();
+    });
   }
 
   Future<void> fetchLocationByUserId() async {
@@ -74,7 +76,7 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                   height: screenHeight,
                   fit: BoxFit.none,
                 ),
-                SingleChildScrollView(
+                Container(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
@@ -197,116 +199,125 @@ class _visitLocationScreenState2 extends State<visitLocationScreen2> {
                       ),
                       SizedBox(height: 10),
                       // Danh sách địa điểm đã lọc
-                      if (filteredLocations.isNotEmpty)
-                        ...filteredLocations.map((location) {
-                          return GestureDetector(
-                            onTap: () {
-                              print("Location: ${location.title}");
-                            },
-                            onLongPress: () {
-                              // Hiển thị hộp thoại xác nhận xóa
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.white,
-                                    title: const Text("Xác nhận xóa"),
-                                    content: Text("Bạn có chắc chắn muốn xóa '${location.title}' không?"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context); // Đóng hộp thoại
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
-                                        ),
-                                        child: const Text("Hủy", style: TextStyle(color: Colors.black)),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          accountModel.removeLocation2(widget.locationCategory,location);
-                                          await RemoveLocation(location.id);
-                                          Navigator.pop(context); // Đóng hộp thoại
-                                          // Làm mới giao diện
-                                          setState(() {});
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
+                      Container(
+                        height: _isFilterVisible == false ? (screenHeight - 90) : (screenHeight - 340),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              if (filteredLocations.isNotEmpty)
+                                ...filteredLocations.map((location) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print("Location: ${location.title}");
+                                    },
+                                    onLongPress: () {
+                                      // Hiển thị hộp thoại xác nhận xóa
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            backgroundColor: Colors.white,
+                                            title: const Text("Xác nhận xóa"),
+                                            content: Text("Bạn có chắc chắn muốn xóa '${location.title}' không?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context); // Đóng hộp thoại
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white12), // Màu nền cho nút
+                                                ),
+                                                child: const Text("Hủy", style: TextStyle(color: Colors.black)),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  accountModel.removeLocation2(widget.locationCategory,location);
+                                                  await RemoveLocation(location.id);
+                                                  Navigator.pop(context); // Đóng hộp thoại
+                                                  // Làm mới giao diện
+                                                  setState(() {});
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red), // Màu nền cho nút
 
-                                        ),
-                                        child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                                                ),
+                                                child: const Text("Xóa", style: TextStyle(color: Colors.white)),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(vertical: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFB0E0E6),
+                                          borderRadius: BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black.withOpacity(0.3),
+                                                spreadRadius: 3,
+                                                blurRadius: 6,
+                                                offset: Offset(5, 5)
+                                            )
+                                          ]
                                       ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFB0E0E6),
-                                borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        spreadRadius: 3,
-                                        blurRadius: 6,
-                                        offset: Offset(5, 5)
-                                    )
-                                  ]
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    location.title,
-                                    style: TextStyle(
-                                        fontSize: 35,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Số lần đến: ',
-                                        style: TextStyle(
-                                            fontSize: 25,
-                                        )
-                                      ),
-                                      Text(
-                                        location.visitedTime.toString(),
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded( // Để tự động xuống dòng nếu chữ dài
-                                        child: Text(
-                                          'Địa chỉ: ${location.address}' ,
-                                          style: TextStyle(
-                                            fontSize: 25,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            location.title,
+                                            style: TextStyle(
+                                                fontSize: 35,
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                  'Số lần đến: ',
+                                                  style: TextStyle(
+                                                    fontSize: 25,
+                                                  )
+                                              ),
+                                              Text(
+                                                location.visitedTime.toString(),
+                                                style: TextStyle(
+                                                  fontSize: 25,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded( // Để tự động xuống dòng nếu chữ dài
+                                                child: Text(
+                                                  'Địa chỉ: ${location.address}' ,
+                                                  style: TextStyle(
+                                                    fontSize: 25,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
+                                  );
+                                }).toList(),
+                              if (filteredLocations.isEmpty)
+                                Text(
+                                  "Không có địa điểm nào khớp với bộ lọc",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      if (filteredLocations.isEmpty)
-                        Text(
-                          "Không có địa điểm nào khớp với bộ lọc",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
+                                ),
+                            ],
                           ),
                         ),
+                      )
                     ],
                   ),
                 ),

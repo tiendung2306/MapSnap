@@ -61,7 +61,6 @@ Future<List<City>> getInfoCity(String userId,String check, String nameCity) asyn
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     List<dynamic> data = json['result'];
-    print(data);
     List<City> cities = data.map((json) => City.fromJson(json)).toList();
     return cities;
   } else {

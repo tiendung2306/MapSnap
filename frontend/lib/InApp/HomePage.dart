@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     int currentTabIndex = 0;
-    autoCallAPI(context);
+    // autoCallAPI(context);  // Tự động tạo Location, City
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.favorite, size: 30,),
+                        icon: Icon(Icons.insert_chart, size: 30,),
                         onPressed: () {
                           Navigator.push(
                             context,
