@@ -33,8 +33,10 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
   bool _isFilterVisible = false;
 
   void initState() {
-    fetchCityByUserId();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchCityByUserId();
+    });
   }
 
 
