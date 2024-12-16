@@ -261,15 +261,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
             if (!snapshot.hasData || snapshot.data!.isEmpty ) {
               return Center(
                   child: Scaffold(
-                    appBar: AppBar(
-                      title: Text('HIHI'),
-                      leading: IconButton(
-                        icon: Icon(Icons.close, color: Colors.black),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
                     body: Center(child:AnimatedRotation(
                       turns: 1, // xoay một vòng
                       duration: Duration(seconds: 1),
@@ -328,6 +319,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                 child: Container(
                                   height: 50,
                                   child: TextField(
+                                    enabled: false,
                                     decoration: InputDecoration(
                                       hintText: "Tìm kiếm...",
                                       border: OutlineInputBorder(
@@ -524,17 +516,37 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                     ),
                                                   );
                                                 },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black.withOpacity(0.5),
-                                                    borderRadius: BorderRadius.circular(8),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '+${post.media.length - 3}',
-                                                      style: TextStyle(color: Colors.white, fontSize: 24),
+                                                child: Stack(
+                                                  alignment: Alignment.center, // Đặt Text vào giữa ảnh
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(post.media[imgIndex]['url']!),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        border: Border.all(
+                                                          color: Colors.blue, // Màu viền
+                                                          width: 2, // Độ dày viền
+                                                        ),
+                                                        borderRadius: BorderRadius.circular(8),
+                                                      ),
+                                                      child: Opacity(
+                                                        opacity: 0.3, // Làm ảnh thứ 3 trong suốt
+                                                        child: Container(
+                                                          color: Colors.black, // Nền mờ màu đen
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    Text(
+                                                      "+${(post.media.length - 4).toString()}",
+                                                      style: const TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white, // Màu chữ hiển thị trên nền mờ
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               );
                                             } else {

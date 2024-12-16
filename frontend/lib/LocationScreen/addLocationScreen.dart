@@ -164,7 +164,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                           maxHeight: 200,
                                         ),
                                         value: Category, // Lưu đối tượng LocationCategory
-                                        hint: Text("Chọn địa điểm"),
+                                        hint: Text("Chọn địa điểm                          "),
                                         items: locationCategory.map((category) {
                                           return DropdownMenuItem<LocationCategory>(
                                             value: category, // Đặt đối tượng LocationCategory vào value
@@ -203,7 +203,7 @@ class _addLocationScreenState extends State<addLocationScreen> {
                                           maxHeight: 200,
                                         ),
                                         value: city,
-                                        hint: Text("Chọn tỉnh"),
+                                        hint: Text("Chọn tỉnh                                   "),
                                         items: listCity.map((cities) {
                                           return DropdownMenuItem<City>(
                                             value: cities,

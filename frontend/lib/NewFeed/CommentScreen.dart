@@ -352,6 +352,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                 setState(() {
                   widget.listComment.insert(0, comment!);
                   listUser.insert(0, user);
+                  isExpanded.insert(0,false);
                 });
               } else {
                 addComment addcomment = addComment(

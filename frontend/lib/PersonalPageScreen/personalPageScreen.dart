@@ -5,10 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/albumScreen.dart';
 import 'package:mapsnap_fe/PersonalPageScreen/postScreen.dart';
 import 'package:mapsnap_fe/SettingScreen/settingScreen.dart';
-import 'package:mapsnap_fe/Camera/mainScreenCamera.dart';
 import 'package:provider/provider.dart';
-
-import '../Widget/AutoRefreshToken.dart';
 import '../Widget/accountModel.dart';
 import '../Widget/bottomNavigationBar.dart';
 
@@ -27,8 +24,14 @@ class personalPageScreenState extends State<personalPageScreen> {
 
   @override
   void initState() {
-    _loadImage();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Gọi _loadImage() ở đây vì bây giờ có thể truy cập Provider
+    _loadImage();
   }
 
   int currentTabIndex = 4;
