@@ -25,7 +25,6 @@ const locationSchema = new Schema({
   cityId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'City',
-    required: true,
   },
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -7,7 +7,8 @@ const { createLocation } = require('./location.service');
 const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
-// const UserModel = require('../models/user.model');
+const { request } = require('express');
+const locationService = require('./location.service');
 
 const _createHistoryLog = async ({ positionId, positionBody, activityType }) => {
   const historyLogRequest = {
@@ -27,6 +28,15 @@ const createPosition = async (requestBody) => {
   if (existedPosition) {
     throw new ApiError(httpStatus.BAD_REQUEST, Message.positionMsg.nameExisted);
   }
+  const goongAddress = await locationService.reverseGeocoding({ query: { lat: requestBody.latitude, lng: requestBody.longitude } });
+  requestBody.cityId = goongAddress.cityId;
+  requestBody.country = goongAddress.country;
+  requestBody.district = goongAddress.district;
+  requestBody.homeNumber = goongAddress.homeNumber;
+  requestBody.address = goongAddress.address;
+  requestBody.classify = goongAddress.classify;
+  const location = await getLocationFromPosition(requestBody);
+  if (location) requestBody.locationId = location._id;
   const position = await Position.create(requestBody);
   await _createHistoryLog({ positionId: position._id, positionBody: requestBody, activityType: 'Create' });
   return position;
@@ -58,7 +68,7 @@ const _getDistance = (longitudeStart, latitudeStart, longitudeDes, latitudeDes) 
   const longitudeDesKm = longitudeDes * 111.32 * Math.cos(latitudeDesKm);
   return Math.sqrt(
     (longitudeDesKm - longitudeStartKm) * (longitudeDesKm - longitudeStartKm) +
-      (latitudeDesKm - latitudeStartKm) * (latitudeDesKm - latitudeStartKm)
+    (latitudeDesKm - latitudeStartKm) * (latitudeDesKm - latitudeStartKm)
   );
 };
 
@@ -80,7 +90,7 @@ const getNearestPosition = async (positionBody) => {
     if (
       !nearestPosition ||
       _getDistance(longitude, latitude, nearestPosition.longitude, nearestPosition.latitude) >
-        _getDistance(longitude, latitude, position.longitude, position.latitude)
+      _getDistance(longitude, latitude, position.longitude, position.latitude)
     )
       nearestPosition = position;
   });
@@ -99,28 +109,37 @@ const _getNearestLocation = async (positionBody) => {
     if (
       !nearestLocation ||
       _getDistance(longitude, latitude, nearestLocation.longitude, nearestLocation.latitude) >
-        _getDistance(longitude, latitude, location.longitude, location.latitude)
+      _getDistance(longitude, latitude, location.longitude, location.latitude)
     )
       nearestLocation = location;
   });
+  console.log(nearestLocation);
   return nearestLocation;
 };
 
 const getLocationFromPosition = async (positionBody) => {
   // eslint-disable-next-line no-unused-vars
-  const { userId, longitude, latitude, country, cityId, district, homeNumber, address } = positionBody;
+  const { userId, longitude, latitude, country, cityId, district, homeNumber, classify, address } = positionBody;
   const filter = { userId, longitude, latitude };
-  const nearestLocation = _getNearestLocation(filter);
-  if (nearestLocation.country !== country || nearestLocation.cityId !== cityId || nearestLocation.district !== district) {
+  const nearestLocation = await _getNearestLocation(filter);
+  console.log(positionBody);
+  console.log(_getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude))
+  if (nearestLocation.country !== country || nearestLocation.district !== district || _getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude) > 50) {
     const locationBody = positionBody;
     locationBody.visitedTime = 1;
     locationBody.status = 'enabled';
+    locationBody.cityId = cityId;
+    locationBody.country = country;
+    locationBody.district = district;
+    locationBody.homeNumber = homeNumber;
+    locationBody.classify = classify;
     locationBody.isAutomaticAdded = true;
     locationBody.updatedByUser = false;
     locationBody.title = address;
     const location = await createLocation(locationBody);
     return location;
   }
+
   return nearestLocation;
 };
 

@@ -5,8 +5,8 @@ const Location = require('../models/location.model');
 const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
-// const { getClosestLocation } = require('../controllers/location.controller');
-// const UserModel = require('../models/user.model');
+const goongService = require('../services/goong.service');
+const cityService = require('../services/city.service');
 
 const _createHistoryLog = async ({ locationId, locationBody, activityType }) => {
   const historyLogRequest = {
@@ -83,6 +83,35 @@ const deleteHardLocation = async (locationId) => {
   await _createHistoryLog({ locationId, locationBody, activityType: 'Delete' });
 };
 
+const reverseGeocoding = async (req, res) => {
+  const { results } = await goongService.reverseGeocoding(req, res);
+  // console.log(results);
+  const address = results[0].formatted_address;
+  const country = 'Việt Nam';
+  const district = results[0].compound.district;
+  const classify = results[0].types[0];
+  const homeNumber =
+    results[0].address_components[0].long_name +
+    (results[0].address_components[1].long_name !== results[0].compound.commune
+      ? ', ' + results[0].address_components[1].long_name
+      : '');
+  const commune = results[0].compound.commune;
+  const province = results[0].compound.province;
+  const cities = await cityService.getCities({ userId: req.query.userId, searchText: province });
+  const cityId = !!cities[0] ? cities[0]._id : null;
+  const location = {
+    address,
+    country,
+    district,
+    classify,
+    homeNumber,
+    commune,
+    province,
+    cityId,
+  };
+  return location;
+};
+
 module.exports = {
   createLocation,
   getLocationByLocationId,
@@ -90,4 +119,5 @@ module.exports = {
   deleteLocation,
   getLocation,
   deleteHardLocation,
+  reverseGeocoding,
 };
