@@ -230,6 +230,10 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                           icon: Icon(Icons.insert_chart, size: 30,),
                           onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => statisticScreen()),
+                            );
                           },
                         ),
                         Text('Statistic')
