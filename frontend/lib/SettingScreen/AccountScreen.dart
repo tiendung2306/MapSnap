@@ -41,22 +41,6 @@ class _accountScreenState extends State<accountScreen> {
   final List<String> sex = [
     'Male',
     'Female',
-    'Transsexual Male',
-    'Transsexual Female',
-    'Metrosexual Male',
-    'Metrosexual Female',
-    'Male, But Curious What Being a Female is Like',
-    'Female, But Curious What Being a Male is Like',
-    'Male. But Overweight. So Have Moobs',
-    'Hermaphrodite with Predominant Male Leanings',
-    'Hermaphrodite with Predominant Female Leanings',
-    'Conjoined Twin-Male',
-    'Conjoined Twin-Female',
-    'Bom Without Genitals-Identify as Male',
-    'Bom Without Genitals-Identify as Female',
-    'Household Pet That Walked Across the Keyboard',
-    'SÚC VẬT',
-    'ĐCM TK NÀO NGHĨ RA MẤY CÁI NÀY V',
   ];
 
 
@@ -78,7 +62,7 @@ class _accountScreenState extends State<accountScreen> {
   // Hàm load ảnh lưu ở database
   Future<void> _loadImage() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
-    final imagePath =  'http://10.0.2.2:3000${accountModel.avatar}';// Lấy đường dẫn ảnh
+    final imagePath =  accountModel.avatar;// Lấy đường dẫn ảnh
     if (imagePath != null) {
       setState(() {
         _image = XFile(imagePath); //Chuyển đường dẫn thành ảnh
