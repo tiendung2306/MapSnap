@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const httpStatus = require('http-status');
 // const mongoose = require('mongoose');
 const _ = require('lodash');
@@ -7,7 +8,6 @@ const { createLocation } = require('./location.service');
 const HistoryLogService = require('./historyLog.service');
 const ApiError = require('../utils/ApiError');
 const Message = require('../utils/Message');
-const { request } = require('express');
 const locationService = require('./location.service');
 
 const _createHistoryLog = async ({ positionId, positionBody, activityType }) => {
@@ -28,13 +28,16 @@ const createPosition = async (requestBody) => {
   if (existedPosition) {
     throw new ApiError(httpStatus.BAD_REQUEST, Message.positionMsg.nameExisted);
   }
-  const goongAddress = await locationService.reverseGeocoding({ query: { lat: requestBody.latitude, lng: requestBody.longitude } });
+  const goongAddress = await locationService.reverseGeocoding({
+    query: { lat: requestBody.latitude, lng: requestBody.longitude, userId: requestBody.userId },
+  });
   requestBody.cityId = goongAddress.cityId;
   requestBody.country = goongAddress.country;
   requestBody.district = goongAddress.district;
   requestBody.homeNumber = goongAddress.homeNumber;
   requestBody.address = goongAddress.address;
   requestBody.classify = goongAddress.classify;
+  // eslint-disable-next-line no-use-before-define
   const location = await getLocationFromPosition(requestBody);
   if (location) requestBody.locationId = location._id;
   const position = await Position.create(requestBody);
@@ -113,7 +116,6 @@ const _getNearestLocation = async (positionBody) => {
     )
       nearestLocation = location;
   });
-  console.log(nearestLocation);
   return nearestLocation;
 };
 
@@ -122,9 +124,12 @@ const getLocationFromPosition = async (positionBody) => {
   const { userId, longitude, latitude, country, cityId, district, homeNumber, classify, address } = positionBody;
   const filter = { userId, longitude, latitude };
   const nearestLocation = await _getNearestLocation(filter);
-  console.log(positionBody);
-  console.log(_getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude))
-  if (nearestLocation.country !== country || nearestLocation.district !== district || _getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude) > 50) {
+  if (
+    nearestLocation.country !== country ||
+    nearestLocation.district !== district ||
+    nearestLocation.cityId !== cityId ||
+    _getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude) > 50
+  ) {
     const locationBody = positionBody;
     locationBody.visitedTime = 1;
     locationBody.status = 'enabled';
