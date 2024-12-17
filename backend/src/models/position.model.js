@@ -35,7 +35,7 @@ const positionSchema = new Schema({
     type: String,
   },
   homeNumber: {
-    type: Number,
+    type: String,
   },
   classify: {
     type: String,
