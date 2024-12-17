@@ -54,7 +54,7 @@ const getPosition = async (positionBody) => {
     if (from) filter.createdAt.$gte = from;
     if (to) filter.createdAt.$lte = to;
   }
-  const positions = await Position.find(filter).sort({ createdAt: 'desc' });
+  const positions = await Position.find(filter).sort({ createdAt: 'asc' });
   return positions;
 };
 
