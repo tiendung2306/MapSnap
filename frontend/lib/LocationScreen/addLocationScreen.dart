@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:mapsnap_fe/InApp/Positions.dart';
+// import 'package:mapsnap_fe/InApp/Positions.dart';
 import 'package:mapsnap_fe/Manager/CRUD_LocationCategory.dart';
 import 'package:mapsnap_fe/Manager/CURD_city.dart';
 import 'package:mapsnap_fe/Manager/CURD_location.dart';

@@ -86,6 +86,8 @@ const getJourneysToday = async (userId) => {
     startedAt: { $gte: startOfDay, $lte: endOfDay },
   };
 
+  console.log(startOfDay);
+  
   const journeys = await Journey.find(filter);
   return journeys;
 };

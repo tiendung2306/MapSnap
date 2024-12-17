@@ -1,66 +1,39 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../Services/APIService.dart';
+import '../Widget/accountModel.dart';
 
 
-class Journeys extends StatefulWidget  {
+class HistoryLog extends StatefulWidget  {
   @override
-  State<Journeys> createState() => _JourneysState();
+  State<HistoryLog> createState() => _HistoryLogState();
 }
 
-class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin{
-  late double SlideTabTop = 700;
+class _HistoryLogState extends State<HistoryLog> with SingleTickerProviderStateMixin{
+  bool isDataLoad = false;
   late TabController _tabController;
+  final  _apiService = ApiService();
+  late List<dynamic> data;
 
-  final List<Map<String, dynamic>> created_journeys = [
-    {
-      "date": "1th, Sep, 2024",
-      "location": "Birmingham",
-    },
-    {
-      "date": "2nd, Sep, 2024",
-      "location": "Fountain Heights",
-    },
-    {
-      "date": "3th, Sep, 2024",
-      "location": "Birmingham",
-    },
-  ];
-
-  final List<Map<String, dynamic>> byday_journeys = [
-    {
-      "date": "1th, Sep, 2024",
-      "location": "Birmingham",
-    },
-    {
-      "date": "2nd, Sep, 2024",
-      "location": "Fountain Heights",
-    },
-    {
-      "date": "3th, Sep, 2024",
-      "location": "Birmingham",
-    },
-  ];
-
-  final List<Map<String, dynamic>> other_journeys = [
-    {
-      "date": "1th, Sep, 2024",
-      "location": "Birmingham",
-    },
-    {
-      "date": "2nd, Sep, 2024",
-      "location": "Fountain Heights",
-    },
-    {
-      "date": "3th, Sep, 2024",
-      "location": "Birmingham",
-    },
-  ];
-
+  void loadData() async {
+    var accountModel = Provider.of<AccountModel>(context, listen: false);
+    final response = await _apiService.GetAllHistoryLogs(accountModel.idUser);
+    data = response["data"]["result"];
+    setState(() {
+      isDataLoad = true;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    loadData();
   }
 
   @override
@@ -69,10 +42,21 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+  Container LoadingScreen(){
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: Text(
+            'Loading'
+        ),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isDataLoad ? Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -99,20 +83,20 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           IconButton(
-                              onPressed: (){
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.arrow_back),
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.arrow_back),
                           ),
                           Text(
-                            'Saved Journeys',
+                            'History Log',
                             style: TextStyle(
-                              fontSize: 20
+                                fontSize: 20
                             ),
                           ),
                           IconButton(
-                              onPressed: (){} ,
-                              icon: Icon(Icons.account_circle),
+                            onPressed: (){} ,
+                            icon: Icon(Icons.account_circle),
                           )
                         ],
                       ),
@@ -123,9 +107,9 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
                       unselectedLabelColor: Colors.black,
                       indicatorColor: Colors.blue,
                       tabs: [
-                        Tab(text: "Created"),
-                        Tab(text: "By day"),
-                        Tab(text: "Others"),
+                        Tab(text: "Today"),
+                        Tab(text: "Last week"),
+                        Tab(text: "Last month"),
                       ],
                     ),
                   ],
@@ -154,26 +138,23 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
                   controller: _tabController,
                   children: [
                     ListView.builder(
-                      itemCount: created_journeys.length,
+                      itemCount: data.length,
                       itemBuilder: (context, index) {
-                        final journey = created_journeys[index];
-                        return _JourneyItem(journey);
+                        return _HistoryItem(data[index]);
                       },
                     ),
 
                     ListView.builder(
-                      itemCount: byday_journeys.length,
+                      itemCount: data.length,
                       itemBuilder: (context, index) {
-                        final journey = byday_journeys[index];
-                        return _JourneyItem(journey);
+                        return _HistoryItem(data[index]);
                       },
                     ),
 
                     ListView.builder(
-                      itemCount: other_journeys.length,
+                      itemCount: data.length,
                       itemBuilder: (context, index) {
-                        final journey = other_journeys[index];
-                        return _JourneyItem(journey);
+                        return _HistoryItem(data[index]);
                       },
                     ),
 
@@ -185,29 +166,51 @@ class _JourneysState extends State<Journeys> with SingleTickerProviderStateMixin
           ),
         ),
       ),
-    );
+    ) : LoadingScreen();
   }
 
 }
 
-class _JourneyItem extends StatefulWidget {
-  final Map<String, dynamic> journey;
+class _HistoryItem extends StatefulWidget {
+  final Map<String, dynamic> historyLog;
 
-  _JourneyItem(this.journey);
+  _HistoryItem(this.historyLog);
 
   @override
-  __JourneyItemState createState() => __JourneyItemState();
+  __HistoryItemState createState() => __HistoryItemState();
 }
 
-class __JourneyItemState extends State<_JourneyItem> with AutomaticKeepAliveClientMixin {
-  late Map<String, dynamic> journey;
+class __HistoryItemState extends State<_HistoryItem> with AutomaticKeepAliveClientMixin {
+
+  String epochToString(int epoch){
+    // Chuyển epoch sang DateTime
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epoch);
+
+    // Định dạng DateTime thành ngày tháng năm
+    return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
+  }
+
+  late Color color;
 
   @override
   void initState() {
-    journey = widget.journey;
+    Random random = Random(); // need fix
+    int randomNumber = random.nextInt(100);
+    if(randomNumber % 3 == 0)
+      widget.historyLog['activityType'] = "Update";
+    if(randomNumber % 3 == 1)
+      widget.historyLog['activityType'] = "Create";
+    if(randomNumber % 3 == 2)
+      widget.historyLog['activityType'] = "Delete";
+
+    if(widget.historyLog['activityType'] == "Update")
+      color = Colors.lightBlueAccent;
+    if(widget.historyLog['activityType'] == "Create")
+      color = Colors.greenAccent;
+    if(widget.historyLog['activityType'] == "Delete")
+      color = Colors.redAccent;
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -218,31 +221,18 @@ class __JourneyItemState extends State<_JourneyItem> with AutomaticKeepAliveClie
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            journey['date'],
+            epochToString(widget.historyLog['createdAt']),
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8),
           Stack(
             children: [
               Container(
-                height: 200,
+                height: 100,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.shade300,
-                ),
-
-                child: GoogleMap(
-                  // onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(21.0285, 105.8542),
-                    zoom: 15,
-                  ),
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false, // Tắt nút phóng to/thu nhỏ mặc định
-                  // markers: _markers.toSet(),
-                  // polylines: _polylines,
+                  color: color,
                 ),
               ),
               Positioned(
@@ -262,22 +252,24 @@ class __JourneyItemState extends State<_JourneyItem> with AutomaticKeepAliveClie
                 ),
               ),
               Positioned(
-                bottom: 10, left: 10,
+                bottom: 10, left: 10, top: 10,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Title',
+                      widget.historyLog["activityType"],
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold
                       ),
                     ),
                     Text(
-                      'Description',
+                      widget.historyLog["modelImpact"],
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 20
                       ),
                     )
                   ],

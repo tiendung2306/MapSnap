@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
 import 'package:mapsnap_fe/Widget/NonExpandListTile.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,21 +13,23 @@ import '../Model/Position.dart';
 import '../Widget/accountModel.dart';
 import 'Point.dart';
 
-class AddVisitScreen extends StatefulWidget {
-  final String journeyID;
+class AddJourneyScreen extends StatefulWidget {
 
-  const AddVisitScreen({Key? key, required this.journeyID}) : super(key: key);
+  const AddJourneyScreen({Key? key}) : super(key: key);
   @override
-  State<AddVisitScreen> createState() => _AddVisitScreenState();
+  State<AddJourneyScreen> createState() => _AddJourneyScreenState();
 }
 
-class _AddVisitScreenState extends State<AddVisitScreen> {
+class _AddJourneyScreenState extends State<AddJourneyScreen> with SingleTickerProviderStateMixin {
   final  _apiService = ApiService();
 
   bool isDataLoad = false;
   bool isMapLoad = false;
 
-  late double SlideTabTop = 700;
+  late TabController _tabController;
+  late double SlideTabTop = 650;
+  Color tabColor = Colors.green;
+
   final ScrollController _scrollController = ScrollController();
   int currIndex = 0;
 
@@ -38,17 +41,49 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
 
   late GoogleMapController _controller;
   List <Marker> _markers = [];
+  List<Marker> _startMarkers = [];
+  List<Marker> _endMarkers = [];
 
 
   double _zoomLevel = 14.0;
-  Set<Polyline> _polylines = {};
+  List<Polyline> _polylines = [];
+  List<Polyline> _startPolylines = [];
+  List<Polyline> _endPolylines = [];
 
+  TimeOfDay? startTime = null;
+  TimeOfDay? endTime = null;
+
+  DateTime? startDay = null;
+  DateTime? endDay = null;
 
 
   @override
   void initState() {
     super.initState();
-    loadData();
+    _tabController = TabController(length: 2, vsync: this);
+    // Lắng nghe sự kiện thay đổi tab
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        setState(() {
+          currIndex = 0;
+
+          switch (_tabController.index) {
+            case 0:
+              _markers = _startMarkers;
+              _polylines = _startPolylines;
+              tabColor = Colors.green;
+              break;
+            case 1:
+              _markers = _endMarkers;
+              _polylines = _endPolylines;
+              tabColor = Colors.blue;
+              break;
+            default:
+          }
+        });;
+      }
+    });
+    loadData("67535832f142e638dca818eb", "start");
   }
 
   @override
@@ -57,8 +92,8 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
     super.dispose();
   }
 
-  void loadData() async{
-    final response = await _apiService.GetJourney(widget.journeyID);
+  void loadData(String journeyId, String loadInto) async{
+    final response = await _apiService.GetJourney(journeyId);
     final data = response["data"]["result"];
 
     int id = 0;
@@ -96,9 +131,9 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
       preVisit = visit;
     }
 
-    addMarkersWithRotation(points);
+    addMarkersWithRotation(points, loadInto);
 
-    addPolyline(points);
+    addPolyline(points, loadInto);
 
     setState(() {
       isDataLoad = true;
@@ -203,9 +238,9 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
         markerId: MarkerId('select'),
         position: pos,
         infoWindow: InfoWindow(
-          title: 'New Marker',
-          snippet: 'Tap add visit',
-          onTap: create
+            title: 'New Marker',
+            snippet: 'Tap add visit',
+            onTap: create
         ),
       ));
       _controller.showMarkerInfoWindow(MarkerId('select'));
@@ -298,7 +333,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
     _scrollToIndex(index);
   }
 
-  void addMarkersWithRotation(List<Point> points) async {
+  void addMarkersWithRotation(List<Point> points, String loadInto) async {
     final BitmapDescriptor visitTab3 = await BitmapDescriptor.asset(
       const ImageConfiguration(size: Size(30, 30)),
       'assets/Common/visitTab3.png', // Đường dẫn tới icon của bạn
@@ -316,18 +351,20 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
 
 
       final markerTab3 = Marker(
-        markerId: MarkerId(points[i].id.toString()),
-        position: start,
-        icon: points[i].type == 'visit' ? visitTab3 : positionTab3,
-        anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
-        rotation: rotation, // Góc xoay
-        infoWindow: InfoWindow(title: points[i].getName()),
-        onTap: (){
-          _scrollToIndex(i);
-        }
+          markerId: MarkerId(points[i].id.toString()),
+          position: start,
+          icon: points[i].type == 'visit' ? visitTab3 : positionTab3,
+          anchor: Offset(0.5, 0.5), // Center của icon trùng tọa độ
+          rotation: rotation, // Góc xoay
+          infoWindow: InfoWindow(title: points[i].getName()),
+          onTap: (){
+            _scrollToIndex(i);
+          }
       );
-
-      _markers.add(markerTab3);
+      if(loadInto == 'start')
+        _startMarkers.add(markerTab3);
+      else
+        _endMarkers.add(markerTab3);
     }
   }
   // Có thể dùng BitmapDescriptor để custom marker
@@ -347,18 +384,25 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
     });
   }
 
-  void addPolyline(List<Point> points){
+  void addPolyline(List<Point> points, String loadInto){
     List<LatLng> _points = [];
     for (int i = 0; i < points.length; i++) {
       _points.add(LatLng(points[i].latitude, points[i].longitude));
     }
-
-    _polylines.add(Polyline(
-      polylineId: PolylineId('route'),
-      points: _points,
-      color: Colors.yellow,
-      width: 5,
-    ),);
+    if(loadInto == 'start')
+      _startPolylines.add(Polyline(
+        polylineId: PolylineId('route'),
+        points: _points,
+        color: Colors.yellow,
+        width: 5,
+      ),);
+    else
+      _endPolylines.add(Polyline(
+        polylineId: PolylineId('route'),
+        points: _points,
+        color: Colors.yellow,
+        width: 5,
+      ),);
   }
 
   void _moveCamera(LatLng position) {
@@ -388,6 +432,46 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
     );
   }
 
+  Future<void> _selectTime(BuildContext context, bool isStart) async {
+    // Chọn ngày
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      // Chọn giờ
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+
+          if (isStart) {
+            startTime = pickedTime;
+            startDay = pickedDate;
+          } else {
+            endTime = pickedTime;
+            endDay = pickedDate;
+          }
+        });
+      }
+    }
+  }
+
+  void SaveTime(){
+    //thiếu hàm xử lý chuẩn thời gian
+    //need fix
+    
+    loadData("67535832f142e638dca818eb", "start");
+    loadData("67535832f142e638dca818eb", "end");
+  }
+
+
   Container LoadingScreen(){
     return Container(
       color: Colors.white,
@@ -411,8 +495,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false, // Tắt nút phóng to/thu nhỏ mặc định
       markers: _markers.toSet(),
-      polylines: _polylines,
-
+      polylines: _polylines.toSet(),
 
     );
   }
@@ -448,7 +531,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
             child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                    'Add new visit',
+                    'Add new journey',
                     style: TextStyle(fontSize: 18)
                 )
             ),
@@ -456,11 +539,6 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
           ElevatedButton.icon(
             onPressed: () {
               save();
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => MapScreen(journeyID: widget.journeyID,)),
-              );
             },
             icon: Icon(Icons.check),
             label: Text(
@@ -496,7 +574,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
           //Thanh cuộn
           Container(
             padding: EdgeInsets.only(top: 10),
-            height: 60,
+            height: 15,
             width: double.infinity,
             color: Colors.white,
             child: Align(
@@ -504,7 +582,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
               child: GestureDetector(
                 onPanUpdate: (details){
                   setState(() {
-                    if(SlideTabTop + details.delta.dy > 200 && SlideTabTop + details.delta.dy < 800)
+                    if(SlideTabTop + details.delta.dy > 200 && SlideTabTop + details.delta.dy < 660)
                       SlideTabTop += details.delta.dy;
                   });
                 },
@@ -517,6 +595,138 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
                   ),
                 ),
               ),
+            ),
+          ),
+          //Chọn thời gian
+          Container(
+            height: 148, width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => _selectTime(context, true),
+                          child: Container(
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start, // Căn giữa theo chiều ngang
+                              children: [
+                                Icon(Icons.calendar_month_outlined, size: 45, color: Colors.grey[500],),
+                                SizedBox(width: 10,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(startDay == null ? 'From time' : DateFormat('dd/MM/yyyy').format(startDay!)),
+                                    Text(
+                                      startTime != null ? startTime!.format(context) : '..:..',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Container(width: 2, height: 40, color: Colors.grey[300],),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => _selectTime(context, false),
+                          child: Container(
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center, // Căn giữa theo chiều ngang
+                              children: [
+                                Icon(Icons.calendar_month_outlined, size: 45, color: Colors.grey[500],),
+                                SizedBox(width: 10,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(endDay == null ? 'To time' : DateFormat('dd/MM/yyyy').format(endDay!)),
+                                    Text(
+                                      endTime != null ? endTime!.format(context) : '..:..',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(width: double.infinity, height: 2, color: Colors.grey[300],),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: (){},
+                            child: Row(
+                              children: [
+                                Icon(Icons.filter_list, size: 35, color: Colors.grey[500],),
+                                SizedBox(width: 10,),
+                                Text('Filter',
+                                  style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.bold),),
+                              ],
+                            )
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            SaveTime();
+                          },
+                          child: Text('Apply', style: TextStyle(color: Colors.black),),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange, // Màu nền
+                            side: BorderSide(color: Colors.white, width: 2), // Viền màu trắng
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          //Các feature
+          Container(
+            width: double.infinity,
+            color: Colors.white,
+            child: Column(
+              children: [
+                TabBar(
+                  controller: _tabController,
+                  labelColor: tabColor,
+                  unselectedLabelColor: Colors.black,
+                  indicatorColor: tabColor,
+                  tabs: [
+                    Tab(text: "Start Day"),
+                    Tab(text: "End Day"),
+                  ],
+                ),
+              ],
             ),
           ),
           //Hiệu ứng đổ bóng
@@ -538,24 +748,48 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
           ),
           //Journey
           Expanded(
-            child: Container(
-              color: Colors.white,
-              child: ListView.builder(
-                shrinkWrap: true,
-                controller: _scrollController,
-                itemCount: points.length,
-                itemBuilder: (context, index){
-                  return NonExpandListTile(
-                    type: points[index].type,
-                    index: index,
-                    title: points[index].getName(),
-                    subtitle: "Subtitle",
-                    content: "Content",
-                    onTapFunc: onTap,
-                    addDelFunc: addOrDelete,
-                  );
-                },
-              ),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: _scrollController,
+                    itemCount: points.length,
+                    itemBuilder: (context, index){
+                      return NonExpandListTile(
+                        type: points[index].type,
+                        index: index,
+                        title: points[index].getName(),
+                        subtitle: "Subtitle",
+                        content: "Content",
+                        onTapFunc: onTap,
+                        addDelFunc: addOrDelete,
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: _scrollController,
+                    itemCount: points.length,
+                    itemBuilder: (context, index){
+                      return NonExpandListTile(
+                        type: points[index].type,
+                        index: index,
+                        title: points[index].getName(),
+                        subtitle: "Subtitle",
+                        content: "Content",
+                        onTapFunc: onTap,
+                        addDelFunc: addOrDelete,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           )
         ],

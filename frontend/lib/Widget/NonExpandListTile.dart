@@ -19,7 +19,7 @@ class NonExpandListTile extends StatefulWidget {
   final String subtitle;
   final String content;
   final Function(int) onTapFunc;
-  final Function(int) addDelFunc;
+  final Function(int, bool) addDelFunc;
   // final String icon;
 
   @override
@@ -34,7 +34,7 @@ class _NonExpandListTileState extends State<NonExpandListTile> {
   }
 
   void addordel(){
-    widget.addDelFunc(widget.index);
+    widget.addDelFunc(widget.index, false);
     widget.onTapFunc(widget.index);
   }
 

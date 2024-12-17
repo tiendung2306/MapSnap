@@ -38,6 +38,7 @@ const updateVisit = catchAsync(async (req, res) => {
 });
 
 const deleteVisit = catchAsync(async (req, res) => {
+  console.log("vpa");
   await visitService.deleteVisit(req.params.visitId);
   res.send({
     code: httpStatus.OK,

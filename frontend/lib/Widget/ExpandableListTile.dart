@@ -11,6 +11,7 @@ class ExpandableListTile extends StatefulWidget {
     required this.subtitle,
     required this.content,
     required this.onTapFunc,
+    this.editFunc,
     // required this.icon,
   });
   final String type;
@@ -20,6 +21,7 @@ class ExpandableListTile extends StatefulWidget {
   final String subtitle;
   final String content;
   final Function(int) onTapFunc;
+  final Function(int)? editFunc;
   // final String icon;
 
   @override
@@ -54,6 +56,10 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
 
   void onTap(){
     widget.onTapFunc(widget.index);
+  }
+
+  void edit(){
+    widget.editFunc!(widget.index);
   }
 
   Container lead(){
@@ -115,16 +121,16 @@ class _ExpandableListTileState extends State<ExpandableListTile> {
               if(widget.isFocus)
                 Row(
                   children: [
+                    if(widget.type == 'Tab1Visit' || widget.type == 'Tab2Visit' || widget.type == 'Tab3Visit')
+                      IconButton(
+                        onPressed: (){
+                          edit();
+                        },
+                        icon: Icon(Icons.edit),
+                      ),
+
                     IconButton(
-                        onPressed: (){print('vpa');},
-                        icon: Icon(Icons.delete,),
-                    ),
-                    IconButton(
-                      onPressed: (){print('vpa');},
-                      icon: Icon(Icons.edit),
-                    ),
-                    IconButton(
-                      onPressed: (){print('vpa');},
+                      onPressed: (){},
                       icon: Icon(Icons.keyboard_arrow_up)
                     ),
                   ],

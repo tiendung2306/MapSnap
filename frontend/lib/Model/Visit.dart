@@ -10,7 +10,7 @@ class Visit {
   final bool updatedByUser;
   final bool isAutomaticAdded;
   final List<String> pictures;
-
+  final String id;
   // Constructor
   Visit({
     required this.userId,
@@ -24,6 +24,7 @@ class Visit {
     required this.updatedByUser,
     required this.isAutomaticAdded,
     required this.pictures,
+    required this.id,
   });
 
   // Factory method for creating a Visit object from JSON
@@ -40,6 +41,7 @@ class Visit {
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],
       pictures: List<String>.from(json['pictures'] ?? []),
+      id: json['id'],
     );
   }
 
@@ -57,6 +59,7 @@ class Visit {
       'updatedByUser': updatedByUser,
       'isAutomaticAdded': isAutomaticAdded,
       'pictures': pictures,
+      'id': id,
     };
   }
 }

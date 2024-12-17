@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mapsnap_fe/InApp/Journeys.dart';
 import 'package:mapsnap_fe/InApp/Map.dart';
@@ -11,7 +12,11 @@ import '../NewFeed/newFeedScreen.dart';
 import 'package:mapsnap_fe/Widget/bottomNavigationBar.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
 
+import '../PersonalPageScreen/personalPageScreen.dart';
+import '../SettingScreen/settingScreen.dart';
 import '../Widget/accountModel.dart';
+import 'AddJourney.dart';
+import 'History.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -132,7 +137,12 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 10),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddJourneyScreen()),
+                );
+              },
               icon: Image.asset("assets/Common/add.png"),
               label: Text(
                 "Create new journey",
@@ -163,7 +173,7 @@ class _HomePageState extends State<HomePage> {
     Widget MainFeatures(){
       return
         Container(
-          // height: 70,
+          height: 160,
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -177,100 +187,149 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.circular(15),
           ),
           padding: EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.map, size: 30,),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MapScreen()),
-                          );
-                        },
-                      ),
-                      Text('Map'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.photo, size: 30,),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => daySaveScreen()),
-                          );
-                        },
-                      ),
-                      Text('Picture'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.show_chart, size: 30,),
-                        onPressed: () {
-                        },
-                      ),
-                      Text('Data')
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Image.asset("assets/Common/journey.png"),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Journeys()),
-                          );
-                        },
-                      ),
-                      Text('Journey'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.newspaper, size: 30,),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => newFeedScreen()),
-                          );
-                        },
-                      ),
-                      Text('Feed'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.location_pin, size: 30,),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => locationScreen()),
-                          );
-                        },
-                      ),
-                      Text('Location')
-                    ],
-                  ),
-                ],
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.map, size: 30,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MapScreen(journeyID: "67535832f142e638dca818eb",)),
+                            );
+                          },
+                        ),
+                        Text('Map'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.photo, size: 30,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => daySaveScreen()),
+                            );
+                          },
+                        ),
+                        Text('Picture'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.show_chart, size: 30,),
+                          onPressed: () {
+                          },
+                        ),
+                        Text('Data')
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Image.asset("assets/Common/journey.png"),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Journeys()),
+                            );
+                          },
+                        ),
+                        Text('Journey'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.newspaper, size: 30,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => newFeedScreen()),
+                            );
+                          },
+                        ),
+                        Text('Feed'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.location_pin, size: 30,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => locationScreen()),
+                            );
+                          },
+                        ),
+                        Text('Location')
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.access_time_filled, size: 30,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => HistoryLog()),
+                            );
+                          },
+                        ),
+                        Text('History'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.account_circle, size: 35,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => personalPageScreen()),
+                            );
+                          },
+                        ),
+                        Text('Account'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.settings, size: 30,),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => settingScreen()),
+                            );
+                          },
+                        ),
+                        Text('Setting')
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
     }
@@ -301,6 +360,30 @@ class _HomePageState extends State<HomePage> {
         ],
       );
     }
+
+    Widget Graph(){
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              "Charts",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          ChartCard(
+            title: "Distance",
+            chart: LineChartSample(),
+          ),
+          ChartCard(
+            title: "Transportation",
+            chart: PieChartSample(),
+          ),
+        ],
+      );
+    }
+
 
     Container LoadingScreen(){
       return Container(
@@ -334,7 +417,6 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: Stack(
-                          // clipBehavior: Clip.none, // Cho phép widget mở rộng ra khỏi Stack
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(top: 130.0),
@@ -350,15 +432,7 @@ class _HomePageState extends State<HomePage> {
                                 child: Column(
                                   children: [
                                     LastJourneys(),
-                                    Container(
-                                      color: Colors.red, 
-                                      height: 500,
-                                      width: double.infinity,
-                                      child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text('Content')
-                                      ),
-                                    )
+                                    Graph(),
                                   ],
                                 ),
                               ),
@@ -432,6 +506,75 @@ class JourneyTile extends StatelessWidget {
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: Icon(Icons.arrow_forward),
+      ),
+    );
+  }
+}
+
+
+class ChartCard extends StatelessWidget {
+  final String title;
+  final Widget chart;
+
+  ChartCard({required this.title, required this.chart});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+            trailing: Text("Last 8 days"),
+          ),
+          Container(
+            height: 200,
+            padding: EdgeInsets.all(8.0),
+            child: chart,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LineChartSample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return LineChart(
+      LineChartData(
+        lineBarsData: [
+          LineChartBarData(
+            spots: [
+              FlSpot(0, 15),
+              FlSpot(1, 25),
+              FlSpot(2, 5),
+              FlSpot(3, 15),
+              FlSpot(4, 10),
+              FlSpot(5, 15),
+            ],
+            isCurved: true,
+            belowBarData: BarAreaData(show: false),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PieChartSample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PieChart(
+      PieChartData(
+        sections: [
+          PieChartSectionData(color: Colors.green, value: 10, title: "10%"),
+          PieChartSectionData(color: Colors.blue, value: 45, title: "45%"),
+          PieChartSectionData(color: Colors.red, value: 45, title: "45%"),
+        ],
       ),
     );
   }

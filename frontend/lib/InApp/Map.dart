@@ -6,11 +6,17 @@ import 'package:mapsnap_fe/Model/Visit.dart';
 import 'package:mapsnap_fe/Model/Location.dart';
 import 'package:mapsnap_fe/Model/Position.dart';
 import 'package:mapsnap_fe/Services/APIService.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
+import '../Widget/accountModel.dart';
 import 'AddVisit.dart';
+import 'EditVisit.dart';
 import 'Point.dart';
 
 class MapScreen extends StatefulWidget {
+  final String journeyID;
+
+  const MapScreen({Key? key, required this.journeyID}) : super(key: key);
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
@@ -88,8 +94,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   }
 
   void loadData() async{
-    final response = await _apiService.GetJourneyToday('672b2c4241382c06b026f861');
-    final data = response["data"]["results"][0];
+    final response = await _apiService.GetJourney(widget.journeyID);
+    final data = response["data"]["result"];
 
     int id = 0;
     Visit? preVisit = null;
@@ -101,7 +107,9 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       Location location = Location.fromJson(location_response["data"]["result"]);
 
       if(preVisit != null){
-        final l_response = await _apiService.GetPositionPeriod('672b2c4241382c06b026f861', preVisit.endedAt, visit.startedAt);
+        var accountModel = Provider.of<AccountModel>(context, listen: false);
+
+        final l_response = await _apiService.GetPositionPeriod(accountModel.idUser, preVisit.endedAt, visit.startedAt);
         final l_data = l_response["data"]["result"];
         for(var positionData in l_data){
           Position position = Position.fromJson(positionData);
@@ -449,6 +457,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
   }
 
   void findPeriod(){
+    //thiếu hàm xử lý chuẩn thời gian
+    //need fix
     int startId = -1; int endId = -1;
     int start = timeOfDayToEpoch(startTime!) - 430680000; //fix
     int end = timeOfDayToEpoch(endTime!) - 430680000;
@@ -466,12 +476,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         break;
       }
     }
-    print(start);
-    print(end);
 
     if(startId < endId && startId != -1 && endId != -1){
-      print(startId);
-      print(endId);
       updatePolyline(startId, endId);
     }
   }
@@ -518,10 +524,10 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         left: 10,
         child: ElevatedButton.icon(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => AddVisitScreen()),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddVisitScreen(journeyID: widget.journeyID,)),
+            );
           },
           icon: Icon(Icons.add),
           label: Text(
@@ -541,6 +547,13 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             ),
           ),
         )
+      );
+    }
+
+    void editVisit(int index){
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EditvisitScreen(journeyID: widget.journeyID)),
       );
     }
 
@@ -634,6 +647,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                         subtitle: "Subtitle",
                         content: "Content",
                         onTapFunc: onTap,
+                        editFunc: editVisit,
                       );
                     },
                   ),
@@ -652,6 +666,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                         subtitle: "Subtitle",
                         content: "Content",
                         onTapFunc: onTap,
+                        editFunc: editVisit,
                       );
                     },
                   ),
@@ -791,16 +806,17 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                         color: Colors.white,
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: points.length * 2,
+                          itemCount: points.length,
                           itemBuilder: (context, index){
                             return ExpandableListTile(
-                              type: points[index % points.length].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
-                              index: index % points.length,
-                              isFocus: currIndex == index % points.length,
-                              title: points[index % points.length].getName(),
+                              type: points[index].type == 'visit' ? 'Tab3Visit' : 'Tab3Position',
+                              index: index,
+                              isFocus: currIndex == index,
+                              title: points[index].getName(),
                               subtitle: "Subtitle",
                               content: "Content",
                               onTapFunc: onTap,
+                              editFunc: editVisit,
                             );
                           },
                         ),

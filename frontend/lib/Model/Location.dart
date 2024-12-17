@@ -5,7 +5,7 @@ class Location {
   int visitedTime;
   double longitude;
   double latitude;
-  // int createdAt;
+  int createdAt;
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
@@ -45,7 +45,8 @@ class Location {
       visitedTime: json['visitedTime'],
       longitude: json['longitude'],
       latitude: json['latitude'],
-      createdAt: json['createdAt'],
+      // createdAt: json['createdAt'],
+      createdAt: 0,
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],

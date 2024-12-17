@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/start',
       routes: {
         '/start': (context) => StartScreen(),
-        '/map': (context) => MapScreen(),
+        '/map': (context) => MapScreen(journeyID: "67535832f142e638dca818eb",),
         '/home': (context) => HomePage(),
         '/camera': (context) => const MainScreenCamera(),
         '/feed': (context) => newFeedScreen(),

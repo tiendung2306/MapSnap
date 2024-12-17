@@ -1,5 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class ApiService {
   final _baseUrl = 'http://10.0.2.2:3000/v1';
@@ -119,7 +124,7 @@ class ApiService {
     }
   }
 
-    Future<Map<String, dynamic>> CreateVisit (String userId, String title) async {
+    Future<Map<String, dynamic>> CreateVisit (String userId, int startedAt, int endedAt) async {
     final url = Uri.parse('$_baseUrl/visit/{userId}/create-visit'.replaceFirst("{userId}", userId));
 
     try {
@@ -127,7 +132,7 @@ class ApiService {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "title": title,
+          "title": "null",
           "startedAt": 1731072409,
           "endedAt": 1731072409,
           "updatedAt": 1731072409,
@@ -150,6 +155,40 @@ class ApiService {
         catch(e){
           return {
             'mess': "Create failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
+    Future<Map<String, dynamic>> DeleteVisit (String visitId) async {
+    final url = Uri.parse('$_baseUrl/visit/{visitId}'.replaceFirst("{visitId}", visitId));
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+      if(response.statusCode == 200)
+        return {
+          'mess': "Delete success",
+        };
+      else{
+        try{
+          return {
+            'mess': "Delete failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Delete failed",
             'data': null,
           };
         }
@@ -359,5 +398,104 @@ class ApiService {
       };
     }
   }
+
+    Future<Map<String, dynamic>> UploadPicture (String userId, String locationId, String visitId,
+        String journeyId, int capturedAt , XFile image) async {
+    final url = Uri.parse('$_baseUrl/pictures');
+
+    final File imgFile = File(image.path);
+    // Tạo yêu cầu `MultipartRequest`
+    final request = http.MultipartRequest('POST', url);
+
+    // Xác định loại MIME của file và thêm vào yêu cầu
+    final mimeTypeData = lookupMimeType(imgFile.path)!.split('/');
+    final multipartFile = await http.MultipartFile.fromPath(
+      'picture',
+      imgFile.path,
+      contentType: MediaType(mimeTypeData[0], mimeTypeData[1]),
+    );
+
+    // Thêm file ảnh vào yêu cầu `multipart`
+    request.files.add(multipartFile);
+    request.fields["userId"] = userId;
+    request.fields["locationId"] = locationId;
+    request.fields["visitId"] = visitId;
+    request.fields["journeyId"] = journeyId;
+    request.fields["capturedAt"] = capturedAt.toString();
+
+    try {
+      final response = await request.send();
+      if(response.statusCode == 200){
+        var completer  = Completer<Map<String, dynamic>>(); // Completer để đợi giá trị trả về
+
+        response.stream.transform(utf8.decoder).listen((value) {
+          completer .complete((json.decode(value))[0]);
+        });
+        Map<String, dynamic> jsonResponse = await completer.future;
+        return {
+          'mess': "Upload success",
+          'data': jsonResponse,
+        };
+      }
+
+      else{
+        try{
+          return {
+            'mess': "Upload failed",
+            'data': null,
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Upload failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> GetAllHistoryLogs (String userId) async { //need fix
+    final url = Uri.parse('$_baseUrl/historylog/{userId}/get-history-logs'.replaceFirst("{userId}", userId));
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get History success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get History failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get History failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
 
 }

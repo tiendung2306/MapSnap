@@ -9,9 +9,12 @@ class Point {
 
   String type;
 
+  late String og_type;
+
   Visit? visit;
   Position? position;
   Location? location;
+
 
   String getName() {
     if(type == 'visit')
@@ -35,7 +38,7 @@ class Point {
   }
 
 
-  Point({required this.id, required this.type, required this.longitude,required this.latitude, this.position, this.visit, this.location});
+  Point({required this.id, required this.type, required this.longitude,required this.latitude, this.position, this.visit, this.location}) : og_type = type;
 }
 //
 // List<Point> positions = [
