@@ -7,7 +7,7 @@ import 'package:mapsnap_fe/Model/forwardGeocoding.dart';
 
 
 Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/location/$userId/create-location');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/create-location');
   final Map<String, dynamic> loadData = {
     'cityId': createLocation.cityId,
     'categoryId': createLocation.categoryId,
@@ -53,7 +53,7 @@ Future<Location?> upLoadLocation(CreateLocation createLocation, String userId) a
 
 
 Future<List<Location>> getInfoLocation(String userId, String body, String check) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/location/$userId/get-location');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/location/$userId/get-location');
   late Map<String, dynamic> updatedData;
   if(check == 'city') {
     updatedData = {
@@ -91,7 +91,6 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);
     List<dynamic> data = json['result'];
-    print(data);
     List<Location> locations = data.map((json) => Location.fromJson(json)).toList();
     return locations;
   } else {
@@ -103,7 +102,7 @@ Future<List<Location>> getInfoLocation(String userId, String body, String check)
 
 
 Future<Location?> getLocationId(String Id) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/location/$Id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/location/$Id');
   final response = await http.get(
     url,
     headers: {
@@ -121,7 +120,7 @@ Future<Location?> getLocationId(String Id) async {
 
 
 Future<void> updateLocation(CreateLocation createLocation,String id) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/city/$id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'cityId': createLocation.cityId,
@@ -154,7 +153,7 @@ Future<void> updateLocation(CreateLocation createLocation,String id) async {
 
 
 Future<void> RemoveLocation(String id ) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/location/$id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/location/$id');
 
   final response = await http.delete(
     url,
@@ -170,8 +169,8 @@ Future<void> RemoveLocation(String id ) async {
 }
 
 
-Future<InfoVisit?> AutoLocation(double lat, double lng,String userId) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/location/reverse-geocoding?lat=$lat&lng=$lng&userId=$userId');
+Future<InfoVisit?> AutoLocation(double lat, double lng) async {
+  final url = Uri.parse('http://10.0.2.2:3000/v1/location/reverse-geocoding?lat=$lat&lng=$lng');
   try {
     final response = await http.get(
       url,
@@ -199,7 +198,7 @@ Future<InfoVisit?> AutoLocation(double lat, double lng,String userId) async {
 
 
 Future<ForwardGeocoding?> GetLatIngbyAddress(String address) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/goong/forward-geocoding?address=$address');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/goong/forward-geocoding?address=$address');
   try {
     final response = await http.get(
       url,

@@ -51,7 +51,6 @@ class _PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var accountModel = Provider.of<AccountModel>(context, listen: false);
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
 
@@ -204,7 +203,7 @@ class _PostScreenState extends State<PostScreen> {
                               if (!isCurrentLocationSelected) {
                                 try {
                                   Map<String, double> coordinates = randomVietnamCoordinates();
-                                  InfoVisit? infoLocation = await AutoLocation(coordinates['latitude']!,coordinates['longitude']!,accountModel.idUser);
+                                  InfoVisit? infoLocation = await AutoLocation(coordinates['latitude']!,coordinates['longitude']!);
                                   // Cập nhật trạng thái
                                   setState(() {
                                     address = infoLocation!.address;
