@@ -62,7 +62,7 @@ class _accountScreenState extends State<accountScreen> {
   // Hàm load ảnh lưu ở database
   Future<void> _loadImage() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
-    final imagePath =  accountModel.avatar;// Lấy đường dẫn ảnh
+    final imagePath =  'http://10.0.2.2:3000${accountModel.avatar}';// Lấy đường dẫn ảnh
     if (imagePath != null) {
       setState(() {
         _image = XFile(imagePath); //Chuyển đường dẫn thành ảnh
