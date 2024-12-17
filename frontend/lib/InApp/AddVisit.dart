@@ -111,7 +111,7 @@ class _AddVisitScreenState extends State<AddVisitScreen> {
       if(points[i].og_type != points[i].type){
         var accountModel = Provider.of<AccountModel>(context, listen: false);
         if(points[i].og_type == 'position'){
-          _apiService.CreateVisit(accountModel.idUser, points[i].getStart(), points[i].getEnd());
+          // _apiService.CreateVisit(accountModel.idUser, points[i].getStart(), points[i].getEnd()); need fix
         }
 
         else

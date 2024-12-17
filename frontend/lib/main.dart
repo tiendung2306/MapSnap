@@ -8,7 +8,9 @@ import 'package:mapsnap_fe/PersonalPageScreen/personalPageScreen.dart';
 import 'package:mapsnap_fe/Widget/locator.dart';
 import 'package:mapsnap_fe/Widget/accountModel.dart';
 import 'package:provider/provider.dart'; // Import file model
+import 'Authentication/SignIn.dart';
 import 'InApp/HomePage.dart';
+import 'dev.dart';
 
 Future<void> main() async {
   // Token token = await Login('linhson7a127@gmail.com', 'a1234567');
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/start',
       routes: {
         '/start': (context) => StartScreen(),
-        '/map': (context) => MapScreen(journeyID: "67535832f142e638dca818eb",),
+        '/map': (context) => MapScreen(journeyID: "67619347c26ede008ef7b79a",),
         '/home': (context) => HomePage(),
         '/camera': (context) => const MainScreenCamera(),
         '/feed': (context) => newFeedScreen(),

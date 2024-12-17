@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MapScreen(journeyID: "67535832f142e638dca818eb",)),
+                              MaterialPageRoute(builder: (context) => MapScreen(journeyID: "67619347c26ede008ef7b79a",)),
                             );
                           },
                         ),
@@ -350,19 +350,16 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10),
-          Container(
-            height: 450,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: data.length,
-              itemBuilder: (context, index){
-                return JourneyTile(
-                      title: data[index]['title'],
-                      subtitle: calculateDuration(data[index]['startedAt'], data[index]['endedAt']),
-                      icon: Icons.directions_walk,
-                );
-              },
-            ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: data.length,
+            itemBuilder: (context, index){
+              return JourneyTile(
+                    title: data[index]['title'],
+                    subtitle: calculateDuration(data[index]['startedAt'], data[index]['endedAt']),
+                    icon: Icons.directions_walk,
+              );
+            },
           ),
         ],
       );

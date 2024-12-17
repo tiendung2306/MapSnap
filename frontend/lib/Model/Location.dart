@@ -1,6 +1,6 @@
 class Location {
-  String cityId;
-  String categoryId;
+  String? cityId;
+  String? categoryId;
   String title;
   int visitedTime;
   double longitude;
@@ -39,8 +39,8 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      cityId: json['cityId'],
-      categoryId: json['categoryId'],
+      cityId: json['cityId'] != null ? json['cityId'] : null,
+      categoryId: json['categoryId'] != null ? json['categoryId'] : null,
       title: json['title'],
       visitedTime: json['visitedTime'],
       longitude: json['longitude'],

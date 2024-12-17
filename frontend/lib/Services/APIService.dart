@@ -7,7 +7,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiService {
-  final _baseUrl = 'http://10.0.2.2:3000/v1';
+  final _baseUrl = 'https://mapsnap.onrender.com/v1';
 
     Future<Map<String, dynamic>> CreateJourney (String userId, String title) async {
     final url = Uri.parse('$_baseUrl/journey/{userId}/create-journey'.replaceFirst("{userId}", userId));
@@ -124,7 +124,7 @@ class ApiService {
     }
   }
 
-    Future<Map<String, dynamic>> CreateVisit (String userId, int startedAt, int endedAt) async {
+    Future<Map<String, dynamic>> CreateVisit (String userId, String locationId, int startedAt, int endAt, String title) async {
     final url = Uri.parse('$_baseUrl/visit/{userId}/create-visit'.replaceFirst("{userId}", userId));
 
     try {
@@ -132,10 +132,12 @@ class ApiService {
         url,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "title": "null",
-          "startedAt": 1731072409,
-          "endedAt": 1731072409,
-          "updatedAt": 1731072409,
+          "journeyId": "67619347c26ede008ef7b79a",
+          "locationId": locationId,
+          "title": title,
+          "startedAt": startedAt,
+          "endedAt": endAt,
+          "updatedAt": 1731072409000,
           "status": "enabled",
           "updatedByUser": true,
           "isAutomaticAdded": true
@@ -273,7 +275,7 @@ class ApiService {
     }
   }
 
-    Future<Map<String, dynamic>> CreatePositon (String userId, double latitude, double longitude, int createdAt, String positionName) async {
+    Future<Map<String, dynamic>> CreatePositon (String userId, double latitude, double longitude, int createdAt) async {
     final url = Uri.parse('$_baseUrl/position/{userId}/create-position'.replaceFirst("{userId}", userId));
 
     try {
@@ -284,8 +286,6 @@ class ApiService {
           "longitude": longitude,
           "latitude": latitude,
           "createdAt": createdAt,
-          "locationId": "60c72b2f5f1b2c001f8e4e39",
-          "positionName": positionName
         }),
       );
       if(response.statusCode == 201)
@@ -303,6 +303,46 @@ class ApiService {
         catch(e){
           return {
             'mess': "Create failed",
+            'data': null,
+          };
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+      return {
+        'mess': 'Connection error',
+      };
+    }
+  }
+
+    Future<Map<String, dynamic>> GetNearestPosition (String userId, double latitude, double longitude,  int from, int to) async {
+    final url = Uri.parse('$_baseUrl/position/{userId}/get-nearest-position'.replaceFirst("{userId}", userId));
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          "latitude": latitude,
+          "longitude": longitude,
+        }),
+      );
+      if(response.statusCode == 200){
+        return {
+          'mess': "Get Position success",
+          'data': json.decode(response.body),
+        };
+      }
+      else{
+        try{
+          return {
+            'mess': "Get Position failed",
+            'data': json.decode(response.body),
+          };
+        }
+        catch(e){
+          return {
+            'mess': "Get Position failed",
             'data': null,
           };
         }

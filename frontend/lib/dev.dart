@@ -1,124 +1,91 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+
+import 'Services/APIService.dart';
+
+
 
 
 class DevScreen extends StatelessWidget {
+  final  _apiService = ApiService();
+  List<Map<String, dynamic>> coordinates = [
+    {"latitude": 20.998619, "longitude": 105.853809, "special": true},
+    {"latitude": 20.998832, "longitude": 105.853614, "special": false},
+    {"latitude": 20.998900, "longitude": 105.853272, "special": false},
+    {"latitude": 20.999135, "longitude": 105.852784, "special": false},
+    {"latitude": 20.998824, "longitude": 105.852524, "special": true},
+    {"latitude": 20.998429, "longitude": 105.852223, "special": false},
+    {"latitude": 20.998520, "longitude": 105.851654, "special": false},
+    {"latitude": 20.998786, "longitude": 105.850337, "special": false},
+    {"latitude": 20.997943, "longitude": 105.850190, "special": false},
+    {"latitude": 20.996827, "longitude": 105.850078, "special": true},
+    {"latitude": 20.995933, "longitude": 105.849929, "special": false},
+    {"latitude": 20.996164, "longitude": 105.848196, "special": false},
+    {"latitude": 20.996759, "longitude": 105.845729, "special": false},
+    {"latitude": 20.997934, "longitude": 105.841297, "special": false},
+    {"latitude": 20.999628, "longitude": 105.841212, "special": true},
+    {"latitude": 21.001874, "longitude": 105.841453, "special": false},
+    {"latitude": 21.003143, "longitude": 105.841425, "special": false},
+    {"latitude": 21.005182, "longitude": 105.841427, "special": false},
+    {"latitude": 21.007611, "longitude": 105.841459, "special": true},
+  ];
+
+  List<Map<String, dynamic>> data = [];
+
+  void load(){
+    DateTime startTime = DateTime(2024, 12, 17, 7, 0);
+    for (var coord in coordinates) {
+      data.add({
+        "latitude": coord["latitude"],
+        "longitude": coord["longitude"],
+        "createdAt": startTime.millisecondsSinceEpoch,
+        "type": coord["special"] ? "visit" : "position",
+      });
+      // Tăng thời gian
+      if (coord["special"] == true) {
+        startTime = startTime.add(Duration(hours: 1)); // Tăng 1 tiếng
+      } else {
+        startTime = startTime.add(Duration(minutes: 30)); // Tăng 30 phút
+      }
+    }
+  }
+
+  void onTap() async {
+    load();
+    for(var cor in data){
+      if(cor["type"] == "visit"){
+        final respoonse = await _apiService.GetNearestPosition("6749909daf248d3b800e31ef", cor["latitude"], cor["longitude"], 1734393500000, 1734431400099);
+        final pos = respoonse["data"]["result"];
+        print(cor["latitude"]);
+        print(cor["longitude"]);
+        print(pos);
+
+        await _apiService.CreateVisit("6749909daf248d3b800e31ef", pos["locationId"], cor["createdAt"], cor["createdAt"], pos["address"]);
+
+      }
+      //
+      // else
+      // await _apiService.CreatePositon("6749909daf248d3b800e31ef", cor["latitude"] + 0.000001, cor["longitude"] + 0.000001, cor["createdAt"].toInt());
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[100],
       appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration(
-            hintText: "Search",
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.search),
+        title: Text('Nút Bấm Ở Giữa'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            onTap();
+          },
+          child: Text(
+            'Bấm vào đây',
+            style: TextStyle(fontSize: 18),
           ),
         ),
-        actions: [Icon(Icons.notifications), SizedBox(width: 10)],
-        backgroundColor: Colors.white,
-        elevation: 1,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                "Charts",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ChartCard(
-              title: "Distance",
-              chart: LineChartSample(),
-            ),
-            ChartCard(
-              title: "Transportation",
-              chart: PieChartSample(),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.add, color: Colors.blue), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
-      ),
-    );
-  }
-}
-
-class ChartCard extends StatelessWidget {
-  final String title;
-  final Widget chart;
-
-  ChartCard({required this.title, required this.chart});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-            trailing: Text("Last 8 days"),
-          ),
-          Container(
-            height: 200,
-            padding: EdgeInsets.all(8.0),
-            child: chart,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class LineChartSample extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return LineChart(
-      LineChartData(
-        lineBarsData: [
-          LineChartBarData(
-            spots: [
-              FlSpot(0, 15),
-              FlSpot(1, 25),
-              FlSpot(2, 5),
-              FlSpot(3, 15),
-              FlSpot(4, 10),
-              FlSpot(5, 15),
-            ],
-            isCurved: true,
-            belowBarData: BarAreaData(show: false),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PieChartSample extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PieChart(
-      PieChartData(
-        sections: [
-          PieChartSectionData(color: Colors.green, value: 10, title: "10%"),
-          PieChartSectionData(color: Colors.blue, value: 45, title: "45%"),
-          PieChartSectionData(color: Colors.red, value: 45, title: "45%"),
-        ],
       ),
     );
   }

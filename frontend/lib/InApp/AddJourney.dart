@@ -83,7 +83,7 @@ class _AddJourneyScreenState extends State<AddJourneyScreen> with SingleTickerPr
         });;
       }
     });
-    loadData("67535832f142e638dca818eb", "start");
+    loadData("67619347c26ede008ef7b79a", "start");
   }
 
   @override
@@ -142,17 +142,6 @@ class _AddJourneyScreenState extends State<AddJourneyScreen> with SingleTickerPr
   }
 
   void save() {
-    for (int i = 0; i < points.length - 1; i++) {
-      if(points[i].og_type != points[i].type){
-        var accountModel = Provider.of<AccountModel>(context, listen: false);
-        if(points[i].og_type == 'position'){
-          _apiService.CreateVisit(accountModel.idUser, points[i].getStart(), points[i].getEnd());
-        }
-
-        else
-          _apiService.DeleteVisit(points[i].visit!.id);
-      }
-    }
   }
 
   void addOrDelete(int index, bool ischeck) async {
@@ -467,8 +456,8 @@ class _AddJourneyScreenState extends State<AddJourneyScreen> with SingleTickerPr
     //thiếu hàm xử lý chuẩn thời gian
     //need fix
     
-    loadData("67535832f142e638dca818eb", "start");
-    loadData("67535832f142e638dca818eb", "end");
+    loadData("67619347c26ede008ef7b79a", "start");
+    loadData("67619347c26ede008ef7b79a", "end");
   }
 
 
