@@ -54,6 +54,7 @@ const deleteHardLocation = catchAsync(async (req, res) => {
 
 const reverseGeocoding = catchAsync(async (req, res) => {
   const location = await locationService.reverseGeocoding(req, res);
+  // console.log(location);
   res.json(location);
 });
 
