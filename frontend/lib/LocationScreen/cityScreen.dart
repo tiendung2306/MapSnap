@@ -21,15 +21,17 @@ class _cityScreenState extends State<cityScreen> {
 
   @override
   void initState() {
-    fetchCityByUserId();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchCityByUserId();
+    });
   }
 
   Future<void> fetchCityByUserId() async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     accountModel.resetCity();
-    List<City> cities = await getInfoCity(accountModel.idUser);
+    List<City> cities = await getInfoCity(accountModel.idUser,"","");
     if (cities.isNotEmpty) {
       for (var city in cities) {
         // accountModel.addCity(city);
@@ -136,7 +138,6 @@ class _cityScreenState extends State<cityScreen> {
                 for(int i = 0 ;i < cities.length; i++) ...[
                   GestureDetector(
                     onTap: () {
-                      print("Siuuuuuuuuuuuuuu");
                       Navigator.push(
                           context,
                           MaterialPageRoute(

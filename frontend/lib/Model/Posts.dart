@@ -8,6 +8,7 @@ class Posts {
   int likesCount;
   String id;
   String journeyId;
+  String address;
 
   Posts({
     required this.userId,
@@ -19,6 +20,7 @@ class Posts {
     required this.likesCount,
     required this.id,
     required this.journeyId,
+    required this.address,
   });
 
   factory Posts.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Posts {
       likesCount: json['likesCount'],
       id: json['_id'],
       journeyId: json['journeyId'],
+      address: json['address'],
     );
   }
 }
@@ -49,6 +52,7 @@ class CreatePost {
   int commentsCount;
   int likesCount;
   String journeyId;
+  String address;
 
   CreatePost({
     required this.userId,
@@ -59,5 +63,6 @@ class CreatePost {
     required this.commentsCount,
     required this.likesCount,
     required this.journeyId,
+    required this.address,
   });
 }

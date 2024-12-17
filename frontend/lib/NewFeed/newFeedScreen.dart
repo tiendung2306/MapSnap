@@ -110,6 +110,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
     super.initState();
   }
 
+
   Future<void> initializePageData() async {
     // Đợi getPageData hoàn tất
     await getPageData();
@@ -154,6 +155,39 @@ class _newFeedScreenState extends State<newFeedScreen> {
     posts.addAll(pagePost!.results);
     return posts;
   }
+
+  RichText NameUser(int index, User user,Posts post) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: "${user.username} ",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue, // Kiểu chữ cho tên người dùng
+            ),
+          ),
+          TextSpan(
+            text: "đang ở ",
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(0xFF7E7E7E), // Kiểu chữ cho chữ "đang ở"
+            ),
+          ),
+          TextSpan(
+            text: post.address,
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Kiểu chữ cho địa điểm
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
 
 
@@ -227,15 +261,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
             if (!snapshot.hasData || snapshot.data!.isEmpty ) {
               return Center(
                   child: Scaffold(
-                    appBar: AppBar(
-                      title: Text('HIHI'),
-                      leading: IconButton(
-                        icon: Icon(Icons.close, color: Colors.black),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
                     body: Center(child:AnimatedRotation(
                       turns: 1, // xoay một vòng
                       duration: Duration(seconds: 1),
@@ -252,8 +277,6 @@ class _newFeedScreenState extends State<newFeedScreen> {
             else {
               post.map((i) => posts.add(i));
             }
-
-
 
             return Consumer<AccountModel>(
               builder: (context, accountModel, child) {
@@ -296,6 +319,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                 child: Container(
                                   height: 50,
                                   child: TextField(
+                                    enabled: false,
                                     decoration: InputDecoration(
                                       hintText: "Tìm kiếm...",
                                       border: OutlineInputBorder(
@@ -314,17 +338,16 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => PostScreen(),
                                     ),
-                                  ).then((success) {
+                                  ).then((success) async {
                                     if (success != null) {
-                                      setState(() {
-                                        setState(() async {
-                                          posts.insert(0,success);  // Thêm bài viết mới vào đầu danh sách
-                                          user.insert(0,null);
-                                          isLike.insert(0, false);
-                                          user[0] = await getUser(success.userId, accountModel.token_access);
-                                          like.insert(0, []);
-                                          comments.insert(0, []);
-                                        });
+                                      User? hihi = await getUser(success.userId, accountModel.token_access);
+                                      setState(()  {
+                                        posts.insert(0,success);
+                                        user.insert(0,null);
+                                        isLike.insert(0, false);
+                                        user[0] = hihi;
+                                        like.insert(0, []);
+                                        comments.insert(0, []);
                                       });
                                     }
                                   });
@@ -342,7 +365,8 @@ class _newFeedScreenState extends State<newFeedScreen> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        Expanded(
+                        Container(
+                          height: screenHeight * 4 / 5 + 10,
                           child: ListView.builder(
                             controller: scrollController,
                             // reverse: true,
@@ -389,16 +413,7 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                           Expanded(
                                             child: Container(
                                               padding: EdgeInsets.symmetric(vertical: 5),
-                                              height: 70,
-                                              child: Text(
-                                                postUser.username,
-                                                style: TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                              child: NameUser(index, postUser,post),
                                             ),
                                           ),
                                           SizedBox(width: 20),
@@ -501,17 +516,37 @@ class _newFeedScreenState extends State<newFeedScreen> {
                                                     ),
                                                   );
                                                 },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black.withOpacity(0.5),
-                                                    borderRadius: BorderRadius.circular(8),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '+${post.media.length - 3}',
-                                                      style: TextStyle(color: Colors.white, fontSize: 24),
+                                                child: Stack(
+                                                  alignment: Alignment.center, // Đặt Text vào giữa ảnh
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(post.media[imgIndex]['url']!),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        border: Border.all(
+                                                          color: Colors.blue, // Màu viền
+                                                          width: 2, // Độ dày viền
+                                                        ),
+                                                        borderRadius: BorderRadius.circular(8),
+                                                      ),
+                                                      child: Opacity(
+                                                        opacity: 0.3, // Làm ảnh thứ 3 trong suốt
+                                                        child: Container(
+                                                          color: Colors.black, // Nền mờ màu đen
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    Text(
+                                                      "+${(post.media.length - 4).toString()}",
+                                                      style: const TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white, // Màu chữ hiển thị trên nền mờ
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               );
                                             } else {
@@ -616,9 +651,11 @@ class _newFeedScreenState extends State<newFeedScreen> {
                           height: 2,
                           color: Colors.grey,
                         ),
-                        CustomBottomNav(
-                          onTabTapped: onTabTapped,
-                          currentIndex: currentTabIndex,
+                        Expanded(
+                          child: CustomBottomNav(
+                            onTabTapped: onTabTapped,
+                            currentIndex: currentTabIndex,
+                          ),
                         ),
                       ],
                     ),

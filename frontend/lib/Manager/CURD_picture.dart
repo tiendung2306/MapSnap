@@ -95,7 +95,6 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
       if (response.statusCode == 200) {
         // Giải mã JSON và ánh xạ vào danh sách Picture
         List<dynamic> data = jsonDecode(response.body);
-        print(data);
         List<Picture> pictures = data.map((json) => Picture.fromJson(json)).toList();
         return pictures;
       } else {

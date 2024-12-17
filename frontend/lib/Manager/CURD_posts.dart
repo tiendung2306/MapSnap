@@ -18,6 +18,7 @@ Future<Posts?> upLoadPost(CreatePost createPost) async {
     'commentsCount': createPost.commentsCount,
     'likesCount': createPost.likesCount,
     "journeyId": createPost.journeyId,
+    'address': createPost.address,
   };
 
   try {

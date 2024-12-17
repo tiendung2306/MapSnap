@@ -43,13 +43,20 @@ Future<City?> upLoadCity(CreateCity createCity, String userId) async {
 
 
 // Hàm gọi API lấy thông tin thành phố
-Future<List<City>> getInfoCity(String userId) async {
+Future<List<City>> getInfoCity(String userId,String check, String nameCity) async {
   final url = Uri.parse('http://10.0.2.2:3000/v1/city/$userId/get-cities');
+  Map<String, dynamic> loadData = {};
+  if(check == "searchText") {
+    loadData = {
+      'searchText': nameCity,
+    };
+  }
   final response = await http.post(
     url,
     headers: {
       'Content-Type': 'application/json',
     },
+    body: jsonEncode(loadData),
   );
   if (response.statusCode == 200) {
     final json = jsonDecode(response.body);

@@ -31,7 +31,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
   int commentIndex = 0;
   List<User?> listUser = [];
   bool isLoading = true;
-  bool isExpanded = false;
+  List<bool> isExpanded = [];
   static const int maxLinesCollapsed = 3; // Số dòng tối đa khi thu gọn
 
   @override
@@ -54,6 +54,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
       var accountModel = Provider.of<AccountModel>(context, listen: false);
       listUser = await Future.wait(
         widget.listComment.map((comment) async {
+          isExpanded.add(false);
           return await fetchData(comment.userId, accountModel.token_access);
         }).toList(),
       );
@@ -282,8 +283,8 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                           children: [
                             Text(
                               comment.content,
-                              maxLines: isExpanded ? null : maxLinesCollapsed,
-                              overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                              maxLines: isExpanded[index] ? null : maxLinesCollapsed,
+                              overflow: isExpanded[index]  ? TextOverflow.visible : TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 19),
                               softWrap: true,
                             ),
@@ -291,11 +292,11 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                               InkWell(
                                 onTap: () {
                                   setState(() {
-                                    isExpanded = !isExpanded;
+                                    isExpanded[index]  = !isExpanded[index] ;
                                   });
                                 },
                                 child: Text(
-                                  isExpanded ? "Ẩn bớt" : "Xem thêm",
+                                  isExpanded[index]  ? "Ẩn bớt" : "Xem thêm",
                                   style: TextStyle(color: Colors.blue),
                                 ),
                               ),
@@ -351,6 +352,7 @@ class _CommentScreenState extends State<CommentScreen> with WidgetsBindingObserv
                 setState(() {
                   widget.listComment.insert(0, comment!);
                   listUser.insert(0, user);
+                  isExpanded.insert(0,false);
                 });
               } else {
                 addComment addcomment = addComment(

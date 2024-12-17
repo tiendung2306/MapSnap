@@ -19,8 +19,10 @@ class _daySaveScreenState extends State<daySaveScreen> {
 
   @override
   void initState() {
-    fetchImagesByUserId();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchImagesByUserId();
+    });
   }
 
   int currentTabIndex = 0;

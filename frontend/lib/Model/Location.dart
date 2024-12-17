@@ -5,7 +5,7 @@ class Location {
   int visitedTime;
   double longitude;
   double latitude;
-  int createdAt;
+  // int createdAt;
   String status;
   bool updatedByUser;
   bool isAutomaticAdded;
@@ -24,7 +24,7 @@ class Location {
     required this.visitedTime,
     required this.longitude,
     required this.latitude,
-    required this.createdAt,
+    // required this.createdAt,
     required this.status,
     required this.updatedByUser,
     required this.isAutomaticAdded,
@@ -46,7 +46,6 @@ class Location {
       longitude: json['longitude'],
       latitude: json['latitude'],
       // createdAt: json['createdAt'],
-      createdAt: 0,
       status: json['status'],
       updatedByUser: json['updatedByUser'],
       isAutomaticAdded: json['isAutomaticAdded'],
@@ -67,8 +66,8 @@ class CreateLocation {
   String categoryId;
   String title;
   int visitedTime;
-  int longitude;
-  int latitude;
+  double longitude;
+  double latitude;
   int createdAt;
   String status;
   bool updatedByUser;

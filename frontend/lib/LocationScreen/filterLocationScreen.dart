@@ -33,8 +33,10 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
   bool _isFilterVisible = false;
 
   void initState() {
-    fetchCityByUserId();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchCityByUserId();
+    });
   }
 
 
@@ -44,7 +46,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     // Kiểm tra xem đã tải ảnh chưa
     accountModel.resetCity();
-    List<City> cities = await getInfoCity(accountModel.idUser);
+    List<City> cities = await getInfoCity(accountModel.idUser,"","");
     if (cities.isNotEmpty) {
       for (var city in cities) {
         // Kiểm tra xem đã tải ảnh chưa
@@ -113,7 +115,7 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                   height: screenHeight,
                   fit: BoxFit.none,
                 ),
-                SingleChildScrollView(
+                Container(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
@@ -267,82 +269,90 @@ class _visitLocationScreenState  extends State<filterLocationScreen>{
                           ),
                         ),
                       ),
-
-                      // Hiển thị danh sách địa điểm
-                      ...filteredData.map((entry) {
-                        City city = entry.key;
-                        List<Location> locations = entry.value;
-                        return Column(
-                          children: [
-                            Text(city.name, style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-                            ...locations.map((location) {
-                              return GestureDetector(
-                                onTap: () {
-                                  print("Location: ${location.title}");
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 10),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black.withOpacity(0.3),
-                                          spreadRadius: 3,
-                                          blurRadius: 6,
-                                          offset: Offset(5, 5)
-                                      )
-                                    ]
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        location.title,
-                                        style: TextStyle(
-                                            fontSize: 35,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Số lần đến: ',
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                ),
+                      Container(
+                        height: _isFilterVisible == false ? (screenHeight - 90) : (screenHeight - 320),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              // Hiển thị danh sách địa điểm
+                              ...filteredData.map((entry) {
+                                City city = entry.key;
+                                List<Location> locations = entry.value;
+                                return Column(
+                                  children: [
+                                    Text(city.name, style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+                                    ...locations.map((location) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          print("Location: ${location.title}");
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.symmetric(vertical: 10),
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color: const Color(0xFFB0E0E6),
+                                              borderRadius: BorderRadius.circular(20),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black.withOpacity(0.3),
+                                                    spreadRadius: 3,
+                                                    blurRadius: 6,
+                                                    offset: Offset(5, 5)
+                                                )
+                                              ]
                                           ),
-                                          Text(
-                                            location.visitedTime.toString(),
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                               ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded( // Để tự động xuống dòng nếu chữ dài
-                                            child: Text(
-                                              'Địa chỉ: ${location.address}' ,
-                                              style: TextStyle(
-                                                fontSize: 25,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                location.title,
+                                                style: TextStyle(
+                                                    fontSize: 35,
+                                                    fontWeight: FontWeight.bold),
                                               ),
-                                              maxLines: 2, // Giới hạn 2 dòng
-                                              overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
-                                            ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    'Số lần đến: ',
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    location.visitedTime.toString(),
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded( // Để tự động xuống dòng nếu chữ dài
+                                                    child: Text(
+                                                      'Địa chỉ: ${location.address}' ,
+                                                      style: TextStyle(
+                                                        fontSize: 25,
+                                                      ),
+                                                      maxLines: 2, // Giới hạn 2 dòng
+                                                      overflow: TextOverflow.ellipsis, // Cắt bớt nếu quá dài
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                        );
-                      }).toList(),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ],
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
