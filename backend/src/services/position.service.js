@@ -113,7 +113,6 @@ const _getNearestLocation = async (positionBody) => {
     )
       nearestLocation = location;
   });
-  console.log(nearestLocation);
   return nearestLocation;
 };
 
@@ -122,8 +121,6 @@ const getLocationFromPosition = async (positionBody) => {
   const { userId, longitude, latitude, country, cityId, district, homeNumber, classify, address } = positionBody;
   const filter = { userId, longitude, latitude };
   const nearestLocation = await _getNearestLocation(filter);
-  console.log(positionBody);
-  console.log(_getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude))
   if (nearestLocation.country !== country || nearestLocation.district !== district || _getDistance(nearestLocation.longitude, nearestLocation.latitude, longitude, latitude) > 50) {
     const locationBody = positionBody;
     locationBody.visitedTime = 1;
