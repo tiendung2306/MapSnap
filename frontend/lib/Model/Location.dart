@@ -39,8 +39,8 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      cityId: json['cityId'],
-      categoryId: json['categoryId'],
+      cityId: json['cityId'] ?? "674990d0af248d3b800e31f7",
+      categoryId: json['categoryId'] ?? "6749c77473001346446af335",
       title: json['title'],
       visitedTime: json['visitedTime'],
       longitude: json['longitude'],

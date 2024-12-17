@@ -8,7 +8,7 @@ import 'package:mapsnap_fe/Model/Posts.dart';
 
 
 Future<Posts?> upLoadPost(CreatePost createPost) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts');
   final Map<String, dynamic> loadData = {
     'userId': createPost.userId,
     'content': createPost.content,
@@ -51,25 +51,25 @@ Future<List<Posts>> getInfoPosts(String parameters, String check) async {
   // Xác định URL dựa trên giá trị của check
   switch (check) {
     case 'userId':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?userId=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?userId=$parameters&sortBy=-createdAt');
       break;
     case 'likesCount':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?likesCount=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?likesCount=$parameters&sortBy=-createdAt');
       break;
     case 'commentsCount':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?commentsCount=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?commentsCount=$parameters&sortBy=-createdAt');
       break;
     case 'limit':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?limit=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?limit=$parameters&sortBy=-createdAt');
       break;
     case 'page':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?page=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?page=$parameters&sortBy=-createdAt');
       break;
     case 'sortBy':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?sortBy=$parameters');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?sortBy=$parameters');
       break;
     case '':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts&sortBy=-createdAt');
       break;
     default:
       print('Tham số không hợp lệ');
@@ -102,25 +102,25 @@ Future<PagePost?> getInfoPosts2(String parameters, String check) async {
   // Xác định URL dựa trên giá trị của check
   switch (check) {
     case 'userId':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?userId=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?userId=$parameters&sortBy=-createdAt');
       break;
     case 'likesCount':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?likesCount=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?likesCount=$parameters&sortBy=-createdAt');
       break;
     case 'commentsCount':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?commentsCount=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?commentsCount=$parameters&sortBy=-createdAt');
       break;
     case 'limit':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?limit=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?limit=$parameters&sortBy=-createdAt');
       break;
     case 'page':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?page=$parameters&sortBy=-createdAt');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?page=$parameters&sortBy=-createdAt');
       break;
     case 'sortBy':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts?sortBy=$parameters');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts?sortBy=$parameters');
       break;
     case '':
-      url = Uri.parse('http://10.0.2.2:3000/v1/posts');
+      url = Uri.parse('https://mapsnap.onrender.com/v1/posts');
       break;
     default:
       print('Tham số không hợp lệ');
@@ -148,7 +148,7 @@ Future<PagePost?> getInfoPosts2(String parameters, String check) async {
 
 
 Future<Posts?> getPostId(String Id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/$Id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/$Id');
   final response = await http.get(
     url,
     headers: {
@@ -168,7 +168,7 @@ Future<Posts?> getPostId(String Id) async {
 
 
 Future<void> updatePost(CreatePost createPost,String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'userId': createPost.userId,
@@ -196,7 +196,7 @@ Future<void> updatePost(CreatePost createPost,String id) async {
 
 
 Future<void> RemovePost(String id ) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/$id');
 
   final response = await http.delete(
     url,
