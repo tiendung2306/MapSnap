@@ -3,7 +3,6 @@ const Message = require('../utils/Message');
 const catchAsync = require('../utils/catchAsync');
 const locationService = require('../services/location.service');
 
-
 const createLocation = catchAsync(async (req, res) => {
   const requestBody = req.body;
   requestBody.userId = req.params.userId;
