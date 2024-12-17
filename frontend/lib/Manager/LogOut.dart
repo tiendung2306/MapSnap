@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:mapsnap_fe/Model/Posts.dart';
 
 Future<void> LogOut(String refreshToken) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/auth/logout');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/auth/logout');
   final Map<String, dynamic> loadData = {
     "refreshToken": refreshToken,
   };
@@ -23,6 +23,4 @@ Future<void> LogOut(String refreshToken) async {
     // Xử lý lỗi từ API
     print(response.statusCode);
   }
-
-
 }

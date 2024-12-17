@@ -8,7 +8,7 @@ import 'package:mapsnap_fe/Model/LocationCategory.dart';
 
 
 Future<LocationCategory?> upLoadLocationCategory(CreateLocationCategory createLocationCategory, String userId) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$userId/create-category');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/locationCategory/$userId/create-category');
   final Map<String, dynamic> loadData = {
     'name': createLocationCategory.name,
     'title': createLocationCategory.title,
@@ -43,7 +43,7 @@ Future<LocationCategory?> upLoadLocationCategory(CreateLocationCategory createLo
 
 // Hàm gọi API lấy thông tin LocationCategory
 Future<List<LocationCategory>> getInfoLocationCategory(String userId) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$userId/get-category');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/locationCategory/$userId/get-category');
   final response = await http.post(
     url,
     headers: {
@@ -64,7 +64,7 @@ Future<List<LocationCategory>> getInfoLocationCategory(String userId) async {
 
 // Hàm gọi API lấy thông tin LocationCategory theo id
 Future<LocationCategory?> getLocationCategoryId(String Id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$Id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/locationCategory/$Id');
   final response = await http.get(
     url,
     headers: {
@@ -84,7 +84,7 @@ Future<LocationCategory?> getLocationCategoryId(String Id) async {
 
 // Gọi API để update thông tin của LocationCategory
 Future<void> updateLocationCategory(CreateLocationCategory createLocationCategory,String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/locationCategory/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'name': createLocationCategory.name,
@@ -112,7 +112,7 @@ Future<void> updateLocationCategory(CreateLocationCategory createLocationCategor
 
 // Gọi API để xóa thành phố
 Future<void> RemoveLocationCategory(String id ) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/locationCategory/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/locationCategory/$id');
   final response = await http.delete(
     url,
     headers: {
