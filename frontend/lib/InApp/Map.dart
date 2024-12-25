@@ -460,8 +460,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
     //thiếu hàm xử lý chuẩn thời gian
     //need fix
     int startId = -1; int endId = -1;
-    int start = timeOfDayToEpoch(startTime!) - 430680000; //fix
-    int end = timeOfDayToEpoch(endTime!) - 430680000;
+    int start = timeOfDayToEpoch(startTime!) ; //fix
+    int end = timeOfDayToEpoch(endTime!) ;
 
     for (var point in points) {
       if (point.getStart() >= start){

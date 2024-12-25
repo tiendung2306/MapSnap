@@ -8,7 +8,7 @@ import 'package:mapsnap_fe/Model/Posts.dart';
 
 
 Future<Comment?> AddComment(addComment addComment) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/comments');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/comments');
   final Map<String, dynamic> loadData = {
     'postId': addComment.postId,
     'userId': addComment.userId,
@@ -38,7 +38,7 @@ Future<Comment?> AddComment(addComment addComment) async {
 
 
 Future<Comment?> updateComment(addComment addComment, String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/comments/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/comments/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'postId': addComment.postId,
@@ -67,7 +67,7 @@ Future<Comment?> updateComment(addComment addComment, String id) async {
 
 
 Future<List<Comment>> getCommentPost(String postId) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/comments/post/$postId');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/comments/post/$postId');
 
   try {
     final response = await http.get(
@@ -97,7 +97,7 @@ Future<List<Comment>> getCommentPost(String postId) async {
 
 
 Future<void> RemoveComments(String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/posts/comments/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/posts/comments/$id');
 
   final response = await http.delete(
     url,

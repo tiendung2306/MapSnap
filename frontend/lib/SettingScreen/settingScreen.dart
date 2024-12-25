@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mapsnap_fe/InApp/Start.dart';
 import 'package:mapsnap_fe/Manager/LogOut.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Widget/AutoRefreshToken.dart';
 import 'securityScreen.dart';
 import 'package:provider/provider.dart';
@@ -210,6 +211,8 @@ class settingScreenState extends State<settingScreen> {
                       child: InkWell(
                         onTap: () async {
                           print("Đăng xuất");
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('isFirstOpen', true);
                           await LogOut(accountModel.token_refresh); // Hàm đăng xuất của bạn
                           Navigator.pushAndRemoveUntil(
                             context,

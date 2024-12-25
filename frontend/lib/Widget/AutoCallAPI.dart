@@ -17,7 +17,7 @@ void autoCallAPI(BuildContext context) {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     Map<String, double> coordinates = randomVietnamCoordinates();
     int randomNumber = randomvisitedTime();
-    InfoVisit? infoLocation = await AutoLocation(coordinates['latitude']!,coordinates['longitude']!);
+    InfoVisit? infoLocation = await AutoLocation(coordinates['latitude']!,coordinates['longitude']!,accountModel.idUser);
     List<City> cities = await getInfoCity(accountModel.idUser,"searchText",infoLocation!.province);
     List<Location> locations = await getInfoLocation(accountModel.idUser, infoLocation.address,"searchText");
     if(locations.isEmpty) {

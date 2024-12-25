@@ -47,7 +47,7 @@ Future<void> refreshTokenFunction(String userId, String Tokenrefresh, BuildConte
 
 
 Future<Token?> refreshToken(String userId, String refreshToken, BuildContext context) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/auth/refresh-tokens');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/auth/refresh-tokens');
   final response = await http.post(
     url,
     headers: <String, String>{

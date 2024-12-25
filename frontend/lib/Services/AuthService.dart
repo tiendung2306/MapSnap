@@ -6,7 +6,7 @@ import 'package:mapsnap_fe/Model/Token.dart';
 
 class AuthService {
   final _storage = FlutterSecureStorage();
-  final _baseUrl = 'http://10.0.2.2:3000/v1';
+  final _baseUrl = 'https://mapsnap.onrender.com/v1';
 
   Future<void> save(String key, String value) async {
     await _storage.write(key: key, value: value);

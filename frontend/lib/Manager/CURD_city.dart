@@ -6,7 +6,7 @@ import 'dart:convert';
 
 // API để gọi tải thành phố lên Database
 Future<City?> upLoadCity(CreateCity createCity, String userId) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$userId/create-city');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/city/$userId/create-city');
   final Map<String, dynamic> loadData = {
     'name': createCity.name,
     'visitedTime': createCity.visitedTime,
@@ -44,7 +44,7 @@ Future<City?> upLoadCity(CreateCity createCity, String userId) async {
 
 // Hàm gọi API lấy thông tin thành phố
 Future<List<City>> getInfoCity(String userId,String check, String nameCity) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$userId/get-cities');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/city/$userId/get-cities');
   Map<String, dynamic> loadData = {};
   if(check == "searchText") {
     loadData = {
@@ -71,7 +71,7 @@ Future<List<City>> getInfoCity(String userId,String check, String nameCity) asyn
 
 // Hàm gọi API lấy thông tin thành phố theo id
 Future<City?> getCityId(String Id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$Id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/city/$Id');
   final response = await http.get(
     url,
     headers: {
@@ -91,7 +91,7 @@ Future<City?> getCityId(String Id) async {
 
 // Gọi API để update thông tin của City
 Future<void> updateCity(CreateCity createCity,String id) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/city/$id');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'name': createCity.name,
@@ -121,7 +121,7 @@ Future<void> updateCity(CreateCity createCity,String id) async {
 
 // Gọi API để xóa thành phố
 Future<void> RemoveCity(String id ) async {
-  final url = Uri.parse('http://10.0.2.2:3000/v1/city/$id');
+  final url = Uri.parse('https://mapsnap.onrender.com/v1/city/$id');
 
   final response = await http.delete(
     url,
