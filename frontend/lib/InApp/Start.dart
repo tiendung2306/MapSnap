@@ -48,36 +48,37 @@ class _StartScreenState extends State<StartScreen> {
 
         final prefs = await SharedPreferences.getInstance();
         final token_data = await prefs.getString('token') ?? 'null';
+        final isFirstOpen = await prefs.getBool('isFirstOpen') ?? true;
 
-        if(token_data == 'null'){
-          final isFirstOpen = await prefs.getBool('isFirstOpen') ?? true;
-          if(isFirstOpen)
-            nextPage = Onboarding();
-          else
-            nextPage = SignIn();
-        }
+        if(isFirstOpen)
+          nextPage = Onboarding();
         else{
-          final DateTime now = DateTime.now();
-          Token token = Token.fromJson(jsonDecode(token_data));
-          final Duration accesstimeLeft = token.token_access_expires.difference(now);
+          if(token_data == 'null')
+            nextPage = SignIn();
 
-          if (accesstimeLeft.isNegative) {
-            final Duration refreshtimeLeft = token.token_refresh_expires.difference(now);
-            print(refreshtimeLeft.inMinutes);
-            if(refreshtimeLeft.isNegative)
-              nextPage = SignIn();
-            else{
-              Token? newtoken = await refreshToken(token.idUser, token.token_refresh, context);
-              if(newtoken != null){
-                await accountModelSetup(newtoken);
-                nextPage = HomePage();
-              }
-              else
+          else{
+            final DateTime now = DateTime.now();
+            Token token = Token.fromJson(jsonDecode(token_data));
+            final Duration accesstimeLeft = token.token_access_expires.difference(now);
+
+            if (accesstimeLeft.isNegative) {
+              final Duration refreshtimeLeft = token.token_refresh_expires.difference(now);
+              print(refreshtimeLeft.inMinutes);
+              if(refreshtimeLeft.isNegative)
                 nextPage = SignIn();
+              else{
+                Token? newtoken = await refreshToken(token.idUser, token.token_refresh, context);
+                if(newtoken != null){
+                  await accountModelSetup(newtoken);
+                  nextPage = HomePage();
+                }
+                else
+                  nextPage = SignIn();
+              }
+            } else {
+              await accountModelSetup(token);
+              nextPage = HomePage();
             }
-          } else {
-            await accountModelSetup(token);
-            nextPage = HomePage();
           }
         }
 

@@ -7,7 +7,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiService {
-  final _baseUrl = 'https://mapsnap.onrender.com/v1';
+  final _baseUrl = 'http://10.0.2.2:3000/v1';
 
     Future<Map<String, dynamic>> CreateJourney (String userId, String title) async {
     final url = Uri.parse('$_baseUrl/journey/{userId}/create-journey'.replaceFirst("{userId}", userId));
