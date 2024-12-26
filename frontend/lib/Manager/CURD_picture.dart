@@ -18,7 +18,7 @@ Future<List<Picture>?> upLoadImage(CreatePicture createPicture) async {
   final File imgFile = File(createPicture.link);
 
   // Địa chỉ API
-  final String url = 'https://mapsnap.onrender.com/v1/pictures';
+  final String url = 'http://10.0.2.2:3000/v1/pictures';
 
   // Tạo yêu cầu `MultipartRequest`
   final request = http.MultipartRequest('POST', Uri.parse(url));
@@ -63,22 +63,22 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
   // Xác định URL dựa trên giá trị của `check`
   switch (check) {
     case 'user_id':
-      url = Uri.parse('https://mapsnap.onrender.com/v1/pictures?userId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?userId=$parameters');
       break;
     case 'created_at':
-      url = Uri.parse('https://mapsnap.onrender.com/v1/pictures?capturedAt=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?capturedAt=$parameters');
       break;
     case 'journeyId':
-      url = Uri.parse('https://mapsnap.onrender.com/v1/pictures?journeyId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?journeyId=$parameters');
       break;
     case 'locationId':
-      url = Uri.parse('https://mapsnap.onrender.com/v1/pictures?locationId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?locationId=$parameters');
       break;
     case 'visitId':
-      url = Uri.parse('https://mapsnap.onrender.com/v1/pictures?visitId=$parameters');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures?visitId=$parameters');
       break;
     case '':
-      url = Uri.parse('https://mapsnap.onrender.com/v1/pictures');
+      url = Uri.parse('http://10.0.2.2:3000/v1/pictures');
       break;
     default:
       print('Tham số không hợp lệ');
@@ -111,7 +111,7 @@ Future<List<Picture>> getInfoImages(String parameters, String check) async {
 
 // Gọi API để lấy thông tin ảnh theo ID
 Future<Picture?> getImage_ID(String id ) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/pictures/$id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/pictures/$id');
 
   final response = await http.get(
     url,
@@ -132,7 +132,7 @@ Future<Picture?> getImage_ID(String id ) async {
 
 // Gọi API để xóa ảnh
 Future<void> RemoveImage(String id ) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/pictures/$id');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/pictures/$id');
 
   final response = await http.delete(
     url,

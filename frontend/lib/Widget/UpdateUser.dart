@@ -18,7 +18,7 @@ import 'accountModel.dart';
 
 // Gọi API để lấy thông tin User
 Future<User?> fetchData(String userId, String token) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/users/$userId');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   final response = await http.get(
     url,
     headers: {
@@ -38,7 +38,7 @@ Future<User?> fetchData(String userId, String token) async {
 
 // Gọi API để update thông tin của User lên database
 Future<void> updateUser(String userId, String newName, String newEmail,String newAddress,String newPhoneNumber,String newAvatar,String token) async {
-  final url = Uri.parse('https://mapsnap.onrender.com/v1/users/$userId');
+  final url = Uri.parse('http://10.0.2.2:3000/v1/users/$userId');
   // Dữ liệu cần cập nhật
   final Map<String, dynamic> updatedData = {
     'username': newName,
@@ -91,7 +91,7 @@ Future<Avatar?> uploadAvatar(String token, String userId, XFile image) async {
   final File imgFile = File(image.path);
 
   // Địa chỉ API
-  final String url = 'https://mapsnap.onrender.com/v1/users/avatar/$userId';
+  final String url = 'http://10.0.2.2:3000/v1/users/avatar/$userId';
 
   // Tạo yêu cầu `MultipartRequest`
   final request = http.MultipartRequest('POST', Uri.parse(url))

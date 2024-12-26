@@ -215,7 +215,7 @@ class _securityScreenState extends State<securityScreen> {
   Future<void> changePassword(String oldPassword,String newPassword) async {
     var accountModel = Provider.of<AccountModel>(context, listen: false);
     final response = await http.post(
-      Uri.parse('https://mapsnap.onrender.com/v1/auth/change-password'),
+      Uri.parse('http://10.0.2.2:3000/v1/auth/change-password'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
