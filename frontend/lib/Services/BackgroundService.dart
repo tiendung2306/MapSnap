@@ -139,7 +139,6 @@ void onStart (ServiceInstance service) async {
         return;
       }
     }
-
     print('vpa');
 
     // Position position = await Geolocator.getCurrentPosition(

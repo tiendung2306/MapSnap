@@ -4,11 +4,13 @@ class postScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      // padding: EdgeInsets.symmetric(horizontal: 10),
       color: Colors.white,
-      child: Center(
-          child: Text('Như kiểu nhật ký của FB',
-            style: TextStyle(fontSize: 32.0),
+      child: Container(
+          child: Image.asset(
+             "assets/Image/post.png",
+              fit: BoxFit.contain,
+
           )
       ),
     );
