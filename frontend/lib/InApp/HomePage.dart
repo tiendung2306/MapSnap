@@ -510,6 +510,12 @@ class JourneyTile extends StatelessWidget {
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: Icon(Icons.arrow_forward),
+        onTap: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MapScreen(journeyID: "67619347c26ede008ef7b79a",)),
+          );
+        },
       ),
     );
   }
